@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
   
-  <title>天池赛题:天猫重复购学习笔记(我的EDA模板) - Coding-Zuo</title>
+  <title>Coding-Zuo</title>
   
     <link rel="shortcut icon" href="/favicon.png">
   
@@ -88,7 +88,6 @@
         
         <div class="date" id="date">
             
-            <span>January</span>
             
             
             
@@ -100,13 +99,14 @@
             
             
             
+            <span>December</span>
             
-            <span>29,</span>
-            <span>2021</span>
+            <span>15,</span>
+            <span>2020</span>
         </div>
         
 
-        <h2 class="title">天池赛题:天猫重复购学习笔记(我的EDA模板)</h2>
+        <h2 class="title"></h2>
     </div>
 
     <div class="divider"></div>
@@ -118,11 +118,14 @@
 <li>复购率 = 重复购买行为次数(或 交易次数)/用户样本数量</li>
 </ul>
 <p>[TOC]</p>
-<p>##EDA步骤<br>###1.看数据类型、数量、样例<br>无疑是一些pd.read_csv(_)和data.info()、data.head()。大致看一看<br>查看是否有单一值变量</p>
+<p>##EDA步骤</p>
+<p>###1.看数据类型、数量、样例<br>无疑是一些pd.read_csv(_)和data.info()、data.head()。大致看一看<br>查看是否有单一值变量</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#查看训练集测试集中特征属性只有一值的特征</span></span><br><span class="line">train_one_value = [col <span class="keyword">for</span> col <span class="keyword">in</span> train.columns <span class="keyword">if</span> train[col].nunique() &lt;= <span class="number">1</span>]</span><br><span class="line">test_one_value = [col <span class="keyword">for</span> col <span class="keyword">in</span> test.columns <span class="keyword">if</span> test[col].nunique() &lt;= <span class="number">1</span>]</span><br><span class="line">print(<span class="string">&#x27;one value featrues in train:&#x27;</span>,train_one_value)</span><br><span class="line">print(<span class="string">&#x27;one value featrues in test: &#x27;</span>,test_one_value)</span><br></pre></td></tr></table></figure>
 <p>###2.区分类别变量和连续变量<br>一般类别变量的处理和连续型变量的处理不一样<br>类别型可能会encode，看一些数量分布。<br>连续型可能会看一看核分布。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#区分类别特征与连续特征</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">split_features</span>(<span class="params">df,colnums,nums=<span class="number">30</span></span>):</span></span><br><span class="line">    label_features=&#123;&#125;</span><br><span class="line">    continue_features=&#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> key <span class="keyword">in</span> colnums:</span><br><span class="line">        nunique=df[key].nunique()</span><br><span class="line">        <span class="keyword">if</span> np.issubdtype(df[key][<span class="number">0</span>],np.<span class="built_in">int</span>) <span class="keyword">and</span> nunique&lt;=nums:</span><br><span class="line">            label_features.update(&#123;key:nunique&#125;)</span><br><span class="line">        <span class="keyword">elif</span> np.issubdtype(df[key][<span class="number">0</span>],np.<span class="built_in">float</span>) <span class="keyword">and</span> nunique&lt;=nums:</span><br><span class="line">            label_features.update(&#123;key:nunique&#125;)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            continue_features.update(&#123;key:nunique&#125;)</span><br><span class="line">    print(label_features)</span><br><span class="line">    <span class="comment">#return label_features,continue_features</span></span><br><span class="line"></span><br><span class="line">user_info_colnums=user_info.columns.values</span><br><span class="line">user_log_colnums=user_log.columns.values</span><br><span class="line">train_colnums=train.columns.values</span><br><span class="line">lable_nunique_maxnums=<span class="number">20</span></span><br><span class="line">print(<span class="string">&#x27;user_info:&#x27;</span>)</span><br><span class="line">split_features(user_info,colnums=user_info_colnums,nums=lable_nunique_maxnums)</span><br><span class="line">print(<span class="string">&#x27;user_log :&#x27;</span>)</span><br><span class="line">split_features(user_log,colnums=user_log_colnums,nums=lable_nunique_maxnums)</span><br><span class="line">print(<span class="string">&#x27;train :&#x27;</span>)</span><br><span class="line">split_features(train,colnums=train_colnums,nums=lable_nunique_maxnums)</span><br></pre></td></tr></table></figure>
-<p>可知<br>user_info:<br>{‘age_range’: 9, ‘gender’: 3}<br>user_log :<br>{‘action_type’: 4}<br>train :<br>{‘label’: 2}<br>###3.看是否有缺失值<br>插补方法|说明|优点|缺点|使用环境<br>| :— | :— | :— |:— |:— |<br>|类均值插补|数值型：均值。<br>非数值型：众数（出现频率最高的值）值比较稳定性；低估资料变异|简单易行：被插补的值比较稳定|不能反映缺失值的变异性；低估资料变异|低缺失率首选<br>|类随机插补|聚类填充；使用所有可能的值填充；组合完整化方法|能体现数据变异性|依赖于观测值|低缺失率<br>回归插补|基于完整的数据集，建立回归方程（模型）|方差估计好|稳定性依赖于辅助变量，抽样误差不易控制|变量间的相关性强<br>Em 插补|通过观测数据的边际分布可以对未知参数进行极大似然估计|利用充分，考虑了缺失值的不确定性|计算复杂|高缺失率<br>多重插补 MCMC| 估计出持插补的值，然后加上不同的噪声，形成多组可选插补值|利用充分，考虑了缺失值的不确定性|计算复杂|高缺失率首选</p>
+<p>可知<br>user_info:<br>{‘age_range’: 9, ‘gender’: 3}<br>user_log :<br>{‘action_type’: 4}<br>train :<br>{‘label’: 2}</p>
+<p>###3.看是否有缺失值</p>
+<p>插补方法|说明|优点|缺点|使用环境<br>| :— | :— | :— |:— |:— |<br>|类均值插补|数值型：均值。<br>非数值型：众数（出现频率最高的值）值比较稳定性；低估资料变异|简单易行：被插补的值比较稳定|不能反映缺失值的变异性；低估资料变异|低缺失率首选<br>|类随机插补|聚类填充；使用所有可能的值填充；组合完整化方法|能体现数据变异性|依赖于观测值|低缺失率<br>回归插补|基于完整的数据集，建立回归方程（模型）|方差估计好|稳定性依赖于辅助变量，抽样误差不易控制|变量间的相关性强<br>Em 插补|通过观测数据的边际分布可以对未知参数进行极大似然估计|利用充分，考虑了缺失值的不确定性|计算复杂|高缺失率<br>多重插补 MCMC| 估计出持插补的值，然后加上不同的噪声，形成多组可选插补值|利用充分，考虑了缺失值的不确定性|计算复杂|高缺失率首选</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 有时0代表缺失值，对于缺失值严重的一般删除处理</span></span><br><span class="line"><span class="comment"># 缺失值较少一般三种：</span></span><br><span class="line"><span class="comment">#统计量填充：连续值推荐用中位数，离散值：用众数，不能用均值和中位数</span></span><br><span class="line"><span class="comment">#特殊值填充：正常范围内取值</span></span><br><span class="line"><span class="comment">#不处理：xgb、lgb对缺失值不太敏感，算法本身有一套缺失值处理方法</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">missing_value_rate</span>(<span class="params">data,col_name</span>):</span></span><br><span class="line">    rate_list = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> col <span class="keyword">in</span> col_name:</span><br><span class="line">        rate = (data.shape[<span class="number">0</span>]-data[col].count())/data.shape[<span class="number">0</span>]</span><br><span class="line"><span class="comment">#         na_zero_num = data[data[col].isna() | (data[data[col]==0])].count()</span></span><br><span class="line">        lable_foamt = <span class="string">&#x27;rate:&#123;&#125;&#x27;</span>.<span class="built_in">format</span>(rate)</span><br><span class="line">        rate_list[col]=lable_foamt</span><br><span class="line">    <span class="keyword">return</span> rate_list</span><br></pre></td></tr></table></figure>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">print(<span class="string">&#x27;age_range:&#x27;</span>,user_info[user_info[<span class="string">&#x27;age_range&#x27;</span>].isna() | (user_info[<span class="string">&#x27;age_range&#x27;</span>]==<span class="number">0</span>)].count())</span><br><span class="line">print()</span><br><span class="line">print(<span class="string">&#x27;gender:&#x27;</span>,user_info[user_info[<span class="string">&#x27;gender&#x27;</span>].isna() | (user_info[<span class="string">&#x27;gender&#x27;</span>]==<span class="number">0</span>)].count())</span><br><span class="line">missing_value_rate(user_info,user_info.columns)</span><br></pre></td></tr></table></figure>
 <p>###4.观察数据分布、不均衡样本<br>不均衡样本，可采用</p>
