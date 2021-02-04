@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+  
+  <title>High-Order Information Matters Learning Relation and Topology for Occluded Person Re-Identification(CVPR2020)(泛读) - Coding-Zuo</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+
+  
+<meta name="generator" content="Hexo 5.3.0"></head>
+    <body>
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">Coding-Zuo</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">Home</a>
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/friends">Friends</a>
+            
+            
+            
+            <a class="nav-item" href="/projects">Projects</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item" target="_blank" rel="noopener" href="https://www.cnblogs.com/zzuuoo666/">cnblogs</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/Coding-Zuo" target="_blank">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        <article class="post">
+    <div class="meta">
+        
+        <div class="date" id="date">
+            
+            <span>January</span>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <span>29,</span>
+            <span>2021</span>
+        </div>
+        
+
+        <h2 class="title">High-Order Information Matters Learning Relation and Topology for Occluded Person Re-Identification(CVPR2020)(泛读)</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <h1 id="High-Order-Information-Matters-Learning-Relation-and-Topology-for-Occluded-Person-Re-Identification-CVPR2020-泛读"><a href="#High-Order-Information-Matters-Learning-Relation-and-Topology-for-Occluded-Person-Re-Identification-CVPR2020-泛读" class="headerlink" title="High-Order Information Matters: Learning Relation and Topology for Occluded Person Re-Identification(CVPR2020)(泛读)"></a>High-Order Information Matters: Learning Relation and Topology for Occluded Person Re-Identification(CVPR2020)(泛读)</h1><p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2003.08177">https://arxiv.org/abs/2003.08177</a><br>##解决方案<br>主要解决遮蔽现象。<br>整体思路可以再各种跟验证相关的任务中去套用。</p>
+<p>针对遮蔽数据集Occluded-DukeMTMC<br>提出三阶段模型：</p>
+<ul>
+<li>关键点局部特征提取 (关键点数据集或者关键点识别模型)</li>
+<li>图卷积融合关键点特征</li>
+<li>基于图匹配的方式来计算相似度并训练模型<br>完成特征提取，重点解决遮蔽问题。</li>
+</ul>
+<p><img src="media/16088026276866/16094111066156.jpg"><br>关键点可以学习人体走路运动的先验知识。</p>
+<p>1、关键点局部特征提取<br>关键点数据集或者关键点识别模型</p>
+<p>2、图卷积融合贯机电特征<br>传统算法是点与点进行匹配，但当两个图像遮蔽位置不一致时，就没法进行对比关键点。<br>图卷积就会好好利用未被遮挡的区域。</p>
+<p>3、基于图匹配的方式来计算相似度并训练模型<br>匹配图像中哪些能用哪些不能用，能用的该怎么用，不能用的该怎么减少。<br>计算U匹配矩阵(13x13)关键点。</p>
+<p><img src="media/16088026276866/16094091735765.jpg"></p>
+<p>###第一阶段S(关键点局部特征提取)<br>根据CNN提取到feature map和十三个关键点的信息。<br>local是十三个关键点信息。<br>global是feature map(global average pooling得到)<br><img src="media/16088026276866/16094117636086.jpg" alt="-w417"><br>热度图是关键点乘以feature map<br>选择一个pose estimation模型即可，得到的是各个关键点的热度图信息，通过热度图得到原始特征图的局部信息。<br><img src="media/16088026276866/16094112053911.jpg"><br>用feature map和关键点信息相乘，相当于在特征图中把信息画出来。<br>得到一共十四个特征+global<br>把local和global都进行训练，添加多个损失。</p>
+<p>###第二阶段R(如何利用各个点的特征，用图卷积局部特征关系整合)<br><img src="media/16088026276866/16094132872113.jpg"><br>做特征的整合，得到的还是local和global，是一个有了相互关系的拓扑结构，相当于一个attention机制。<br>将得到的邻接矩阵A来指导每个关键点特征如何跟其他关键点特征进行计算，并且A矩阵也要进行学习。</p>
+<p>如何利用好局部特征？加入关系<br>先初始化邻接矩阵来进行图卷积，邻接矩阵在学习过程中更新，综合利用各关键点直接的信息。</p>
+<p>如何才能更好的针对每个输入利用不同的局部特征？没有边的就不用</p>
+<p>和整体差异越大的，越离群。<br>利用差异特征来学习邻居矩阵A<br>有了A就能开始图卷积了，用他来指导如何利用不同关键点的特征进行组合，最终再与输入的局部特征进行整合。</p>
+<p><img src="media/16088026276866/16094140621824.jpg"><br>$K=13$ 13个关键点<br>$V_l^{in}$ 关键点特征向量 $batch<em>13</em>2048$<br>$V_g^{in}$ 全局特征向量   $1<em>13</em>2048$<br>repeat调整向量大小把$1<em>13</em>2048$变成$batch<em>13</em>2048$后做减法<br>然后经过abs绝对值、bn层、fc层后得到一个$K*K$的矩阵$A^{adp}$。<br>用学习到的$A^{adp}$和邻接矩阵A做乘法。$A’=A^{adp}*A$<br>之后在用$V_l^{in}$和上面相乘得到的结果当成$V_l^{in}*A’$相当于图卷积过程。<br>再将本身特征$V_l^{in}$和图卷积后的关系特征相加。<br>再concat全局特征向量$V_g^{in}$得到输出</p>
+<p>###第三阶段T(图匹配，相似度计算)</p>
+<p>输入两张图像(经过了前两阶段后的结果)</p>
+<p>Graph Matching 计算一个14X14的相似度矩阵U，对一下关键点。表示两个图之间的关系。<br><img src="media/16088026276866/16094788285661.jpg" alt="-w454"><br>进入了新的验证损失函数。<br>就是sigmoid(emb1,emb2)的结果。</p>
+<p><img src="media/16088026276866/16094792835034.jpg"><br>输入两个编码后的特征向量。<br>先经过fc+relu提取下特征，再进行图匹配得出相似度矩阵U。<br>然后是一个交叉cross的过程，分别交叉来得到个子匹配的特征结果。知道了哪里该匹配哪里不该，再进过fc+relu得到最终特征。</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/EhAeaA68Ek27EptkTfZiBQ">这篇的旷世推文</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/baidu_41617231/article/details/107421943">【CVPR2020】：High-Order Information Matters: Learning Relation and Topology for Occluded Person Re-Ide</a><br><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1764y1c7jZ?p=3">【唐宇迪】CVPR2020最新行人重识别论文解读</a><br><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV13W411K7jM?from=search&seid=5052861388779194545">图解行人重识别论文系列</a></p>
+
+    </div>
+
+    <div class="about">
+        <h1>About this Post</h1>
+        <p>This post is written by Coding-Zuo, licensed under <a
+                href="">Coding-Zuo</a>.</p>
+    </div>
+
+    
+        
+    
+</article>
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+            <div class="group">
+                <h4 class="title">Blog</h4>
+                
+                <a href="/" class="item" target="_blank">Blog</a>
+                
+                <a href="/archives" class="item" target="_blank">Archives</a>
+                
+                <a href="/friends" class="item" target="_blank">Friends</a>
+                
+                <a href="/projects" class="item" target="_blank">Projects</a>
+                
+                <a href="/about" class="item" target="_blank">About</a>
+                
+                <a href="/atom.xml" class="item" target="_blank">RSS</a>
+                
+            </div>
+            
+            <div class="group">
+                <h4 class="title">Projects</h4>
+                
+                <a href="https://github.com/Coding-Zuo/DL-paper" class="item" target="_blank">DL-paper</a>
+                
+                <a href="https://github.com/Coding-Zuo/DataGame" class="item" target="_blank">DataGame</a>
+                
+                <a href="https://github.com/Coding-Zuo/ACM" class="item" target="_blank">ACM</a>
+                
+                <a href="https://github.com/Coding-Zuo/pyTorch_Tensorflow_Dgl" class="item" target="_blank">pyTorch_Tensorflow_Dgl</a>
+                
+            </div>
+            
+            <div class="group">
+                <h4 class="title">Me</h4>
+                
+                <a href="https://github.com/Coding-Zuo" class="item" target="_blank">GitHub</a>
+                
+                <a href="https://www.cnblogs.com/zzuuoo666/" class="item" target="_blank">cnblogs</a>
+                
+                <a href="zzuuoo666@sina.com" class="item" target="_blank">Email</a>
+                
+            </div>
+            
+        </div>
+        &copy; 2021 Coding-Zuo<br />
+        Powered by <a href="#" target="_blank">Zuo</a>
+    </div>
+</footer>
+
+        
+<script src="/js/main.js"></script>
+
+         
+        
+<script src="/%3Cscript%20src=%22/code.tidio.co/mak6nokafytw9mgrsuzglwzfxiy3fpdl.js%22%20async%3E%3C/script%3E.js"></script>
+ 
+        
+        <script src="//code.tidio.co/mak6nokafytw9mgrsuzglwzfxiy3fpdl.js" async></script>
+    </body>
+</html>
