@@ -1,0 +1,318 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Heterogeneous Graph Neural Network | Coding-Zuo</title><meta name="keywords" content="GNN"><meta name="author" content="Coding-Zuo"><meta name="copyright" content="Coding-Zuo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="Heterogeneous Graph Neural Network摘要挑战：不仅是因为需要合并由多种类型的节点和边组成的异质结构(图)信息，而且还因为需要考虑与每个节点相关联的异质属性或内容(例如，文字或图像)。 方法：C1引入了一种带重启的随机游走策略，对每个节点的固定大小的强相关异构邻居进行采样，并根据节点类型对它们进行分组。 接下来，设计一个包含两个模块的神经网络体系结构，用来聚合那些采样">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Heterogeneous Graph Neural Network">
+<meta property="og:url" content="http://example.com/2021/03/30/Heterogeneous-Graph-Neural-Network/index.html">
+<meta property="og:site_name" content="Coding-Zuo">
+<meta property="og:description" content="Heterogeneous Graph Neural Network摘要挑战：不仅是因为需要合并由多种类型的节点和边组成的异质结构(图)信息，而且还因为需要考虑与每个节点相关联的异质属性或内容(例如，文字或图像)。 方法：C1引入了一种带重启的随机游走策略，对每个节点的固定大小的强相关异构邻居进行采样，并根据节点类型对它们进行分组。 接下来，设计一个包含两个模块的神经网络体系结构，用来聚合那些采样">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2021/03/30/joZhFfytV4YGSBg.png">
+<meta property="article:published_time" content="2021-03-30T03:45:27.000Z">
+<meta property="article:modified_time" content="2021-03-30T08:16:23.285Z">
+<meta property="article:author" content="Coding-Zuo">
+<meta property="article:tag" content="GNN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/03/30/joZhFfytV4YGSBg.png"><link rel="shortcut icon" href="https://i.loli.net/2021/03/22/reFlcYOnP3dSuJX.png"><link rel="canonical" href="http://example.com/2021/03/30/Heterogeneous-Graph-Neural-Network/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-03-30 16:16:23'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    })(window)</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sviptzk/HexoStaticFile@latest/Hexo/css/footer.min.css"><meta name="generator" content="Hexo 5.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://i.loli.net/2021/03/22/YP2oqk7lOAfceTD.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">15</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://i.loli.net/2021/03/30/joZhFfytV4YGSBg.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Coding-Zuo</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Heterogeneous Graph Neural Network</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-03-30T03:45:27.000Z" title="发表于 2021-03-30 11:45:27">2021-03-30</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-03-30T08:16:23.285Z" title="更新于 2021-03-30 16:16:23">2021-03-30</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Heterogeneous Graph Neural Network"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Heterogeneous-Graph-Neural-Network"><a href="#Heterogeneous-Graph-Neural-Network" class="headerlink" title="Heterogeneous Graph Neural Network"></a>Heterogeneous Graph Neural Network</h1><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>挑战：不仅是因为需要合并由多种类型的节点和边组成的异质结构(图)信息，而且还因为需要考虑与每个节点相关联的异质属性或内容(例如，文字或图像)。</p>
+<p>方法：C1引入了一种带重启的随机游走策略，对每个节点的固定大小的强相关异构邻居进行采样，并根据节点类型对它们进行分组。</p>
+<p>接下来，设计一个包含两个模块的神经网络体系结构，用来聚合那些采样的相邻节点的特征信息。</p>
+<p>第一个模块C2：对异构内容的“深度”特征交互进行编码，并为每个节点生成内容Embedding。</p>
+<p>第二个模块C3：聚合不同相邻组(类型)的内容(属性)嵌入，并通过考虑不同组的影响来进一步组合它们，以获得最终的节点嵌入。</p>
+<p>HetGNN用途：在边链接预测、推荐、节点分类和聚类以及归纳节点分类和聚类等各种图挖掘任务</p>
+<h2 id="异质图"><a href="#异质图" class="headerlink" title="异质图"></a>异质图</h2><p><img src="https://i.loli.net/2021/03/30/BAJN9XrwndLE5zW.png" alt=""></p>
+<p>学术图中，</p>
+<p>关系：作者与论文(写作)、论文与论文(引文)、论文与期刊(出版)</p>
+<p>此外，该图中的节点携带属性 如作者有id属性、文本有论文摘要属性。</p>
+<h2 id="挑战"><a href="#挑战" class="headerlink" title="挑战"></a>挑战</h2><p><img src="https://i.loli.net/2021/03/30/a74yHiAdxeXI1jn.png" alt=""></p>
+<ul>
+<li><p>1：现有的GNN大多只聚合直接（一阶）相邻节点的特征信息，特征传播过程可能会削弱远邻节点的影响。此外，“中心”节点的嵌入生成受到弱相关邻居（“噪声”邻居）的影响，“冷启动”节点的嵌入由于邻居信息有限而没有得到充分的表示。因此，挑战1是：如何为HetG中的每个节点采样与嵌入生成密切相关的异构邻居。如上图C1。(信息聚合考虑的信息不够多)</p>
+<p>方法：基于重启策略的随机游走，采样固定大小强相关异构邻居，并根据节点类型进行分组。</p>
+</li>
+<li><p>2：HETG中的一个节点可以携带非结构化的异构内容。如上图C2，type1有属性＋文本，type2有属性+图片。因此挑战2是：如何设计节点内容编码器来解决HetG中不同节点的内容异构性。(异构属性信息如何嵌入)</p>
+<p>方法：聚合模块1，用RNN对异构内容的“深层”特征交互进行编码，得到每个节点的内容嵌入。</p>
+</li>
+<li><p>3：不同类型的邻居对HetG中节点嵌入的贡献不同。目前的GNN主要集中在齐次图上，没有考虑节点类型的影响。因此，挑战3是：如何通过考虑不同节点类型的影响来聚合异构邻居的特征信息，如图上图C3。(不同类型节点如何聚合)</p>
+<p>方法：聚合模块2，利用另一个RNN聚合不同邻域组的内容嵌入，并进一步通过注意力机制进行组合，以度量异构节点类型的不同影响，并获得最终的节点嵌入。</p>
+</li>
+</ul>
+<p>和其他模型对比</p>
+<p><img src="https://i.loli.net/2021/03/30/a5wPN1Uc8hnB9Tu.png" alt=""></p>
+<h2 id="C-HetG"><a href="#C-HetG" class="headerlink" title="C-HetG"></a>C-HetG</h2><p>内容关联异质图</p>
+<p>定义为有多种类型的节点V和边E的图。$G=(V，E，O_V，R_E)$。</p>
+<p>$O_V$ 和 $R_E$ 分别表示对象类型的集合和关系类型的集合。</p>
+<p>此外，每个节点与不同种类的内容相关联(例如，属性、文本或图像)。</p>
+<h2 id="基于重启策略的随机游走-C1"><a href="#基于重启策略的随机游走-C1" class="headerlink" title="基于重启策略的随机游走 C1"></a>基于重启策略的随机游走 C1</h2><p>和GAT/GCN采样一阶邻居不一样。他们不能聚合多种类型节点的信息，并且采样信息不完整。</p>
+<p>HetGNN用这个方法采样。</p>
+<p>Step1：采样固定大小长度的随机游走路径$RWR(v)$ 。以概率p决定是走到当前节点还是返回上一节点。 v是起始节点，$RWR(v)$ 中不同类型节点的数量受到限制，以确保可以采样所有节点类型。</p>
+<p>Step2:：对不同类型的邻居进行分组。对于每个节点类型t，根据频率从 $RWR(v)$ 中选择前kt个节点，并将它们作为节点v的t型相关邻居的集合。</p>
+<p>保证了手机每个节点都有所有类型邻居的信息，并且对相同类型的邻居进行分组，以便后续任务。</p>
+<h2 id="异质内容编码-C2"><a href="#异质内容编码-C2" class="headerlink" title="异质内容编码 C2"></a>异质内容编码 C2</h2><p><img src="https://i.loli.net/2021/03/30/O34hFWBto5xnsYT.png" alt=""></p>
+<p>对于第二个挑战，设计此模块去提取图中的异质内容$C_v$ ,编码为固定大小的embedding。</p>
+<p>定义$C_v$ 中的第i个特征表达为 $x_i \in R^{d_f\times 1}$</p>
+<p>$x<em>i$ 可以根据不同类型的内容采用不同的技术进行预训练。例如，可以利用Par2Vec来预先训练文本内容，或者使用CNNs来预先训练图像内容。 下面的 $FC</em>{\theta_x}$ 就代表不同的特征转换器，参数为$\theta_x$。</p>
+<p>采用双向LSTM学习深度特征：</p>
+<script type="math/tex; mode=display">
+\begin{equation}\begin{split} 
+    f_1(v) =\frac {\sum_{i\in C_v}[\overrightarrow{LSTM}\{FC_{\theta_x}(x_i) \} \oplus \overleftarrow{LSTM} \{ FC_{\theta_x}(x_i)  \}]}{ |C_v|}
+    \end{split}\end{equation}</script><p>$\oplus$ 链接操作。LSTM公式：</p>
+<script type="math/tex; mode=display">
+\begin{equation}\begin{split} 
+ z_i &= \sigma (U_zFC_{\theta_x}(x_i) + W_zh_{i-1} + b_z) \\
+  f_i &= \sigma (U_fFC_{\theta_x}(x_i) + W_fh_{i-1} + b_z) \\
+   o_i &= \sigma (U_oFC_{\theta_x}(x_i) + W_oh_{i-1} + b_z) \\
+   \tilde c_i &= tanh(U_cFC_{\theta_x}(x_i)+ W_ch_{i-1} + b_c)\\
+   c_i &= f_i \circ c_{i-1} + z_i \circ \tilde c_i\\
+   h_i &= tanh(c_i) \circ o_i
+ \end{split}\end{equation}</script><h2 id="聚合异构邻居-C3"><a href="#聚合异构邻居-C3" class="headerlink" title="聚合异构邻居 C3"></a>聚合异构邻居 C3</h2><p>包含两个步骤：</p>
+<ul>
+<li>同类邻居聚合</li>
+<li>类型邻居聚合</li>
+</ul>
+<h3 id="同类型聚合"><a href="#同类型聚合" class="headerlink" title="同类型聚合"></a>同类型聚合</h3><p><img src="https://i.loli.net/2021/03/30/uh5zVmLsHNKiMyf.png" alt=""></p>
+<p>使用随机游走对每个节点的不同节点类型的固定大小邻居进行采样后。</p>
+<p>将$v∈V$ 的t类型抽样邻居集表示为$N_t(v)$</p>
+<p>经过上面的内容嵌入后变为$ v’ \in N_t(v)$ </p>
+<p>然后使用神经网络$f_2^t$ 来聚合得到的内容嵌入。</p>
+<p>聚合嵌入公式为：</p>
+<script type="math/tex; mode=display">
+\begin{equation}\begin{split} 
+ f_2^t(v) = AGG_{v'\in N_t(v)}^t \{ f_1(v')\}
+    \end{split}\end{equation}</script><p>还是使用的Bi-LSTM：</p>
+<script type="math/tex; mode=display">
+\begin{equation}\begin{split} 
+ f_2^t(v) =\frac {\sum_{v'\in N_{t(v)}}[\overrightarrow{LSTM}\{f_1(v') \} \oplus \overleftarrow{LSTM} \{ f_1(v')  \}]}{ |N_{t(v)}|}
+    \end{split}\end{equation}</script><p>使用Bi-LSTM来聚集所有t型邻居的内容嵌入，并使用所有隐藏状态的平均值来表示一般的聚集嵌入。我们使用不同的Bi-LSTM来区分邻居聚合的不同节点类型。Bi-LSTM对无序邻域集进行操作，该集合的灵感来自于GraphSAGE</p>
+<h3 id="类型邻居聚合"><a href="#类型邻居聚合" class="headerlink" title="类型邻居聚合"></a>类型邻居聚合</h3><p><img src="https://i.loli.net/2021/03/30/4yp3YDo8l7JhSAc.png" alt=""></p>
+<p>上一步为节点v生成$|O_v|$ 聚集嵌入 (图中的节点类型集)。</p>
+<p>为了将这些基于类型的邻居嵌入与v的内容嵌入相结合，采用了注意机制。</p>
+<p>其动机是不同类型的邻居将对v的最终表示做出不同的贡献。因此，输出嵌入被表示为：</p>
+<script type="math/tex; mode=display">
+\begin{equation}\begin{split} 
+ \epsilon_v = a^{v,v} f_1(v) + \sum_{t\in O_v} \alpha^{v,t} f_2^t(v)
+    \end{split}\end{equation}</script><p>$\epsilon_v \in \Re^{d\times 1}$  , d 是嵌入维度</p>
+<p>$f_1(v)$ 是获得v的内容嵌入</p>
+<p>$f_2^t(v)$ 是类型聚合嵌入</p>
+<p>$\alpha^{v,*}$  表示不同嵌入的重要性</p>
+<p>定义：$F(v) ={ f_1(v) \bigcup (f_2^t(v) ,t\in O_v)}$</p>
+<script type="math/tex; mode=display">
+\begin{equation}\begin{split} 
+ \alpha^{v,i} = \frac{ exp \{LeakyReLU(u^T[f_i\oplus f_1(v)])\}}{\sum_{f_j\in F(v)} exp\{ LeakyReLU(u^T[f_j\oplus f_1(v)]) \}}
+    \end{split}\end{equation}</script><h2 id=""><a href="#" class="headerlink" title=" "></a> </h2><h2 id="HetGNN"><a href="#HetGNN" class="headerlink" title="HetGNN"></a>HetGNN</h2><p><img src="https://i.loli.net/2021/03/30/FKu5qcMT1AahHlk.png" alt=""></p>
+<p>四个组成部分</p>
+<ul>
+<li>采样异质邻居</li>
+<li>编码节点的异质内容</li>
+<li>聚合异质邻居</li>
+<li>制定目标函数，设计训练过程。</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Coding-Zuo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2021/03/30/Heterogeneous-Graph-Neural-Network/">http://example.com/2021/03/30/Heterogeneous-Graph-Neural-Network/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">Coding-Zuo</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/GNN/">GNN</a></div><div class="post_share"><div class="addthis_inline_share_toolbox"></div><script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=null" async="async"></script></div></div><div class="post-reward"><div class="reward-button button--animated"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2021/03/27/Cognitive-Graph-for-Multi-Hop-Reading-Comprehension-at-Scale-ACL2019/"><img class="next-cover" src="https://i.loli.net/2021/03/27/548YCMeHJnoBtDZ.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Cognitive Graph for Multi-Hop Reading Comprehension at Scale(ACL2019)</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/03/23/Spatial-Temporal-Graph-Convolutional-Network-for-Video-based-Person-Re-identification-CVPR2020/" title="Spatial-Temporal Graph Convolutional Network for Video-based Person Re-identification(CVPR2020)"><img class="cover" src="https://i.loli.net/2021/03/23/BC3YgrzAhbtFqHW.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-03-23</div><div class="title">Spatial-Temporal Graph Convolutional Network for Video-based Person Re-identification(CVPR2020)</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Heterogeneous-Graph-Neural-Network"><span class="toc-number">1.</span> <span class="toc-text">Heterogeneous Graph Neural Network</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%91%98%E8%A6%81"><span class="toc-number">1.1.</span> <span class="toc-text">摘要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%82%E8%B4%A8%E5%9B%BE"><span class="toc-number">1.2.</span> <span class="toc-text">异质图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%91%E6%88%98"><span class="toc-number">1.3.</span> <span class="toc-text">挑战</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#C-HetG"><span class="toc-number">1.4.</span> <span class="toc-text">C-HetG</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E%E9%87%8D%E5%90%AF%E7%AD%96%E7%95%A5%E7%9A%84%E9%9A%8F%E6%9C%BA%E6%B8%B8%E8%B5%B0-C1"><span class="toc-number">1.5.</span> <span class="toc-text">基于重启策略的随机游走 C1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%82%E8%B4%A8%E5%86%85%E5%AE%B9%E7%BC%96%E7%A0%81-C2"><span class="toc-number">1.6.</span> <span class="toc-text">异质内容编码 C2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%81%9A%E5%90%88%E5%BC%82%E6%9E%84%E9%82%BB%E5%B1%85-C3"><span class="toc-number">1.7.</span> <span class="toc-text">聚合异构邻居 C3</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8C%E7%B1%BB%E5%9E%8B%E8%81%9A%E5%90%88"><span class="toc-number">1.7.1.</span> <span class="toc-text">同类型聚合</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B1%BB%E5%9E%8B%E9%82%BB%E5%B1%85%E8%81%9A%E5%90%88"><span class="toc-number">1.7.2.</span> <span class="toc-text">类型邻居聚合</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">1.8.</span> <span class="toc-text"> </span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HetGNN"><span class="toc-number">1.9.</span> <span class="toc-text">HetGNN</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By Coding-Zuo</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my BLOG</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    loader: {
+      source: {
+        '[tex]/amsCd': '[tex]/amscd'
+      }
+    },
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        addClass: [200,() => {
+          document.querySelectorAll('mjx-container:not([display=\'true\']').forEach( node => {
+            const target = node.parentNode
+            if (!target.classList.contains('has-jax')) {
+              target.classList.add('mathjax-overflow')
+            }
+          })
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>if (document.getElementsByClassName('mermaid').length) {
+  if (window.mermaidJsLoad) mermaid.init()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(() => {
+      window.mermaidJsLoad = true
+      mermaid.initialize({
+        theme: 'default',
+      })
+      false && mermaid.init()
+    })
+  }
+}</script></div><script src="/js/custom.js"></script><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script src="//code.tidio.co/mak6nokafytw9mgrsuzglwzfxiy3fpdl.js" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
