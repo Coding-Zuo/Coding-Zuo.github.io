@@ -1,0 +1,310 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>RoBERTa &amp; Albert | Coding-Zuo</title><meta name="keywords" content="nlp"><meta name="author" content="Coding-Zuo"><meta name="copyright" content="Coding-Zuo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="RoBERTa &amp; Albert2021年了，bert的改进体也越来越多，Roberta和Albert是比较出名的两个改进体。 Roberta主要针对bert的预训练任务如NSP，mask进行改进。并且扩大了batchsize和使用更长的序列训练，这两点可能在长文本竞赛上有作用。 Albert主要针对bert参数量太大，训练慢来进行改进。引入了跨层参数共享，embedding解绑分解，取消">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RoBERTa &amp; Albert">
+<meta property="og:url" content="http://example.com/2021/04/05/RoBERTa-Albert/index.html">
+<meta property="og:site_name" content="Coding-Zuo">
+<meta property="og:description" content="RoBERTa &amp; Albert2021年了，bert的改进体也越来越多，Roberta和Albert是比较出名的两个改进体。 Roberta主要针对bert的预训练任务如NSP，mask进行改进。并且扩大了batchsize和使用更长的序列训练，这两点可能在长文本竞赛上有作用。 Albert主要针对bert参数量太大，训练慢来进行改进。引入了跨层参数共享，embedding解绑分解，取消">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2021/04/05/YbQjlSCNi3UTpLX.png">
+<meta property="article:published_time" content="2021-04-05T07:31:04.000Z">
+<meta property="article:modified_time" content="2021-04-05T11:37:00.752Z">
+<meta property="article:author" content="Coding-Zuo">
+<meta property="article:tag" content="nlp">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/04/05/YbQjlSCNi3UTpLX.png"><link rel="shortcut icon" href="https://i.loli.net/2021/03/22/reFlcYOnP3dSuJX.png"><link rel="canonical" href="http://example.com/2021/04/05/RoBERTa-Albert/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-04-05 19:37:00'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    })(window)</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sviptzk/HexoStaticFile@latest/Hexo/css/footer.min.css"><meta name="generator" content="Hexo 5.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://i.loli.net/2021/03/22/YP2oqk7lOAfceTD.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">16</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://i.loli.net/2021/04/05/YbQjlSCNi3UTpLX.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Coding-Zuo</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">RoBERTa &amp; Albert</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-04-05T07:31:04.000Z" title="发表于 2021-04-05 15:31:04">2021-04-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-04-05T11:37:00.752Z" title="更新于 2021-04-05 19:37:00">2021-04-05</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="RoBERTa &amp; Albert"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="RoBERTa-amp-Albert"><a href="#RoBERTa-amp-Albert" class="headerlink" title="RoBERTa &amp; Albert"></a>RoBERTa &amp; Albert</h1><p>2021年了，bert的改进体也越来越多，Roberta和Albert是比较出名的两个改进体。</p>
+<p>Roberta主要针对bert的预训练任务如NSP，mask进行改进。并且扩大了batchsize和使用更长的序列训练，这两点可能在长文本竞赛上有作用。</p>
+<p>Albert主要针对bert参数量太大，训练慢来进行改进。引入了跨层参数共享，embedding解绑分解，取消dropout和添加SOP预训练任务。</p>
+<h2 id="RoBERTa"><a href="#RoBERTa" class="headerlink" title="RoBERTa"></a>RoBERTa</h2><ol>
+<li>使用更大的batch在更大的数据集上对Bert进行深度训练</li>
+<li>不再使用NSP(Next Sentence Prediction)任务</li>
+<li>使用更长的序列进行训练</li>
+<li>动态改变训练数据的MASK模式</li>
+</ol>
+<h3 id="静态Masking-vs-动态Masking"><a href="#静态Masking-vs-动态Masking" class="headerlink" title="静态Masking vs 动态Masking"></a>静态Masking vs 动态Masking</h3><ul>
+<li>静态Masking:在数据预处理期间Mask矩阵就已经生成好了，每个样本只会进行一次随机Mask，每个epoch都是相同的。</li>
+<li>修改版静态Masking: 在预处理时将数据拷贝10份，每一份拷贝都采用不同的Mask，也就是说，同样的一句话有十种不同的mask 方式，然后每份数据都训练N/10个epoch</li>
+<li>动态Masking:每次向模型输入一个序列时，都会生成一种新的Mask方式，即不在预处理的时候进行mask，而是在向模型提供输入时动态生成Mask。</li>
+</ul>
+<p><img src="https://i.loli.net/2021/04/05/zFrQXsCIgc98pu3.png" alt=""></p>
+<h3 id="取消NSP任务"><a href="#取消NSP任务" class="headerlink" title="取消NSP任务"></a>取消NSP任务</h3><p>RoBERTa 实验了 4 种方法：</p>
+<ul>
+<li>SEGMENT-PAIR + NSP：输入包含两部分，每个部分是来自同一文档或者不同文档的 segment （segment 是连续的多个句子），这两个 segment 的 token 总数少于 512 。预训练包含 MLM 任务和 NSP 任务。这是原始 BERT 的做法</li>
+<li>SENTENCE-PAIR + NSP：输入也是包含两部分，每个部分是来自同一个文档或者不同文档的单个句子，这两个句子的 token 总数少于 512 。由于这些输入明显少于 512 个 tokens，因此增加 batch size 的大小，以使 tokens 总数保持与 SEGMENT-PAIR + NSP 相似。预训练包含 MLM 任务和 NSP 任务</li>
+<li>FULL-SENTENCES：输入只有一部分（而不是两部分），来自同一个文档或者不同文档的连续多个句子，token 总数不超过 512 。输入可能跨越文档边界，如果跨文档，则在上一个文档末尾添加标志文档边界的 token 。预训练不包含 NSP 任务</li>
+<li>DOC-SENTENCES：输入只有一部分（而不是两部分），输入的构造类似于 FULL-SENTENCES，只是不需要跨越文档边界，其输入来自同一个文档的连续句子，token 总数不超过 512 。在文档末尾附近采样的输入可以短于 512 个 tokens， 因此在这些情况下动态增加 batch size 大小以达到与 FULL-SENTENCES 相同的 tokens 总数。预训练不包含 NSP 任务</li>
+</ul>
+<p><img src="https://i.loli.net/2021/04/05/TqvNDS2WIXHBnAl.png" alt=""></p>
+<h3 id="扩大Batch-Size"><a href="#扩大Batch-Size" class="headerlink" title="扩大Batch Size"></a>扩大Batch Size</h3><p>公认的因素：降低batch size会显著降低实验效果，具体可参考BERT，XLNet目录的相关Issue。</p>
+<p>Roberta 作者也证实了这一点。</p>
+<p><img src="https://i.loli.net/2021/04/05/jRdWv3gEVMlLk14.png" alt=""></p>
+<p>其中，bsz 是 Batch Size；steps 是训练步数（为了保证 bsz*steps 近似相同，所以大 bsz 必定对应小 steps）；lr 是学习率；ppl 是困惑度，越小越好；最后两项是不同任务的准确率。</p>
+<h3 id="文本编码"><a href="#文本编码" class="headerlink" title="文本编码"></a>文本编码</h3><ul>
+<li>基于 char-level ：原始 BERT 的方式，它通过对输入文本进行启发式的词干化之后处理得到。</li>
+<li>基于 bytes-level：与 char-level 的区别在于bytes-level 使用 bytes 而不是 unicode 字符作为 sub-word 的基本单位，因此可以编码任何输入文本而不会引入 UNKOWN 标记。</li>
+</ul>
+<h2 id="Albert"><a href="#Albert" class="headerlink" title="Albert"></a>Albert</h2><p>最近在 NLP 领域的研究趋势是使用越来越大的模型，以获得更好的性能。ALBERT 的研究表明，无脑堆叠模型参数可能导致效果降低</p>
+<p>在论文中，作者做了一个有趣的实验</p>
+<blockquote>
+<p>如果更大的模型可以带来更好的性能，为什么不将最大的 BERT 模型 (BERT-large) 的隐含层单元增加一倍，从 1024 个单元增加到 2048 个单元呢？</p>
+</blockquote>
+<p>他们称之为 “BERT-xlarge”。令人惊讶的是，无论是在语言建模任务还是阅读理解测试（RACE）中，这个更大的模型的表现都不如 BERT-large</p>
+<p><img src="https://i.loli.net/2021/04/05/5kJfDmlt8xiUFCv.png" alt=""></p>
+<h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>ALBERT 利用了参数共享、矩阵分解等技术大大减少了模型参数，用 SOP（Sentence Order Prediction） Loss 取代 NSP（Next Sentence Prediction） Loss 提升了下游任务的表现。但是 ALBERT 的层数并未减少，因此<strong>推理时间（Inference Time）还是没有得到改进</strong>。不过参数减少的确使得训练变快，同时 ALBERT 可以扩展到比 BERT 更大的模型（ALBERT-xxlarge），因此能得到更好的表现</p>
+<p>具体的创新部分有三个：</p>
+<ol>
+<li>embedding 层参数因式分解</li>
+<li>跨层参数共享</li>
+<li>将 NSP 任务改为 SOP 任务</li>
+</ol>
+<h4 id="Factorized-Embedding-Parameterization"><a href="#Factorized-Embedding-Parameterization" class="headerlink" title="Factorized Embedding Parameterization"></a>Factorized Embedding Parameterization</h4><p>原始的 BERT 模型以及各种依据 Transformer 的预训连语言模型都有一个共同特点，即 E=H，其中 E 指的是 Embedding Dimension，H 指的是 Hidden Dimension。这就会导致一个问题，当提升 Hidden Dimension 时，Embedding Dimension 也需要提升，最终会导致参数量呈平方级的增加。</p>
+<p>所以 ALBERT 的作者将 <strong>E 和 H 进行解绑</strong>，具体的操作就是<strong>在 Embedding 后面加入一个矩阵进行维度变换</strong>。E 的维度是不变的，如果 H 增大了，我们只需要在 E 后面进行一个升维操作即可</p>
+<p><img src="https://i.loli.net/2021/04/05/8FjUN5XrKWAqvsP.png" alt=""></p>
+<p>所以，ALBERT 不直接将原本的 one-hot 向量映射到 hidden space size of H，而是分解成两个矩阵，原本参数数量为 V∗H，V 表示的是 Vocab Size。分解成两步则减少为 V∗E+E∗H，当 H 的值很大时，这样的做法能够大幅降低参数数量</p>
+<blockquote>
+<p>V∗H=30000∗768=23,040,000</p>
+<p>V∗E+E∗H=30000∗256+256∗768=7,876,608</p>
+<p>举个例子，当 V 为 30000，H 为 768，E 为 256 时，参数量从 2300 万降低到 780 万</p>
+</blockquote>
+<p>通过因式分解 Embedding 的实验可以看出，对于参数不共享的版本，随着 E 的增大，效果是不断提升的。但是参数共享的版本似乎不是这样，E 最大并不是效果最好。同时也能发现参数共享对于效果可能带来 1-2 个点的下降</p>
+<p><img src="https://i.loli.net/2021/04/05/5W9ytZiukCfdLmQ.png" alt=""></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span></span><br><span class="line">  self.emb = nn.Embedding(vocab_size, <span class="number">128</span>)</span><br><span class="line">  self.fc = nn.Linear(<span class="number">128</span>, <span class="number">1024</span>)</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, x</span>):</span></span><br><span class="line">  x = self.emb(x)</span><br><span class="line">  x = self.fc(x) <span class="comment"># [batch_size, seq_len, 1024]</span></span><br></pre></td></tr></table></figure>
+<h4 id="Cross-Layer-Parameter-Sharing"><a href="#Cross-Layer-Parameter-Sharing" class="headerlink" title="Cross-Layer Parameter Sharing"></a>Cross-Layer Parameter Sharing</h4><p>传统 Transformer 的每一层参数都是独立的，包括各层的 self-attention、全连接。这样就导致层数增加时，参数量也会明显上升。之前有工作试过单独将 self-attention 或者全连接层进行共享，都取得了一些效果。ALBERT 作者尝试将所有层的参数进行共享，相当于只学习第一层的参数，并在剩下的所有层中重用该层的参数，而不是每个层都学习不同的参数</p>
+<p><img src="https://i.loli.net/2021/04/05/zOjWTLiGyaXMvnq.png" alt=""></p>
+<p>使用参数共享提升了模型 的稳定性，曲线更平滑了。</p>
+<p>BERT-base 和 ALBERT 使用相同的层数以及 768 个隐藏单元，结果 BERT-base 共有 1.1 亿个参数，而 ALBERT 只有 3100 万个参数。通过实验发现，feed-forward 层的参数共享会对精度产生比较大的影响；共享注意力参数的影响是最小的</p>
+<p><img src="https://i.loli.net/2021/04/05/V3Tf6EhcAiuXder.png" alt=""></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 参数共享例子</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span></span><br><span class="line">    self.enc_layer = TransformerEncoder()</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, x</span>):</span></span><br><span class="line">    <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">12</span>):</span><br><span class="line">        x = self.enc_layer(x)</span><br><span class="line"><span class="comment"># 参数不共享例子        </span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span></span><br><span class="line">    self.enc_layer1 = TransformerEncoder()</span><br><span class="line">    self.enc_layer2 = TransformerEncoder()</span><br><span class="line">    ....</span><br><span class="line">    self.enc_layer12 = TransformerEncoder()</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, x</span>):</span></span><br><span class="line">    x = self.enc_layer1(x)</span><br><span class="line">    x = self.enc_layer2(x)</span><br><span class="line">    ....</span><br><span class="line">    x = self.enc_layer12(x)</span><br></pre></td></tr></table></figure>
+<h4 id="Sentence-Order-Prediciton-SOP"><a href="#Sentence-Order-Prediciton-SOP" class="headerlink" title="Sentence-Order Prediciton (SOP)"></a>Sentence-Order Prediciton (SOP)</h4><p><strong>BERT</strong> 引入了一个叫做<strong>下一个句子预测</strong>的二分类问题。这是专门为提高使用句子对，如 “自然语言推理” 的下游任务的性能而创建的。但是像 RoBERTa 和 XLNet 这样的论文已经阐明了 NSP 的无效性，并且发现它对下游任务的影响是不可靠的</p>
+<p>因此，ALBERT 提出了另一个任务 —— <strong>句子顺序预测</strong>。关键思想是：</p>
+<ul>
+<li>从同一个文档中取两个连续的句子作为一个正样本</li>
+<li>交换这两个句子的顺序，并使用它作为一个负样本</li>
+</ul>
+<p><img src="https://i.loli.net/2021/04/05/XHDghABQW6Y2Fdf.png" alt=""></p>
+<p><img src="https://i.loli.net/2021/04/05/K7vIQg5C2GthUda.png" alt=""></p>
+<h4 id="Adding-Data-amp-Remove-Dropout"><a href="#Adding-Data-amp-Remove-Dropout" class="headerlink" title="Adding Data &amp; Remove Dropout"></a>Adding Data &amp; Remove Dropout</h4><p>以上 ALBERT 都是使用跟 BERT 相同的训练数据。但是增加训练数据或许可以提升模型的表现，于是 ALBERT 加上 STORIES Dataset 后总共训练了 157G 的数据。另外，训练到 1M 步的时候，模型还没有对训练集 Overfit，所以作者直接把 Dropout 移除，最终在 MLM 验证集上的效果得到了大幅提升</p>
+<p><img src="https://i.loli.net/2021/04/05/8u3sZJXQ4EFcn2C.png" alt=""></p>
+<h4 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h4><p>刚开始看这篇文章是很惊喜的，因为它直接把同等量级的 BERT 缩小了 10 + 倍，让普通用户有了运行可能。但是仔细看了实验后才发现参数量的减小是需要付出代价的</p>
+<p><img src="https://i.loli.net/2021/04/05/U37dpafWzxT4lqD.png" alt=""></p>
+<p>需要注意的是，Speedup 是训练时间而不是 Inference 时间。Inference 时间并未得到改善，因为即使是使用了共享参数机制，还是得跑完 12 层 Encoder，故 Inference 时间跟 BERT 是差不多的</p>
+<p>实验用的参数如下</p>
+<p><img src="https://i.loli.net/2021/04/05/svcV1HRtMd7jxX8.png" alt=""></p>
+<p>可以得出的结论是：</p>
+<ol>
+<li>在相同的训练时间下，ALBERT 得到的效果确实比 BERT 好</li>
+<li>在相同的 Inference 时间下，ALBERT base 和 large 的效果都没有 BERT 好，而且差了 2-3 个点，作者在最后也提到了会继续寻找提高速度的方法（Sparse attention 和 Block attention）</li>
+</ol>
+<p>另外，结合 <strong>Universal Transformer</strong> 可以想到的是，在训练和 Inference 阶段可以动态地调整 Transformer 层数（告别 12、24、48 的配置）。同时可以想办法去避免纯参数共享带来的效果下降，毕竟 Transformer 中越深层学到的任务相关信息越多，可以改进 Transformer 模块，加入记忆单元、每层个性化的 Embedding</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Coding-Zuo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2021/04/05/RoBERTa-Albert/">http://example.com/2021/04/05/RoBERTa-Albert/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">Coding-Zuo</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/nlp/">nlp</a></div><div class="post_share"><div class="addthis_inline_share_toolbox"></div><script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=null" async="async"></script></div></div><div class="post-reward"><div class="reward-button button--animated"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2021/03/30/Heterogeneous-Graph-Neural-Network/"><img class="next-cover" src="https://i.loli.net/2021/03/30/joZhFfytV4YGSBg.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Heterogeneous Graph Neural Network</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/03/27/Cognitive-Graph-for-Multi-Hop-Reading-Comprehension-at-Scale-ACL2019/" title="Cognitive Graph for Multi-Hop Reading Comprehension at Scale(ACL2019)"><img class="cover" src="https://i.loli.net/2021/03/27/548YCMeHJnoBtDZ.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-03-27</div><div class="title">Cognitive Graph for Multi-Hop Reading Comprehension at Scale(ACL2019)</div></div></a></div><div><a href="/2021/03/22/HopRetriever-Retrieve-Hops-over-Wikipedia-to-Answer-Complex-Questions-AAAI2020/" title="HopRetriever:Retrieve Hops over Wikipedia to Answer Complex Questions(AAAI2020)"><img class="cover" src="https://z3.ax1x.com/2021/03/23/6T4MDg.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-03-22</div><div class="title">HopRetriever:Retrieve Hops over Wikipedia to Answer Complex Questions(AAAI2020)</div></div></a></div><div><a href="/2021/03/23/HotpotQA数据集/" title="HotpotQA数据集"><img class="cover" src="https://z3.ax1x.com/2021/03/23/6HutoV.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-03-23</div><div class="title">HotpotQA数据集</div></div></a></div><div><a href="/2021/03/27/Multi-hop-Reading-Comprehension-across-Multiple-Documents-by-Reasoning-over-Heterogeneous-Graphs/" title="Multi-hop Reading Comprehension across Multiple Documents by Reasoning over Heterogeneous Graphs"><img class="cover" src="https://i.loli.net/2021/03/27/fCj9ordWQJygFIA.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-03-27</div><div class="title">Multi-hop Reading Comprehension across Multiple Documents by Reasoning over Heterogeneous Graphs</div></div></a></div><div><a href="/2021/03/25/协同注意力和自注意力的区别/" title="协同注意力和自注意力的区别(DCN+)"><img class="cover" src="https://i.loli.net/2021/03/25/QAPcvhuEalRWoTg.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-03-25</div><div class="title">协同注意力和自注意力的区别(DCN+)</div></div></a></div><div><a href="/2021/03/22/阅读理解数据集综述/" title="阅读理解数据集综述"><img class="cover" src="https://i.loli.net/2021/03/22/5EnDrHBkelu2hcv.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-03-22</div><div class="title">阅读理解数据集综述</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#RoBERTa-amp-Albert"><span class="toc-number">1.</span> <span class="toc-text">RoBERTa &amp; Albert</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#RoBERTa"><span class="toc-number">1.1.</span> <span class="toc-text">RoBERTa</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%99%E6%80%81Masking-vs-%E5%8A%A8%E6%80%81Masking"><span class="toc-number">1.1.1.</span> <span class="toc-text">静态Masking vs 动态Masking</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%96%E6%B6%88NSP%E4%BB%BB%E5%8A%A1"><span class="toc-number">1.1.2.</span> <span class="toc-text">取消NSP任务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%A9%E5%A4%A7Batch-Size"><span class="toc-number">1.1.3.</span> <span class="toc-text">扩大Batch Size</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E6%9C%AC%E7%BC%96%E7%A0%81"><span class="toc-number">1.1.4.</span> <span class="toc-text">文本编码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Albert"><span class="toc-number">1.2.</span> <span class="toc-text">Albert</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">1.2.1.</span> <span class="toc-text">概述</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Factorized-Embedding-Parameterization"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">Factorized Embedding Parameterization</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Cross-Layer-Parameter-Sharing"><span class="toc-number">1.2.1.2.</span> <span class="toc-text">Cross-Layer Parameter Sharing</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Sentence-Order-Prediciton-SOP"><span class="toc-number">1.2.1.3.</span> <span class="toc-text">Sentence-Order Prediciton (SOP)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Adding-Data-amp-Remove-Dropout"><span class="toc-number">1.2.1.4.</span> <span class="toc-text">Adding Data &amp; Remove Dropout</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Conclusion"><span class="toc-number">1.2.1.5.</span> <span class="toc-text">Conclusion</span></a></li></ol></li></ol></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By Coding-Zuo</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my BLOG</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    loader: {
+      source: {
+        '[tex]/amsCd': '[tex]/amscd'
+      }
+    },
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        addClass: [200,() => {
+          document.querySelectorAll('mjx-container:not([display=\'true\']').forEach( node => {
+            const target = node.parentNode
+            if (!target.classList.contains('has-jax')) {
+              target.classList.add('mathjax-overflow')
+            }
+          })
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>if (document.getElementsByClassName('mermaid').length) {
+  if (window.mermaidJsLoad) mermaid.init()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(() => {
+      window.mermaidJsLoad = true
+      mermaid.initialize({
+        theme: 'default',
+      })
+      false && mermaid.init()
+    })
+  }
+}</script></div><script src="/js/custom.js"></script><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script src="//code.tidio.co/mak6nokafytw9mgrsuzglwzfxiy3fpdl.js" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
