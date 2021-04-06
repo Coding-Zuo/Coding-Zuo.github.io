@@ -1,0 +1,275 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>海华中文阅读理解比赛梳理/多卡并行/transformers | Coding-Zuo</title><meta name="keywords" content="DataGame"><meta name="author" content="Coding-Zuo"><meta name="copyright" content="Coding-Zuo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="海华中文阅读理解比赛梳理赛题概述 train 训练集提供了6313条数据数据格式是和中小学生做的阅读题一样，一篇文章有两到三个问题每个问题有两到四个答案选项。 validation 验证集提供了1000条数据。  原始单条数据格式如下： 123456789101112131415161718192021222324252627&amp;#123;    &quot;ID&quot;: &quot;0001">
+<meta property="og:type" content="article">
+<meta property="og:title" content="海华中文阅读理解比赛梳理&#x2F;多卡并行&#x2F;transformers">
+<meta property="og:url" content="http://example.com/2021/04/06/%E6%B5%B7%E5%8D%8E%E4%B8%AD%E6%96%87%E9%98%85%E8%AF%BB%E7%90%86%E8%A7%A3%E6%AF%94%E8%B5%9B%E6%A2%B3%E7%90%86-%E5%A4%9A%E5%8D%A1%E5%B9%B6%E8%A1%8C-transformers/index.html">
+<meta property="og:site_name" content="Coding-Zuo">
+<meta property="og:description" content="海华中文阅读理解比赛梳理赛题概述 train 训练集提供了6313条数据数据格式是和中小学生做的阅读题一样，一篇文章有两到三个问题每个问题有两到四个答案选项。 validation 验证集提供了1000条数据。  原始单条数据格式如下： 123456789101112131415161718192021222324252627&amp;#123;    &quot;ID&quot;: &quot;0001">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2021/04/06/BLiKPmD6Mwve1FQ.png">
+<meta property="article:published_time" content="2021-04-06T12:28:26.000Z">
+<meta property="article:modified_time" content="2021-04-06T15:17:23.744Z">
+<meta property="article:author" content="Coding-Zuo">
+<meta property="article:tag" content="DataGame">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/04/06/BLiKPmD6Mwve1FQ.png"><link rel="shortcut icon" href="https://i.loli.net/2021/03/22/reFlcYOnP3dSuJX.png"><link rel="canonical" href="http://example.com/2021/04/06/%E6%B5%B7%E5%8D%8E%E4%B8%AD%E6%96%87%E9%98%85%E8%AF%BB%E7%90%86%E8%A7%A3%E6%AF%94%E8%B5%9B%E6%A2%B3%E7%90%86-%E5%A4%9A%E5%8D%A1%E5%B9%B6%E8%A1%8C-transformers/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-04-06 23:17:23'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    })(window)</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sviptzk/HexoStaticFile@latest/Hexo/css/footer.min.css"><meta name="generator" content="Hexo 5.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://i.loli.net/2021/03/22/YP2oqk7lOAfceTD.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">18</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://i.loli.net/2021/04/06/BLiKPmD6Mwve1FQ.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Coding-Zuo</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">海华中文阅读理解比赛梳理/多卡并行/transformers</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-04-06T12:28:26.000Z" title="发表于 2021-04-06 20:28:26">2021-04-06</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-04-06T15:17:23.744Z" title="更新于 2021-04-06 23:17:23">2021-04-06</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="海华中文阅读理解比赛梳理/多卡并行/transformers"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="海华中文阅读理解比赛梳理"><a href="#海华中文阅读理解比赛梳理" class="headerlink" title="海华中文阅读理解比赛梳理"></a>海华中文阅读理解比赛梳理</h1><h2 id="赛题概述"><a href="#赛题概述" class="headerlink" title="赛题概述"></a>赛题概述</h2><ul>
+<li>train 训练集提供了6313条数据数据格式是和中小学生做的阅读题一样，一篇文章有两到三个问题每个问题有两到四个答案选项。</li>
+<li>validation 验证集提供了1000条数据。</li>
+</ul>
+<p>原始单条数据格式如下：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;ID&quot;</span>: <span class="string">&quot;0001&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;Content&quot;</span>: <span class="string">&quot;春之怀古张晓风春天必然曾经是这样的：从绿意内敛的山头，一把雪再也撑不住了，噗嗤的一声，将冷面笑成花面，一首澌澌然的歌便从云端唱到山麓，从山麓唱到低低的荒村。。。。。很多省略。&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;Questions&quot;</span>: [</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">&quot;Q_id&quot;</span>: <span class="string">&quot;000101&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;Question&quot;</span>: <span class="string">&quot;鸟又可以开始丈量天空了。”这句话的意思是   （   ）&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;Choices&quot;</span>: [</span><br><span class="line">          <span class="string">&quot;A．鸟又可以飞了。&quot;</span>,</span><br><span class="line">          <span class="string">&quot;B． 鸟又要远飞了。&quot;</span>,</span><br><span class="line">          <span class="string">&quot;C．鸟又可以筑巢了。&quot;</span></span><br><span class="line">        ],</span><br><span class="line">        <span class="attr">&quot;Answer&quot;</span>: <span class="string">&quot;A&quot;</span></span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">&quot;Q_id&quot;</span>: <span class="string">&quot;000102&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;Question&quot;</span>: <span class="string">&quot;本文写景非常含蓄，请读一读找一找哪些不在作者的笔下有所描述&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;Choices&quot;</span>: [</span><br><span class="line">          <span class="string">&quot;A．冰雪融化&quot;</span>,</span><br><span class="line">          <span class="string">&quot;B． 蝴蝶在花间飞舞&quot;</span>,</span><br><span class="line">          <span class="string">&quot;C．白云在空中飘&quot;</span>,</span><br><span class="line">          <span class="string">&quot;D．小鸟在空中自由地飞&quot;</span></span><br><span class="line">        ],</span><br><span class="line">        <span class="attr">&quot;Answer&quot;</span>: <span class="string">&quot;C&quot;</span></span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="EDA-与预处理"><a href="#EDA-与预处理" class="headerlink" title="EDA 与预处理"></a>EDA 与预处理</h2><p>将原始数据每个问题抽出来以 [文章- 问题 -答案] 作为一条数据。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;Question&quot;</span>: <span class="string">&quot;下列对这首诗的理解和赏析，不正确的一项是&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;Choices&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;A．作者写作此诗之时，皮日休正患病居家，闭门谢客，与外界不通音讯。&quot;</span>,</span><br><span class="line">        <span class="string">&quot;B．由于友人患病，原有的约会被暂时搁置，作者游春的诗篇也未能写出。&quot;</span>,</span><br><span class="line">        <span class="string">&quot;C．作者虽然身在书斋从事教学，但心中盼望能走进自然，领略美好春光。&quot;</span>,</span><br><span class="line">        <span class="string">&quot;D．尾联使用了关于沈约的典故，可以由此推测皮日休所患的疾病是目疾。&quot;</span></span><br><span class="line">    ],</span><br><span class="line">    <span class="attr">&quot;Answer&quot;</span>: <span class="string">&quot;A&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;Q_id&quot;</span>: <span class="string">&quot;000101&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;Content&quot;</span>: <span class="string">&quot;奉和袭美抱疾杜门见寄次韵  陆龟蒙虽失春城醉上期，下帷裁遍未裁诗。因吟郢岸百亩蕙，欲采商崖三秀芝。栖野鹤笼宽使织，施山僧饭别教炊。但医沈约重瞳健，不怕江花不满枝。&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>训练集从6313变为15421条数据，相当于有15421个问题</p>
+<p>验证集从1000变为2444条数据，相当于有2444个问题</p>
+<p>接下来看看文章的长度如何？</p>
+<p><img src="https://i.loli.net/2021/04/06/UXPvh1c6CIRY54J.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">count    15421.000000</span><br><span class="line">mean      1039.781272</span><br><span class="line">std        435.583878</span><br><span class="line">min         38.000000</span><br><span class="line">25%        744.000000</span><br><span class="line">50%       1067.000000</span><br><span class="line">75%       1251.000000</span><br><span class="line">max       3047.000000</span><br><span class="line">Name: content_len, dtype: float64</span><br><span class="line">count    2444.000000</span><br><span class="line">mean      927.508592</span><br><span class="line">std       481.552693</span><br><span class="line">min        40.000000</span><br><span class="line">25%       596.000000</span><br><span class="line">50%       938.000000</span><br><span class="line">75%      1179.500000</span><br><span class="line">max      3047.000000</span><br><span class="line">Name: content_len, dtype: float64</span><br></pre></td></tr></table></figure>
+<p>发现content文章都非常长，绝大多数都超过了512。</p>
+<p>使用预训练模型bert的话，如何训练很长的文章是是个提高的点。</p>
+<p>我的想法是bert模型一个这个提高的点、看看最近比较火的Longformer怎么做，再用几个和长度无关的模型像lstm等最后做集成。</p>
+<p><img src="https://i.loli.net/2021/04/06/gBUFiwHtaK195rq.png" alt=""></p>
+<p>答案中选C的居多，点歌都选C。。。</p>
+<p>在提供的测试集中有一个特别的地方，赛方给出了文章的类型。</p>
+<p>00 现代文 11文言文 22 古诗词 33现代诗词</p>
+<p><img src="https://i.loli.net/2021/04/06/ZoVXJGdhrf7wga5.png" alt=""></p>
+<p>这个还不知道怎么用，将来用来数据增强？不太清楚</p>
+<p>接下来将标签从ABCD转成0123</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">train_df[<span class="string">&#x27;label&#x27;</span>] = train_df[<span class="string">&#x27;Answer&#x27;</span>].apply(<span class="keyword">lambda</span> x:[<span class="string">&#x27;A&#x27;</span>,<span class="string">&#x27;B&#x27;</span>,<span class="string">&#x27;C&#x27;</span>,<span class="string">&#x27;D&#x27;</span>].index(x)) </span><br><span class="line"></span><br><span class="line">test_df[<span class="string">&#x27;label&#x27;</span>] = <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<h2 id="Baseline"><a href="#Baseline" class="headerlink" title="Baseline"></a>Baseline</h2><h3 id="分词器"><a href="#分词器" class="headerlink" title="分词器"></a>分词器</h3><p>采用transformers提供的bert分词器</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tokenizer = BertTokenizer.from_pretrained(<span class="string">&#x27;model&#x27;</span>) <span class="comment">#加载bert的分词器</span></span><br></pre></td></tr></table></figure>
+<p>这里我试过如果要将bert改成roberta，分词器还是要采用BertTokenizer，如果用RobertaTokenizer会报错。</p>
+<p>参考<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/121787628">关于transformers库中不同模型的Tokenizer</a></p>
+<p><strong>由于中文的特殊性不太适合采用byte级别的编码，所以大部分开源的中文Roberta预训练模型仍然采用的是单字词表，所以直接使用<code>BertTokenizer</code>读取即可，</strong> 不需要使用<code>RobertaTokenizer</code>。</p>
+<h3 id="制造模型输入数据"><a href="#制造模型输入数据" class="headerlink" title="制造模型输入数据"></a>制造模型输入数据</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyDataset</span>(<span class="params">Dataset</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, dataframe</span>):</span></span><br><span class="line">        self.df = dataframe</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__len__</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">len</span>(self.df)</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getitem__</span>(<span class="params">self, idx</span>):</span> </span><br><span class="line">      <span class="comment">#将一条数据从(文章,问题,4个选项)转成(文章,问题,选项1)、(文章,问题,选项2)...</span></span><br><span class="line">        label = self.df.label.values[idx]</span><br><span class="line">        question = self.df.Question.values[idx]</span><br><span class="line">        content = self.df.Content.values[idx]</span><br><span class="line">        choice = self.df.Choices.values[idx][<span class="number">2</span>:-<span class="number">2</span>].split(<span class="string">&#x27;\&#x27;, \&#x27;&#x27;</span>)</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(choice) &lt; <span class="number">4</span>: <span class="comment">#如果选项不满四个，就补“不知道”</span></span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">4</span>-<span class="built_in">len</span>(choice)):</span><br><span class="line">                choice.append(<span class="string">&#x27;D．不知道&#x27;</span>)</span><br><span class="line">        </span><br><span class="line">        content = [content <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(choice))]</span><br><span class="line">        pair = [question + <span class="string">&#x27; &#x27;</span> + i[<span class="number">2</span>:] <span class="keyword">for</span> i <span class="keyword">in</span> choice]</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> content, pair, label</span><br></pre></td></tr></table></figure>
+<p>$61536 = 15325\times 4 + 71 \times3+ 25\times2 $</p>
+<p>数据将变成61536条</p>
+<p>如果用五折交叉验证： 训练集 49228 验证集12307</p>
+<p>如果Using 8 dataloader workers every process</p>
+<p>每个batch 8条数据的话  约等于每个epoch 训练集运行772次，验证集193次</p>
+<p>(这个地方不知道算的对不对)</p>
+<p>将数据做成bert需要的三种编码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">collate_fn</span>(<span class="params">data</span>):</span> </span><br><span class="line">  <span class="comment"># 将文章问题选项拼在一起后，得到分词后的数字id，输出的size是(batch, n_choices, max_len)</span></span><br><span class="line">    input_ids, attention_mask, token_type_ids = [], [], []</span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> data:</span><br><span class="line">        text = tokenizer(x[<span class="number">1</span>],</span><br><span class="line">                         text_pair=x[<span class="number">0</span>],</span><br><span class="line">                         padding=<span class="string">&#x27;max_length&#x27;</span>,  <span class="comment"># 填充到使用参数max_length指定的最大长度，或者填充到模型的最大可接受输入长度(如果未提供该参数)。</span></span><br><span class="line">                         truncation=<span class="literal">True</span>,</span><br><span class="line">                         <span class="comment"># TRUE或‘LIMEST_FIRST’：截断到使用参数max_length指定的最大长度，或者截断到模型的最大可接受输入长度(如果没有提供该参数)。这将逐个令牌截断令牌，如果提供了一对序列(或一批对)，则从该对中最长的序列中删除一个令牌。</span></span><br><span class="line">                         max_length=Param[<span class="string">&#x27;max_len&#x27;</span>],</span><br><span class="line">                         return_tensors=<span class="string">&#x27;pt&#x27;</span>)  <span class="comment"># 返回pytorch tensor格式</span></span><br><span class="line">        input_ids.append(text[<span class="string">&#x27;input_ids&#x27;</span>].tolist())</span><br><span class="line">        attention_mask.append(text[<span class="string">&#x27;attention_mask&#x27;</span>].tolist())</span><br><span class="line">        token_type_ids.append(text[<span class="string">&#x27;token_type_ids&#x27;</span>].tolist())</span><br><span class="line">    input_ids = torch.tensor(input_ids)</span><br><span class="line">    attention_mask = torch.tensor(attention_mask)</span><br><span class="line">    token_type_ids = torch.tensor(token_type_ids)</span><br><span class="line">    label = torch.tensor([x[-<span class="number">1</span>] <span class="keyword">for</span> x <span class="keyword">in</span> data])</span><br><span class="line">    <span class="keyword">return</span> input_ids, attention_mask, token_type_ids, label</span><br></pre></td></tr></table></figure>
+<p>DataLoader</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">train_set = utils.MyDataset(train)</span><br><span class="line">val_set = utils.MyDataset(val)</span><br><span class="line"></span><br><span class="line"><span class="string">&quot;&quot;&quot;单卡直接写&quot;&quot;&quot;</span></span><br><span class="line">train_loader = DataLoader(train_set, batch_size=CFG[<span class="string">&#x27;train_bs&#x27;</span>], collate_fn=collate_fn, shuffle=<span class="literal">True</span>, num_workers=CFG[<span class="string">&#x27;num_workers&#x27;</span>])</span><br><span class="line">val_loader = DataLoader(val_set, batch_size=CFG[<span class="string">&#x27;valid_bs&#x27;</span>], collate_fn=collate_fn, shuffle=<span class="literal">False</span>, num_workers=CFG[<span class="string">&#x27;num_workers&#x27;</span>])</span><br><span class="line"></span><br><span class="line"><span class="string">&quot;&quot;&quot;多卡写法&quot;&quot;&quot;</span></span><br><span class="line"> <span class="comment"># 给每个rank对应的进程分配训练的样本索引</span></span><br><span class="line">train_sampler = DistributedSampler(train_set)</span><br><span class="line">val_sampler = DistributedSampler(val_set)</span><br><span class="line"> <span class="comment"># 将样本索引每batch_size个元素组成一个list 验证集不用</span></span><br><span class="line">train_batch_sampler = torch.utils.data.BatchSampler(train_sampler, batch_size=args.batch_size, drop_last=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">train_loader = DataLoader(train_set, batch_sampler=train_batch_sampler, pin_memory=<span class="literal">False</span>,</span><br><span class="line">                                  collate_fn=collate_fn, num_workers=<span class="number">2</span>)</span><br><span class="line">val_loader = DataLoader(val_set, batch_size=args.batch_size, sampler=val_sampler, pin_memory=<span class="literal">False</span>, collate_fn=collate_fn, num_workers=<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+<p>DistributedSampler/BatchSampler:</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_37400316/article/details/107210970">四Sampler源码</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.freesion.com/article/6505681767/">（TORCH.NN.PARALLEL.DISTRIBUTEDDATAPARALLEL）时，DISTRIBUTEDSAMPLER(DATASET)用法解释</a></p>
+<p>Dataloader 中的 num_workers:</p>
+<p>加快训练进程<br>为了加快训练过程，使用DataLoader类的num workers可选属性。<br>num workers属性告诉数据加载器实例要使用多少子进程来加载数据。默认情况下，num  workers值设置为0，值为0告诉加载程序在主进程内加载数据。<br>这意味着训练将在主进程中按顺序工作。在训练过程中使用了一个batch，并且需要另一个batch之后，从磁盘读取批数据。现在，如果我们有一个worker进程，我们可以利用机器多个核的。这意味着在主进程准备好进行另一批处理时，下一批处理已经可以加载并准备就绪。这就是加速的来源。批处理使用其他工作进程加载，并在内存中排队。</p>
+<h3 id="模型部分"><a href="#模型部分" class="headerlink" title="模型部分"></a>模型部分</h3><p>baseline采用transformers提供的调包，封装好的BertForMultipleChoice (多项选择任务)，它的源码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BertForMultipleChoice</span>(<span class="params">BertPreTrainedModel</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, config</span>):</span></span><br><span class="line">        <span class="built_in">super</span>().__init__(config)</span><br><span class="line"></span><br><span class="line">        self.bert = BertModel(config)</span><br><span class="line">        self.dropout = nn.Dropout(config.hidden_dropout_prob)</span><br><span class="line">        self.classifier = nn.Linear(config.hidden_size, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">        self.init_weights()</span><br><span class="line"></span><br><span class="line"><span class="meta">    @add_start_docstrings_to_callable(<span class="params">BERT_INPUTS_DOCSTRING</span>)</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params"></span></span></span><br><span class="line"><span class="function"><span class="params">        self,</span></span></span><br><span class="line"><span class="function"><span class="params">        input_ids=<span class="literal">None</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">        attention_mask=<span class="literal">None</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">        token_type_ids=<span class="literal">None</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">        position_ids=<span class="literal">None</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">        head_mask=<span class="literal">None</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">        inputs_embeds=<span class="literal">None</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">        labels=<span class="literal">None</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">    </span>):</span></span><br><span class="line">       </span><br><span class="line">        num_choices = input_ids.shape[<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">        input_ids = input_ids.view(-<span class="number">1</span>, input_ids.size(-<span class="number">1</span>))</span><br><span class="line">        attention_mask = attention_mask.view(-<span class="number">1</span>, attention_mask.size(-<span class="number">1</span>)) <span class="keyword">if</span> attention_mask <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span> <span class="keyword">else</span> <span class="literal">None</span></span><br><span class="line">        token_type_ids = token_type_ids.view(-<span class="number">1</span>, token_type_ids.size(-<span class="number">1</span>)) <span class="keyword">if</span> token_type_ids <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span> <span class="keyword">else</span> <span class="literal">None</span></span><br><span class="line">        position_ids = position_ids.view(-<span class="number">1</span>, position_ids.size(-<span class="number">1</span>)) <span class="keyword">if</span> position_ids <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span> <span class="keyword">else</span> <span class="literal">None</span></span><br><span class="line">				<span class="comment"># 将bert三个输入展平 输入到bertmodel</span></span><br><span class="line">        outputs = self.bert(</span><br><span class="line">            input_ids,</span><br><span class="line">            attention_mask=attention_mask,</span><br><span class="line">            token_type_ids=token_type_ids,</span><br><span class="line">            position_ids=position_ids,</span><br><span class="line">            head_mask=head_mask,</span><br><span class="line">            inputs_embeds=inputs_embeds,</span><br><span class="line">        )</span><br><span class="line">				<span class="comment"># 隐层输出</span></span><br><span class="line">        pooled_output = outputs[<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">        pooled_output = self.dropout(pooled_output)</span><br><span class="line">        logits = self.classifier(pooled_output)</span><br><span class="line">        reshaped_logits = logits.view(-<span class="number">1</span>, num_choices)</span><br><span class="line"></span><br><span class="line">        outputs = (reshaped_logits,) + outputs[<span class="number">2</span>:]  <span class="comment"># add hidden states and attention if they are here</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> labels <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            loss_fct = CrossEntropyLoss()</span><br><span class="line">            loss = loss_fct(reshaped_logits, labels)</span><br><span class="line">            outputs = (loss,) + outputs</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> outputs  <span class="comment"># (loss), reshaped_logits, (hidden_states), (attentions)</span></span><br></pre></td></tr></table></figure>
+<p>做bert方面的模型扩展可以参考上面，其实就是BertModel加上了线性层。</p>
+<h3 id="训练过程"><a href="#训练过程" class="headerlink" title="训练过程"></a>训练过程</h3><h4 id="优化配置"><a href="#优化配置" class="headerlink" title="优化配置"></a>优化配置</h4><h4 id="梯度累积"><a href="#梯度累积" class="headerlink" title="梯度累积"></a>梯度累积</h4><h4 id="loss计算与warmup"><a href="#loss计算与warmup" class="headerlink" title="loss计算与warmup"></a>loss计算与warmup</h4><p><a target="_blank" rel="noopener" href="https://blog.zhujian.life/posts/f311f0.html">[LR Scheduler]warmup</a></p>
+<h4 id="模型保存与加载"><a href="#模型保存与加载" class="headerlink" title="模型保存与加载"></a>模型保存与加载</h4><h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Coding-Zuo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2021/04/06/%E6%B5%B7%E5%8D%8E%E4%B8%AD%E6%96%87%E9%98%85%E8%AF%BB%E7%90%86%E8%A7%A3%E6%AF%94%E8%B5%9B%E6%A2%B3%E7%90%86-%E5%A4%9A%E5%8D%A1%E5%B9%B6%E8%A1%8C-transformers/">http://example.com/2021/04/06/%E6%B5%B7%E5%8D%8E%E4%B8%AD%E6%96%87%E9%98%85%E8%AF%BB%E7%90%86%E8%A7%A3%E6%AF%94%E8%B5%9B%E6%A2%B3%E7%90%86-%E5%A4%9A%E5%8D%A1%E5%B9%B6%E8%A1%8C-transformers/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">Coding-Zuo</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/DataGame/">DataGame</a></div><div class="post_share"><div class="addthis_inline_share_toolbox"></div><script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=null" async="async"></script></div></div><div class="post-reward"><div class="reward-button button--animated"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2021/04/06/bfprt%E7%AE%97%E6%B3%95/"><img class="next-cover" src="https://i.loli.net/2021/04/06/lGSAiXsypmtaweM.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">bfprt算法</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/03/27/Pytorch多GPU并行实例/" title="Pytorch多GPU并行实例"><img class="cover" src="https://i.loli.net/2021/03/27/bBWz3dgpP2AIHGJ.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-03-27</div><div class="title">Pytorch多GPU并行实例</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B5%B7%E5%8D%8E%E4%B8%AD%E6%96%87%E9%98%85%E8%AF%BB%E7%90%86%E8%A7%A3%E6%AF%94%E8%B5%9B%E6%A2%B3%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">海华中文阅读理解比赛梳理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B5%9B%E9%A2%98%E6%A6%82%E8%BF%B0"><span class="toc-number">1.1.</span> <span class="toc-text">赛题概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#EDA-%E4%B8%8E%E9%A2%84%E5%A4%84%E7%90%86"><span class="toc-number">1.2.</span> <span class="toc-text">EDA 与预处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Baseline"><span class="toc-number">1.3.</span> <span class="toc-text">Baseline</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E8%AF%8D%E5%99%A8"><span class="toc-number">1.3.1.</span> <span class="toc-text">分词器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%B6%E9%80%A0%E6%A8%A1%E5%9E%8B%E8%BE%93%E5%85%A5%E6%95%B0%E6%8D%AE"><span class="toc-number">1.3.2.</span> <span class="toc-text">制造模型输入数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E9%83%A8%E5%88%86"><span class="toc-number">1.3.3.</span> <span class="toc-text">模型部分</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%AD%E7%BB%83%E8%BF%87%E7%A8%8B"><span class="toc-number">1.3.4.</span> <span class="toc-text">训练过程</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E9%85%8D%E7%BD%AE"><span class="toc-number">1.3.4.1.</span> <span class="toc-text">优化配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A2%AF%E5%BA%A6%E7%B4%AF%E7%A7%AF"><span class="toc-number">1.3.4.2.</span> <span class="toc-text">梯度累积</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#loss%E8%AE%A1%E7%AE%97%E4%B8%8Ewarmup"><span class="toc-number">1.3.4.3.</span> <span class="toc-text">loss计算与warmup</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E4%BF%9D%E5%AD%98%E4%B8%8E%E5%8A%A0%E8%BD%BD"><span class="toc-number">1.3.4.4.</span> <span class="toc-text">模型保存与加载</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reference"><span class="toc-number">1.4.</span> <span class="toc-text">Reference</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By Coding-Zuo</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my BLOG</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    loader: {
+      source: {
+        '[tex]/amsCd': '[tex]/amscd'
+      }
+    },
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        addClass: [200,() => {
+          document.querySelectorAll('mjx-container:not([display=\'true\']').forEach( node => {
+            const target = node.parentNode
+            if (!target.classList.contains('has-jax')) {
+              target.classList.add('mathjax-overflow')
+            }
+          })
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>if (document.getElementsByClassName('mermaid').length) {
+  if (window.mermaidJsLoad) mermaid.init()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(() => {
+      window.mermaidJsLoad = true
+      mermaid.initialize({
+        theme: 'default',
+      })
+      false && mermaid.init()
+    })
+  }
+}</script></div><script src="/js/custom.js"></script><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script src="//code.tidio.co/mak6nokafytw9mgrsuzglwzfxiy3fpdl.js" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
