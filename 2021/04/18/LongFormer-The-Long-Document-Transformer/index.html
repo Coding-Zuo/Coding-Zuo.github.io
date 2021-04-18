@@ -1,0 +1,314 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>LongFormer:The Long-Document Transformer | Coding-Zuo</title><meta name="keywords" content="nlp"><meta name="author" content="Coding-Zuo"><meta name="copyright" content="Coding-Zuo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="LongFormer:The Long-Document Transformer主要记录一些Longfromer的原理和使用时的细节。 摘要针对的问题：  基于Transformer的模型，由于self-attention的操作，导致不能处理很长的序列。 self-attention的处理规模和序列长度是成二次关系的。   因为self-attention对于每个token都要计算打分，也就是缩放">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LongFormer:The Long-Document Transformer">
+<meta property="og:url" content="http://example.com/2021/04/18/LongFormer-The-Long-Document-Transformer/index.html">
+<meta property="og:site_name" content="Coding-Zuo">
+<meta property="og:description" content="LongFormer:The Long-Document Transformer主要记录一些Longfromer的原理和使用时的细节。 摘要针对的问题：  基于Transformer的模型，由于self-attention的操作，导致不能处理很长的序列。 self-attention的处理规模和序列长度是成二次关系的。   因为self-attention对于每个token都要计算打分，也就是缩放">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2021/04/18/U8X3gDmrc1Rh2jE.png">
+<meta property="article:published_time" content="2021-04-18T06:40:10.000Z">
+<meta property="article:modified_time" content="2021-04-18T16:00:17.349Z">
+<meta property="article:author" content="Coding-Zuo">
+<meta property="article:tag" content="nlp">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/04/18/U8X3gDmrc1Rh2jE.png"><link rel="shortcut icon" href="https://i.loli.net/2021/03/22/reFlcYOnP3dSuJX.png"><link rel="canonical" href="http://example.com/2021/04/18/LongFormer-The-Long-Document-Transformer/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-04-19 00:00:17'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    })(window)</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sviptzk/HexoStaticFile@latest/Hexo/css/footer.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css"><meta name="generator" content="Hexo 5.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://i.loli.net/2021/03/22/YP2oqk7lOAfceTD.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">25</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">7</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://i.loli.net/2021/04/18/U8X3gDmrc1Rh2jE.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Coding-Zuo</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">LongFormer:The Long-Document Transformer</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-04-18T06:40:10.000Z" title="发表于 2021-04-18 14:40:10">2021-04-18</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-04-18T16:00:17.349Z" title="更新于 2021-04-19 00:00:17">2021-04-19</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="LongFormer:The Long-Document Transformer"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="LongFormer-The-Long-Document-Transformer"><a href="#LongFormer-The-Long-Document-Transformer" class="headerlink" title="LongFormer:The Long-Document Transformer"></a>LongFormer:The Long-Document Transformer</h1><p>主要记录一些Longfromer的原理和使用时的细节。</p>
+<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>针对的问题：</p>
+<ul>
+<li>基于Transformer的模型，由于self-attention的操作，导致不能处理很长的序列。</li>
+<li>self-attention的处理规模和序列长度是成二次关系的。</li>
+</ul>
+<p><img src="https://i.loli.net/2021/04/18/3YtkrO18p2dAvmV.png" alt=""></p>
+<p>因为self-attention对于每个token都要计算打分，也就是缩放点积中的$QK^T$ 矩阵运算。</p>
+<p>这相当于对每个token之间都照顾到了注意信息。</p>
+<p>每个token代表一个小格，自注意力机制的QK都是自己，所以是个正方形。</p>
+<p>为解决这个问题，作者引入了三种具有随序列长度线性缩放的注意机制，将规模缩减成线性。</p>
+<p>分别是局部窗口注意和任务激活的全局注意力。</p>
+<p>并且还提供了LongFormer的预训练模型。</p>
+<p>定义了生成结构为Long-Forward-Encoding-Decoder(LED) </p>
+<h2 id="引入-amp-相关工作"><a href="#引入-amp-相关工作" class="headerlink" title="引入&amp;相关工作"></a>引入&amp;相关工作</h2><p>熟知的Bert等预训练模型，最大长度为512，多的就要截断，这样可能会潜在地导致重要的跨分区信息丢失问题。</p>
+<p>然而当时已有的针对解决长文本的方法，都是基于自回归语言模型的。</p>
+<p>而LongFormer是可以应用于迁移学习环境中的文档级NLP任务的。</p>
+<p><img src="https://i.loli.net/2021/04/18/KNJa3dZx6fCG8eH.png" alt=""></p>
+<p>之后可能会读几篇。ltr从左到右的模型，其受益于双向语境(自回归或从左到右的语言建模被粗略地定义为在给定输入序列中的先前符号/字符的情况下估计现有符号/字符的概率分布)。</p>
+<p>spare代表模型通过稀疏性来进行优化。</p>
+<p>Generating long se-quences with sparse transformers.其使用由BlockSparse提供的大小为8x8的块的扩展滑动窗口的形式，但没有探索预训练设置。等等</p>
+<h2 id="LongFormer"><a href="#LongFormer" class="headerlink" title="LongFormer"></a>LongFormer</h2><p>原始Transformer的自注意力机制有$O(n^2)$ 的时间和空间内存复杂度。</p>
+<p>为了解决这个问题，作者根据指定相互关注的输入位置对的“注意模式”来稀疏完整的自我注意矩阵</p>
+<p>与full self-attention不同的是，提出的注意力模式与输入序列成线性关系，这使得它对较长的序列是有效的。</p>
+<h3 id="注意力模式"><a href="#注意力模式" class="headerlink" title="注意力模式"></a>注意力模式</h3><h4 id="滑动窗口-Sliding-Window"><a href="#滑动窗口-Sliding-Window" class="headerlink" title="滑动窗口 (Sliding Window)"></a>滑动窗口 (Sliding Window)</h4><p>设固定窗口大小为 w，transformer层数为$l$, token的每边 $\frac{1}{2}w$  计算复杂度为$O(n\times w)$</p>
+<p><img src="https://i.loli.net/2021/04/18/XaDokntURBWdNSe.png" alt=""></p>
+<p>作者认为：根据应用程序的不同，为每个图层使用不同的w值可能有助于在效率和模型表达能力之间取得平衡。</p>
+<h4 id="空洞滑窗-Dilated-Sliding-Window"><a href="#空洞滑窗-Dilated-Sliding-Window" class="headerlink" title="空洞滑窗(Dilated Sliding Window)"></a>空洞滑窗(Dilated Sliding Window)</h4><p>类似于CNN的空洞卷积</p>
+<p>空洞尺寸 $d$ 感受野是 $l\times d\times w$</p>
+<p><img src="https://i.loli.net/2021/04/18/SxDhujGwCVIvt2g.png" alt=""></p>
+<p>在多头注意力中，每个注意力头部计算不同的注意力分数。</p>
+<p>作者发现，每个头具有不同扩张配置设置的话效果会好：</p>
+<p>允许一些没有空洞的头部专注于局部语境，而另一些带空洞的则专注于更长的语境，从而提高了性能。</p>
+<h4 id="全局注意力-Global-Attention"><a href="#全局注意力-Global-Attention" class="headerlink" title="全局注意力(Global Attention)"></a>全局注意力(Global Attention)</h4><p><img src="https://i.loli.net/2021/04/18/tVGNpUa3o9gIluf.png" alt=""></p>
+<p>例如对于QA，问题和文档连接在一起，允许模型通过自我关注将问题与文档进行比较。</p>
+<p>有时需要使用特殊的全局CLS作为整体的表达，所以就需要再这某些个关键点地方计算全局注意力，关注每一个token。其他的还是滑窗的形式。</p>
+<p>我们在几个预先选择的输入位置添加了“全局关注”。</p>
+<p>由于这样的记号token的数量相对于n很小，并且与n无关，因此组合的局部和全局注意的复杂度仍然是O(N)。</p>
+<p>这时，计算打分函数就可以分为两组QKV，分别是全局的$Q_g,K_g,V_g$ 和 滑窗局部的 $Q_s,K_s,V_s$</p>
+<p>昂贵的运算是矩阵乘法 $QK^T$，因为Q和K都具有n(序列长度)投影。对于LongFormer，空洞滑动窗口注意只计算固定数量$QK^T$的对角线。</p>
+<p>在实现的时候主要用到了带状乘法。还定制了特别的CUDA内核。。</p>
+<h3 id="对于自回归的语言模型"><a href="#对于自回归的语言模型" class="headerlink" title="对于自回归的语言模型"></a>对于自回归的语言模型</h3><p>可以使用空洞滑动窗口注意力，并且可以跨层使用不同尺寸的窗口，效果可能更佳。</p>
+<p>对较低层使用较小的窗口大小，并在移动到较高层时增加窗口大小</p>
+<p>这允许顶层了解整个序列的较高级别表示，同时使较低层捕获本地信息。此外，它还在效率和性能之间取得平衡。</p>
+<p>(窗口大小越小，非零值越少，计算开销越小)</p>
+<p>(窗口大小越大，表示能力更丰富，通常会带来性能提升)</p>
+<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><p>和训练长文本的模型进行对比 ，BPC值越小越好</p>
+<p><img src="https://i.loli.net/2021/04/18/Oxo2A1SCsaIeDL8.png" alt=""></p>
+<h2 id="在QA上的Finetuning"><a href="#在QA上的Finetuning" class="headerlink" title="在QA上的Finetuning"></a>在QA上的Finetuning</h2><p>分别采用了我比较关注的多文档数据集 WikiHop/HotpotQA(干扰榜)/TriviaQA</p>
+<p>将问题和文档连接成一个长序列放入Longformer，最后加一个预测层。</p>
+<p><img src="https://i.loli.net/2021/04/18/lqTB5cSPrD8Z3w7.png" alt=""></p>
+<h3 id="WikiHop"><a href="#WikiHop" class="headerlink" title="WikiHop"></a>WikiHop</h3><p>数据特点：</p>
+<ul>
+<li><p>候选答案个数由2个到79个不等。</p>
+</li>
+<li><p>文章段落数量由3段到63段不等</p>
+</li>
+</ul>
+<p>数据集不为多跳推理链提供任何中间注释，需要模型代之以从间接答案监督中推断它们。</p>
+<p>数据预处理：</p>
+<p>将问题和答案与特殊令牌连接在一起</p>
+<p>$ [q] question [/q] [ent] candidate1 [/ent] … [ent] candidateN [/ent] $</p>
+<p>上下文也是使用文档分隔符进行间隔</p>
+<p>$&lt;/s&gt; context1 &lt;/s&gt; … &lt;/s&gt; contextM &lt;/s&gt;$</p>
+<p>在准备好输入数据后，从每个模型的顶层开始计算活动。获取问题和答案候选并将它们连接到尽可能多的上下文直到模型序列长度(Roberta为512，LongFormer为4,096)，在模型中运行序列，收集输出激活，并重复，直到用尽所有上下文(除了LongFormor-Large之外的所有模型，由于存储器要求，我们只包括第一个4,096长度的序列)。然后，将所有块的所有激活连接成一个长序列。在Longformer的下，使用全局注意力来关注整个问答候选序列。</p>
+<p>最终预测，对每个[ent] 附加一个线性层，输出一个logit，最后平均所有候选答案的logits。 用softmax和交叉熵得出最终答案。</p>
+<p>优化策略：</p>
+<p>Adam、Linear warmup超过200梯度更新对于最大LR，然后linear decay剩余训练。</p>
+<p>使用梯度累积最终batch达到32</p>
+<p>其他超参Dropout weight decay 都和Roberta相同。</p>
+<p>对LR[2e-5，3e-5，5e-5]和epoch[5，10，15]进行网格搜索。</p>
+<p>LR=3e-5，15个epoch是最好的Longform-Base配置。</p>
+<h3 id="TriviaQA"><a href="#TriviaQA" class="headerlink" title="TriviaQA"></a>TriviaQA</h3><p>TriviaQA有超过10万个问题、答案、文档。</p>
+<p>文档是维基百科文章，答案是文章中提到的命名实体。</p>
+<p>回答问题的跨度没有注释，但可以使用简单的文本匹配找到它。</p>
+<p>数据预处理：</p>
+<p>$[s] question [/s]document [/s]$</p>
+<p>在所有问题符号上都使用全局注意力。</p>
+<h2 id="HotpotQA"><a href="#HotpotQA" class="headerlink" title="HotpotQA"></a>HotpotQA</h2><p>使用两阶段首先确定相关段落，然后确定最终答案范围和证据。</p>
+<p>这主要是因为首先删除分散注意力的段落，可以降低最终认识和范围检测的噪声，这一点也被发现非常重要此数据集中最新的最新方法。</p>
+<p>数据预处理：</p>
+<p>$[CLS] [q] question [/q] ⟨t⟩ title1 ⟨/t⟩ sent1,1 [s] sent1,2 [s] …⟨t⟩ title2 ⟨/t⟩ sent2,1 [s] sent2,2 [s] …$</p>
+<p>使用全局注意力来问句标记、段落计时开始标记以及句子标记。</p>
+<p>在段落标题顶部增加了前馈层，用于预测相关段落的开始标记，以及用于预测证据句子的句子标记。</p>
+<p>在对第一阶段模型进行训练后，预测了训练集和开发集的相关段落得分。然后，保留最多5个原始得分高于预先指定的阈值(-3.0)的段落，并从上下文中删除其他段落。然后，根据得到的缩短上下文训练第二阶段模型。</p>
+<p>将跨度、问题分类、句子和段落损失结合起来，使用线性损失组合对模型进行多任务训练。</p>
+<p>使用ADAM优化器对模型进行了训练，并进行了线性warmup(1000步)和线性衰减。我们使用最小超参数调整，使用3E-5和5E-5的LR和3到7的epoch，发现LR为3E-5和5个历元的模型效果最好。</p>
+<p><img src="https://i.loli.net/2021/04/19/LuOCHUx1eMPwDW9.png" alt=""></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Coding-Zuo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2021/04/18/LongFormer-The-Long-Document-Transformer/">http://example.com/2021/04/18/LongFormer-The-Long-Document-Transformer/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">Coding-Zuo</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/nlp/">nlp</a></div><div class="post_share"><div class="addthis_inline_share_toolbox"></div><script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=null" async="async"></script></div></div><div class="post-reward"><div class="reward-button button--animated"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2021/04/15/Kaggle%E4%B8%8A%E4%BC%A0dataset%E7%9A%84%E6%96%B9%E6%B3%95/"><img class="next-cover" src="https://i.loli.net/2021/04/15/p6FQI8tvTfmR3XE.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Kaggle上传dataset的方法</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/03/27/Cognitive-Graph-for-Multi-Hop-Reading-Comprehension-at-Scale-ACL2019/" title="Cognitive Graph for Multi-Hop Reading Comprehension at Scale(ACL2019)"><img class="cover" src="https://i.loli.net/2021/03/27/548YCMeHJnoBtDZ.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-03-27</div><div class="title">Cognitive Graph for Multi-Hop Reading Comprehension at Scale(ACL2019)</div></div></a></div><div><a href="/2021/03/22/HopRetriever-Retrieve-Hops-over-Wikipedia-to-Answer-Complex-Questions-AAAI2020/" title="HopRetriever:Retrieve Hops over Wikipedia to Answer Complex Questions(AAAI2020)"><img class="cover" src="https://z3.ax1x.com/2021/03/23/6T4MDg.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-03-22</div><div class="title">HopRetriever:Retrieve Hops over Wikipedia to Answer Complex Questions(AAAI2020)</div></div></a></div><div><a href="/2021/03/23/HotpotQA数据集/" title="HotpotQA数据集"><img class="cover" src="https://z3.ax1x.com/2021/03/23/6HutoV.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-03-23</div><div class="title">HotpotQA数据集</div></div></a></div><div><a href="/2021/03/27/Multi-hop-Reading-Comprehension-across-Multiple-Documents-by-Reasoning-over-Heterogeneous-Graphs/" title="Multi-hop Reading Comprehension across Multiple Documents by Reasoning over Heterogeneous Graphs"><img class="cover" src="https://i.loli.net/2021/03/27/fCj9ordWQJygFIA.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-03-27</div><div class="title">Multi-hop Reading Comprehension across Multiple Documents by Reasoning over Heterogeneous Graphs</div></div></a></div><div><a href="/2021/04/05/RoBERTa-Albert/" title="RoBERTa & Albert"><img class="cover" src="https://i.loli.net/2021/04/05/YbQjlSCNi3UTpLX.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-04-05</div><div class="title">RoBERTa & Albert</div></div></a></div><div><a href="/2021/04/07/nlp中的对抗训练-与bert结合/" title="nlp中的对抗训练&与bert结合"><img class="cover" src="https://i.loli.net/2021/04/07/XnaA6GeHZ1sokOr.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-04-07</div><div class="title">nlp中的对抗训练&与bert结合</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#LongFormer-The-Long-Document-Transformer"><span class="toc-number">1.</span> <span class="toc-text">LongFormer:The Long-Document Transformer</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%91%98%E8%A6%81"><span class="toc-number">1.1.</span> <span class="toc-text">摘要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E5%85%A5-amp-%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C"><span class="toc-number">1.2.</span> <span class="toc-text">引入&amp;相关工作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LongFormer"><span class="toc-number">1.3.</span> <span class="toc-text">LongFormer</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.3.1.</span> <span class="toc-text">注意力模式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3-Sliding-Window"><span class="toc-number">1.3.1.1.</span> <span class="toc-text">滑动窗口 (Sliding Window)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A9%BA%E6%B4%9E%E6%BB%91%E7%AA%97-Dilated-Sliding-Window"><span class="toc-number">1.3.1.2.</span> <span class="toc-text">空洞滑窗(Dilated Sliding Window)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%A8%E5%B1%80%E6%B3%A8%E6%84%8F%E5%8A%9B-Global-Attention"><span class="toc-number">1.3.1.3.</span> <span class="toc-text">全局注意力(Global Attention)</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%B9%E4%BA%8E%E8%87%AA%E5%9B%9E%E5%BD%92%E7%9A%84%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.3.2.</span> <span class="toc-text">对于自回归的语言模型</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C"><span class="toc-number">1.4.</span> <span class="toc-text">实验</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%A8QA%E4%B8%8A%E7%9A%84Finetuning"><span class="toc-number">1.5.</span> <span class="toc-text">在QA上的Finetuning</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#WikiHop"><span class="toc-number">1.5.1.</span> <span class="toc-text">WikiHop</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TriviaQA"><span class="toc-number">1.5.2.</span> <span class="toc-text">TriviaQA</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HotpotQA"><span class="toc-number">1.6.</span> <span class="toc-text">HotpotQA</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By Coding-Zuo</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my BLOG</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    loader: {
+      source: {
+        '[tex]/amsCd': '[tex]/amscd'
+      }
+    },
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        addClass: [200,() => {
+          document.querySelectorAll('mjx-container:not([display=\'true\']').forEach( node => {
+            const target = node.parentNode
+            if (!target.classList.contains('has-jax')) {
+              target.classList.add('mathjax-overflow')
+            }
+          })
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>if (document.getElementsByClassName('mermaid').length) {
+  if (window.mermaidJsLoad) mermaid.init()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(() => {
+      window.mermaidJsLoad = true
+      mermaid.initialize({
+        theme: 'default',
+      })
+      false && mermaid.init()
+    })
+  }
+}</script></div><script src="/js/custom.js"></script><script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script src="//code.tidio.co/mak6nokafytw9mgrsuzglwzfxiy3fpdl.js" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
