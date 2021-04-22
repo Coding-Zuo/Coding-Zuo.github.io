@@ -1,0 +1,332 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Select, Answer and Explain-Interpretable Multi-hop Reading Comprehension over Multiple Documents | Coding-Zuo</title><meta name="keywords" content="GNN&amp;nlp"><meta name="author" content="Coding-Zuo"><meta name="copyright" content="Coding-Zuo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="Select, Answer and Explain: Interpretable Multi-hop Reading Comprehension over Multiple Documents摘要选择、回答和解释(SAE)系统解决多文档RC问题。 首先主要创新，用文档分类器过滤掉与答案无关的文档，从而减少分散注意力的信息量。 然后将所选择的答案相关文档输入到模型以联合预测答案和支持句子。 该模型">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Select, Answer and Explain-Interpretable Multi-hop Reading Comprehension over Multiple Documents">
+<meta property="og:url" content="http://example.com/2021/04/22/Select-Answer-and-Explain-Interpretable-Multi-hop-Reading-Comprehension-over-Multiple-Documents/index.html">
+<meta property="og:site_name" content="Coding-Zuo">
+<meta property="og:description" content="Select, Answer and Explain: Interpretable Multi-hop Reading Comprehension over Multiple Documents摘要选择、回答和解释(SAE)系统解决多文档RC问题。 首先主要创新，用文档分类器过滤掉与答案无关的文档，从而减少分散注意力的信息量。 然后将所选择的答案相关文档输入到模型以联合预测答案和支持句子。 该模型">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2021/04/22/qcORiXUfsp7DHMg.png">
+<meta property="article:published_time" content="2021-04-21T16:47:09.000Z">
+<meta property="article:modified_time" content="2021-04-22T05:12:11.538Z">
+<meta property="article:author" content="Coding-Zuo">
+<meta property="article:tag" content="GNN&amp;nlp">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/04/22/qcORiXUfsp7DHMg.png"><link rel="shortcut icon" href="https://i.loli.net/2021/03/22/reFlcYOnP3dSuJX.png"><link rel="canonical" href="http://example.com/2021/04/22/Select-Answer-and-Explain-Interpretable-Multi-hop-Reading-Comprehension-over-Multiple-Documents/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-04-22 13:12:11'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    })(window)</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sviptzk/HexoStaticFile@latest/Hexo/css/footer.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css"><meta name="generator" content="Hexo 5.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://i.loli.net/2021/03/22/YP2oqk7lOAfceTD.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">27</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">7</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://i.loli.net/2021/04/22/qcORiXUfsp7DHMg.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Coding-Zuo</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Select, Answer and Explain-Interpretable Multi-hop Reading Comprehension over Multiple Documents</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-04-21T16:47:09.000Z" title="发表于 2021-04-22 00:47:09">2021-04-22</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-04-22T05:12:11.538Z" title="更新于 2021-04-22 13:12:11">2021-04-22</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Select, Answer and Explain-Interpretable Multi-hop Reading Comprehension over Multiple Documents"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Select-Answer-and-Explain-Interpretable-Multi-hop-Reading-Comprehension-over-Multiple-Documents"><a href="#Select-Answer-and-Explain-Interpretable-Multi-hop-Reading-Comprehension-over-Multiple-Documents" class="headerlink" title="Select, Answer and Explain: Interpretable Multi-hop Reading Comprehension over Multiple Documents"></a>Select, Answer and Explain: Interpretable Multi-hop Reading Comprehension over Multiple Documents</h1><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>选择、回答和解释(SAE)系统解决多文档RC问题。</p>
+<p>首先主要创新，用文档分类器过滤掉与答案无关的文档，从而减少分散注意力的信息量。</p>
+<p>然后将所选择的答案相关文档输入到模型以联合预测答案和支持句子。</p>
+<p>该模型在答案预测的表征层和支持句子预测的句子层都设置了多任务学习目标，</p>
+<p>并在这两个任务之间进行了基于注意力的交互，对模型进行了优化。</p>
+<p>关键词：过滤无关文档、多任务学习、混合注意力交互</p>
+<p><img src="https://i.loli.net/2021/04/22/yArGlY6zuT7eMsW.png" alt=""></p>
+<h2 id="在HotpotQA中什么是gold-doc"><a href="#在HotpotQA中什么是gold-doc" class="headerlink" title="在HotpotQA中什么是gold doc"></a>在HotpotQA中什么是gold doc</h2><p>HotpotQA通过为答案提供支持句来鼓励可解释的QA模型，这些支持句通常来自多个文档，如果文档包含答案或包含对答案的支持句，则称为“黄金文档”。</p>
+<p>应答文本，它可以是一段文本或“是/否”。</p>
+<p>作者从答案和支持句标签导出GOLD文档标签。我们使用 $D_i$ 表示文档 i：如果Di是黄金文档，则标记为1，否则标记为0。还将答案类型标记为以下注释之一：“Span”、“Yes”和“No”。</p>
+<h2 id="选择gold-doc-过滤文档"><a href="#选择gold-doc-过滤文档" class="headerlink" title="选择gold doc(过滤文档)"></a>选择gold doc(过滤文档)</h2><p>答案预测和支持句预测的上游任务。将分类排名最靠前的文档作为预测的黄金文档 gold doc。</p>
+<p><img src="https://i.loli.net/2021/04/22/EapiyjuwNbPt49l.png" alt=""></p>
+<p>做文档过滤最直接做法就是采用bert的CLS摘要向量，做交叉熵分类</p>
+<script type="math/tex; mode=display">
+\begin{equation}\begin{split} 
+ L = -\sum_{i=0}^n t_ilogP(D_i) + (1-t_i) log(1-P(D_i))
+    \end{split}\end{equation}</script><p>$t_i$ 是 $D_i$ 的标签，n是文档数，$P(D_i)$ 是文档i在标签 $t_i$ 中的概率。</p>
+<p>这种简单的方法的缺点：单独处理每个文档，而不考虑下游多跳推理任务所必需的文档间交互和关系。</p>
+<p>为解决此问题，作者提出了一个新的模型，如图上图CLS后，加了一层多头注意力层。</p>
+<p>意在：增加对从不同文档生成的“CLS”标记的关注的动机是鼓励文档间的交互。文档间交互对于文档间的多跳推理至关重要。</p>
+<p>优化：采用了新的成对学习排序损失。还将问题从分类问题描述为两两学习排序问题，</p>
+<p>通过将文档与所有其他文档进行比较，该模型能够更好地将一小部分黄金文档与睡觉分散注意力的文档区分开来。</p>
+<p>给每个文档一共分数 $S(.)$</p>
+<p>如果 $D_i$ 是gold doc $S(D_i) = 1 $, 否则 $S(D_i) = 0$</p>
+<p>然后，标记每对输入文档：给定一对输入文档 $(D_i，D_j)$，标签 $l$设置为：</p>
+<script type="math/tex; mode=display">
+\begin{equation}\begin{split} 
+ l_{i,j} = 
+\begin{cases}
+ 1, &if\ S(D_i) \gt S(D_j) \\
+ 0 , &if\  S(D_i) \le S(D_j)
+\end{cases}
+    \end{split}\end{equation}</script><p>还认为包含答案范围的文档对于下游任务更重要。因此，如果$D_i$是包含答案跨度的黄金文献，$S(D_i)=2$。</p>
+<p>再将MHSA输出传递给双线性层来输出每对文档的概率，双线性层基于二元交叉熵进行训练，如下所示：</p>
+<script type="math/tex; mode=display">
+\begin{equation}\begin{split} 
+ L = - \sum_{i=0,j=0}^n \sum_{j\neq i} l_{i,j} logP(D_i,D_j) + (1-l_{i,j}) log(1-P(D_i,D_j))
+    \end{split}\end{equation}</script><p>相关性定义为$ R_i=􏰅\sum_j^n(P(D_i，D_j)&gt;0.5)$。将来自该相关性排序的前k个排序的文档作为的过滤文档。</p>
+<h2 id="答案和解释"><a href="#答案和解释" class="headerlink" title="答案和解释"></a>答案和解释</h2><p>模型采用多任务学习的方式进行训练，以联合预测答案和对黄金文档的支持意义。</p>
+<p>基于GNN构建多跳推理图，将上下文语句嵌入作为节点，而不是像以往的工作那样以实体作为节点，直接输出带有答案预测的支持语句。</p>
+<p>为什么不用NER因为作者认为：</p>
+<p>目前GNN在QA任务中的应用通常需要实体作为图形节点，并且通过在具有上下文信息的节点上进行消息传递来实现推理。这仅在预定义的一组目标实体可用时才有可能。否则，需要使用命名实体识别(NER)工具来提取实体，这可能会导致图推理中的冗余实体和噪声实体。如果答案不是命名实体，则需要进一步处理以定位最终答案。</p>
+<p> token-level and sentence-level 多任务学习</p>
+<p>基于一种新的混合注意池机制</p>
+<p>将GNN中使用的上下文语句嵌入归结到令牌表示上。注意力权重是根据令牌表示上的答案广度日志和自我注意输出来计算的。这种基于注意力的交互能够利用“回答”和“解释”任务之间的互补信息。</p>
+<h3 id="答案预测"><a href="#答案预测" class="headerlink" title="答案预测"></a>答案预测</h3><p>针对bert输出的每一个$H_i$ 用两层MLP做答案起始位置预测 $L$ 为长度</p>
+<script type="math/tex; mode=display">
+\begin{equation}\begin{split} 
+ \hat Y &= f_{span} (H^i) \in R^{L\times2}\\
+ L ^{span} &= \frac{1}{2}(CE(\hat Y[:,0], y^{start}) + CE(\hat Y[:,1], y^{end}))
+    \end{split}\end{equation}</script><p>其中$\hat Y$的第一行是起始位置的逻辑，第二行是结束位置的逻辑。$y^{star}t$和 $y^{end}$ 是范围 [0，L-1] 中的开始位置和结束位置的标签。CE表示交叉熵损失函数。</p>
+<h3 id="支持句预测"><a href="#支持句预测" class="headerlink" title="支持句预测"></a>支持句预测</h3><p>预测输入上下文中的句子是否为答案预测的支持证据。为了实现句子级预测，我们首先获得$H_i$中每个句子的序列表示。$H_i$ 是bert的token输出。</p>
+<script type="math/tex; mode=display">
+\begin{equation}\begin{split} 
+ S^j - H[j^s:j^e,:] \in R^{L^j\times d}
+    \end{split}\end{equation}</script><p>$S^j$是表示语句 j 内的标记嵌入的矩阵( 这里省略了样本索引i)。 $j^s$ 和 $j^e$ 定义了开始和结束位置，$L_j$ 是语句$j$ 的长度。</p>
+<h3 id="多任务"><a href="#多任务" class="headerlink" title="多任务"></a>多任务</h3><p>答案预测任务和支持句预测任务可以相辅相成。</p>
+<p>据观察，答案预测任务总是可以帮助支持句子预测任务，因为有答案的句子总是一条证据；</p>
+<p>但反过来情况不是一样的，因为可能有多个支持句子，概率最高的句子可能不包含答案</p>
+<p>所以答案预测任务总 可以帮助支持句子预测任务，因为有答案的句子总是一个证据；</p>
+<p>反之亦然，因为可能有多个支持句子，概率最高的句子可能不包含答案。</p>
+<p>因此，为了揭示这两个互补任务之间的相互作用，提出了一种基于注意力的总结句子表示法，以引入来自回答预测的互补信息。</p>
+<p>注意力权重的计算方法如下：在Sj上用自我注意计算一部分注意力，另一部分来自答案预测任务的起始位置日志和结束位置日志的总和。</p>
+<script type="math/tex; mode=display">
+\begin{equation}\begin{split} 
+ \alpha^j &= \sigma(f_{att}(S^j) + \hat Y[j^s:j^e,0] + \hat Y[j^s:j^e,1])\\
+ s^j &= \sum^{L^j}_{k=0} \alpha^j_k S^j[k,:] \in R^{1\times d}
+    \end{split}\end{equation}</script><p>Sj是表示语句j 的标记嵌入的矩阵</p>
+<p>$f_{att}$ 是一个两层MLP输出size为1，$\sigma$是softmax</p>
+<p>$α_j ∈ R^{L^j×1}$表示句子j的每个token上的关注度权重。</p>
+<h3 id="构建GNN"><a href="#构建GNN" class="headerlink" title="构建GNN"></a>构建GNN</h3><p>接下来，在语句嵌入Sj上建立GNN模型，以显式地促进对预测gold doc中所有语句的多跳推理，从而更好地利用复杂的关系信息。使用语句嵌入Sj来初始化图的节点特征。采用基于多关系图卷积网络(GCN)的消息传递策略来更新图的节点特征，并将最终的节点特征输入到MLP中，得到每个句子的分类。</p>
+<p><img src="https://i.loli.net/2021/04/22/kfrJdNaDZBqyAhV.png" alt=""></p>
+<p>根据问题和句子中出现的命名实体和名词短语设计了三种类型的边：</p>
+<ul>
+<li>如果两个节点最初来自同一文档，则在这两个节点之间添加一条边(上图中的实节点)</li>
+<li>如果表示两个节点的句子在问题中都具有命名实体或名词短语(可以是不同的)，则在来自不同文档的两个节点之间添加边。(图中的虚线)</li>
+<li>如果表示两个节点的句子具有相同的命名实体或名词短语，则在来自不同文档的两个节点之间添加一条边。(图中的虚线)</li>
+</ul>
+<p>第一种类型的边的动机是希望GNN掌握每个文档中呈现的全局信息。</p>
+<p>第二类和第三类边，为了以更好地捕捉这种跨文档推理路径。跨文档推理是通过从问题中的实体跳到未知的桥梁实体或比较问题中两个实体的属性来实现的 。</p>
+<p>对于消息传递，使用具有门控机制的多关系GCN。</p>
+<p>假设 $h^0_j$ 表示从语句嵌入 $S_j$的初始节点嵌入，则一跳(或一层)之后的节点嵌入计算可表示为:</p>
+<script type="math/tex; mode=display">
+\begin{equation}\begin{split} 
+ h_j^{k+1} &= act(u_j^k) \odot g^k_j + h^k_j \odot (1-g^k_j) \\
+ u^k_j &= f_s(h^k_j) + \sum_{r\in R} \frac{1}{|N_j^r|} \sum_{n\in N^r_j} f_r(h_n^k)\\
+ g_j^k &= sigmoid (f_g([u_j^k; h^k_j])) 
+    \end{split}\end{equation}</script><p>其中R 是一些列边类型， $N^r_j$ 是边类型为r的 j 节点的邻居。</p>
+<p>$h^k_n$ 是节点n的第k层节点表示。</p>
+<p>$f_r、f_s、f_g$中的每一个都定义了输入节点表示上的变换，并且可以使用MLP来实现。</p>
+<p>门控$g_j^k$ 是由0和1之间的值组成的向量，用于控制来自计算的更新$u^k_j$ 或来自原始节点表示的信息。</p>
+<p>函数$act$表示非线性激活函数。</p>
+<p>最后得到每个节点的最终表示 $h_j$ 后用两层MLP 最终预测 。</p>
+<p>$\hat y^{sp}<em>j = sigmoid(f</em>{sp}(h_j))$ </p>
+<p>除了支持句子预测任务之外，还在GNN输出之上添加了另一个任务，以说明“Yes/No”类型的问题。</p>
+<p>预测任务描述为3类(“Yes”、“No”和“span”)分类</p>
+<p>引入：</p>
+<p>$h = \sum_j a_jh_j$</p>
+<p>$a = \sigma(\hat y^{sp})$</p>
+<p>$\hat y^{ans} = f_{ans}(h)$</p>
+<p>最终loss表达为：</p>
+<script type="math/tex; mode=display">
+\begin{equation}\begin{split} 
+ L = \gamma L^{span} + BCE(\hat y^{sp}, y^{sp}) + CE(\hat y^{ans}, y^{ans})
+    \end{split}\end{equation}</script><p>$BCE()$ 二元交叉熵函数</p>
+<p>为了考虑不同损失的尺度差异，在跨度损失中加入了一个权重γ。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Coding-Zuo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2021/04/22/Select-Answer-and-Explain-Interpretable-Multi-hop-Reading-Comprehension-over-Multiple-Documents/">http://example.com/2021/04/22/Select-Answer-and-Explain-Interpretable-Multi-hop-Reading-Comprehension-over-Multiple-Documents/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">Coding-Zuo</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/GNN-nlp/">GNN&amp;nlp</a></div><div class="post_share"><div class="addthis_inline_share_toolbox"></div><script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=null" async="async"></script></div></div><div class="post-reward"><div class="reward-button button--animated"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2021/04/20/DP%E5%88%86%E6%9E%90%E6%B3%95%E2%80%94%E2%80%9401%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98/"><img class="next-cover" src="https://i.loli.net/2021/04/20/JeAwNzKWdGXaSC2.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">DP分析法--01背包问题</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/03/27/Cognitive-Graph-for-Multi-Hop-Reading-Comprehension-at-Scale-ACL2019/" title="Cognitive Graph for Multi-Hop Reading Comprehension at Scale(ACL2019)"><img class="cover" src="https://i.loli.net/2021/03/27/548YCMeHJnoBtDZ.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-03-27</div><div class="title">Cognitive Graph for Multi-Hop Reading Comprehension at Scale(ACL2019)</div></div></a></div><div><a href="/2021/03/22/HopRetriever-Retrieve-Hops-over-Wikipedia-to-Answer-Complex-Questions-AAAI2020/" title="HopRetriever:Retrieve Hops over Wikipedia to Answer Complex Questions(AAAI2020)"><img class="cover" src="https://z3.ax1x.com/2021/03/23/6T4MDg.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-03-22</div><div class="title">HopRetriever:Retrieve Hops over Wikipedia to Answer Complex Questions(AAAI2020)</div></div></a></div><div><a href="/2021/03/27/Multi-hop-Reading-Comprehension-across-Multiple-Documents-by-Reasoning-over-Heterogeneous-Graphs/" title="Multi-hop Reading Comprehension across Multiple Documents by Reasoning over Heterogeneous Graphs"><img class="cover" src="https://i.loli.net/2021/03/27/fCj9ordWQJygFIA.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-03-27</div><div class="title">Multi-hop Reading Comprehension across Multiple Documents by Reasoning over Heterogeneous Graphs</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Select-Answer-and-Explain-Interpretable-Multi-hop-Reading-Comprehension-over-Multiple-Documents"><span class="toc-number">1.</span> <span class="toc-text">Select, Answer and Explain: Interpretable Multi-hop Reading Comprehension over Multiple Documents</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%91%98%E8%A6%81"><span class="toc-number">1.1.</span> <span class="toc-text">摘要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%A8HotpotQA%E4%B8%AD%E4%BB%80%E4%B9%88%E6%98%AFgold-doc"><span class="toc-number">1.2.</span> <span class="toc-text">在HotpotQA中什么是gold doc</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%89%E6%8B%A9gold-doc-%E8%BF%87%E6%BB%A4%E6%96%87%E6%A1%A3"><span class="toc-number">1.3.</span> <span class="toc-text">选择gold doc(过滤文档)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AD%94%E6%A1%88%E5%92%8C%E8%A7%A3%E9%87%8A"><span class="toc-number">1.4.</span> <span class="toc-text">答案和解释</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AD%94%E6%A1%88%E9%A2%84%E6%B5%8B"><span class="toc-number">1.4.1.</span> <span class="toc-text">答案预测</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%94%AF%E6%8C%81%E5%8F%A5%E9%A2%84%E6%B5%8B"><span class="toc-number">1.4.2.</span> <span class="toc-text">支持句预测</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%9A%E4%BB%BB%E5%8A%A1"><span class="toc-number">1.4.3.</span> <span class="toc-text">多任务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%84%E5%BB%BAGNN"><span class="toc-number">1.4.4.</span> <span class="toc-text">构建GNN</span></a></li></ol></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By Coding-Zuo</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my BLOG</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    loader: {
+      source: {
+        '[tex]/amsCd': '[tex]/amscd'
+      }
+    },
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        addClass: [200,() => {
+          document.querySelectorAll('mjx-container:not([display=\'true\']').forEach( node => {
+            const target = node.parentNode
+            if (!target.classList.contains('has-jax')) {
+              target.classList.add('mathjax-overflow')
+            }
+          })
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>if (document.getElementsByClassName('mermaid').length) {
+  if (window.mermaidJsLoad) mermaid.init()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(() => {
+      window.mermaidJsLoad = true
+      mermaid.initialize({
+        theme: 'default',
+      })
+      false && mermaid.init()
+    })
+  }
+}</script></div><script src="/js/custom.js"></script><script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script src="//code.tidio.co/mak6nokafytw9mgrsuzglwzfxiy3fpdl.js" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
