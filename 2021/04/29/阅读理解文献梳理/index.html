@@ -1,0 +1,262 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>阅读理解文献梳理 | Coding-Zuo</title><meta name="keywords" content="GNN&amp;nlp"><meta name="author" content="Coding-Zuo"><meta name="copyright" content="Coding-Zuo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="阅读理解文献梳理多跳QA模型在任务中学习的多跳推理行为。QFE (Nishida et al., 2019) regards evidence extraction as a query-focused summarization task, and reformulates the query in each hop.    将证据提取作为以查询为中心的摘要任务，并在每一跳中重构查询。—— HG">
+<meta property="og:type" content="article">
+<meta property="og:title" content="阅读理解文献梳理">
+<meta property="og:url" content="http://example.com/2021/04/29/%E9%98%85%E8%AF%BB%E7%90%86%E8%A7%A3%E6%96%87%E7%8C%AE%E6%A2%B3%E7%90%86/index.html">
+<meta property="og:site_name" content="Coding-Zuo">
+<meta property="og:description" content="阅读理解文献梳理多跳QA模型在任务中学习的多跳推理行为。QFE (Nishida et al., 2019) regards evidence extraction as a query-focused summarization task, and reformulates the query in each hop.    将证据提取作为以查询为中心的摘要任务，并在每一跳中重构查询。—— HG">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2021/04/29/Jv1COaYBUDrIPm9.png">
+<meta property="article:published_time" content="2021-04-29T08:49:50.000Z">
+<meta property="article:modified_time" content="2021-04-30T11:21:05.005Z">
+<meta property="article:author" content="Coding-Zuo">
+<meta property="article:tag" content="GNN&amp;nlp">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/04/29/Jv1COaYBUDrIPm9.png"><link rel="shortcut icon" href="https://i.loli.net/2021/03/22/reFlcYOnP3dSuJX.png"><link rel="canonical" href="http://example.com/2021/04/29/%E9%98%85%E8%AF%BB%E7%90%86%E8%A7%A3%E6%96%87%E7%8C%AE%E6%A2%B3%E7%90%86/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-04-30 19:21:05'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    })(window)</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sviptzk/HexoStaticFile@latest/Hexo/css/footer.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css"><meta name="generator" content="Hexo 5.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://i.loli.net/2021/03/22/YP2oqk7lOAfceTD.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">35</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">7</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://i.loli.net/2021/04/29/Jv1COaYBUDrIPm9.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Coding-Zuo</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">阅读理解文献梳理</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-04-29T08:49:50.000Z" title="发表于 2021-04-29 16:49:50">2021-04-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-04-30T11:21:05.005Z" title="更新于 2021-04-30 19:21:05">2021-04-30</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="阅读理解文献梳理"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="阅读理解文献梳理"><a href="#阅读理解文献梳理" class="headerlink" title="阅读理解文献梳理"></a>阅读理解文献梳理</h1><h2 id="多跳QA"><a href="#多跳QA" class="headerlink" title="多跳QA"></a>多跳QA</h2><h3 id="模型在任务中学习的多跳推理行为。"><a href="#模型在任务中学习的多跳推理行为。" class="headerlink" title="模型在任务中学习的多跳推理行为。"></a>模型在任务中学习的多跳推理行为。</h3><p>QFE (Nishida et al., 2019) regards evidence extraction as a query-focused summarization task, and reformulates the query in each hop.    将证据提取作为以查询为中心的摘要任务，并在每一跳中重构查询。—— HGN</p>
+<p>Kosuke Nishida, Kyosuke Nishida, Masaaki Nagata, Atsushi Otsuka, Itsumi Saito, Hisako Asano, and Junji Tomita. 2019. Answering while summarizing: Multi-task learning for multi-hop qa with evidence extraction. In <em>ACL</em>.</p>
+<hr>
+<p> DecompRC (Min et al., 2019b) decomposes a compositional question into simpler sub-questions and leverages single-hop MRC mod- els to answer the sub-questions.  将作文问题分解为更简单的子问题，并利用单跳MRC模型答复子问题—— HGN</p>
+<p>Sewon Min, Victor Zhong, Luke Zettlemoyer, and Han- naneh Hajishirzi. 2019b. Multi-hop reading compre- hension through question decomposition and rescor- ing. In <em>ACL</em>.</p>
+<hr>
+<p>A neural modular network is also proposed in Jiang and Bansal (2019b), where neural modules are dynamically assembled for more interpretable multi-hop rea- soning.一种神经模块网络，其中神经模块被动态地组装起来，以便更好地解释多跳推理。—— HGN</p>
+<p>Yichen Jiang and Mohit Bansal. 2019b. Self- assembling modular networks for interpretable multi-hop reasoning. In <em>EMNLP</em>.</p>
+<hr>
+<p>其他</p>
+<p>Jifan Chen and Greg Durrett. 2019. Understanding dataset design choices for multi-hop reasoning. In <em>NAACL</em>.—— HGN</p>
+<p>Sewon Min, Eric Wallace, Sameer Singh, Matt Gard- ner, Hannaneh Hajishirzi, and Luke Zettlemoyer. 2019a. Compositional questions do not necessitate multi-hop reasoning. In <em>ACL</em>.—— HGN</p>
+<p>Yichen Jiang and Mohit Bansal. 2019a. Avoiding rea- soning shortcuts: Adversarial evaluation, training, and model development for multi-hop qa. In <em>ACL</em>.—— HGN</p>
+<hr>
+<h3 id="与GNN相关的"><a href="#与GNN相关的" class="headerlink" title="与GNN相关的"></a>与GNN相关的</h3><p>Coref-GRN (Dhingra et al., 2018) construct an entity graph based on co-reference reso- lution or sliding windows.基于共引用解决方案或滑动窗口构建实体图。—— HGN</p>
+<p>Bhuwan Dhingra, Qiao Jin, Zhilin Yang, William W Cohen, and Ruslan Salakhutdinov. 2018. Neural models for reasoning over multiple mentions using coreference. In <em>NAACL</em>.</p>
+<hr>
+<p>Entity-GCN (De Cao et al., 2019) considers three different types of edges that connect different entities in the entity graph.考虑连接实体图中不同实体的三种不同类型的边。—— HGN</p>
+<p>Nicola De Cao, Wilker Aziz, and Ivan Titov. 2019. Question answering by reasoning across documents with graph convolutional networks. In <em>NAACL</em>.</p>
+<hr>
+<p><strong>(已读)</strong>HDE-Graph (Tu et al., 2019) enriches information in the entity graph by adding document nodes and creating interactions among documents, entities and answer candidates.通过添加文档节点并在文档、实体和候选答案之间创建交互，丰富了实体图中的信息。——HGN</p>
+<hr>
+<p><strong>(已读)</strong>Cognitive Graph QA employs an MRC model to predict answer spans and possible next-hop spans, and then organizes them into a cognitive graph.使用MRC模型预测答案跨度和可能的下一跳跨度，然后将它们组织到认知图中。——HGN</p>
+<hr>
+<p>DFGN (Xiao et al., 2019) constructs a dynamic entity graph, where in each reasoning step irrelevant en- tities are softly masked out and a fusion module is designed to improve the interaction between the entity graph and documents.构建了一个动态实体图，在每个推理步骤中，不相关的实体被软屏蔽，并设计了一个融合模块来改善实体图与文档之间的交互性。——HGN</p>
+<p>Yunxuan Xiao, Yanru Qu, Lin Qiu, Hao Zhou, Lei Li, Weinan Zhang, and Yong Yu. 2019. Dynamically fused graph network for multi-hop reasoning. In <em>ACL</em>.</p>
+<hr>
+<p><strong>(已读)</strong>SAE (Tu et al., 2020) defines three types of edge in the sentence graph based on the named entities and noun phrases appearing in the question and sentences 根据问题和句子中出现的命名实体和名词短语，定义句子图中的三种边——HGN</p>
+<hr>
+<p>C2F Reader (Shao et al., 2020) uses graph attention or self-attention on entity graph, and argues that this graph may not be necessary for multi-hop reasoning. 在实体图上使用图注意或自我注意，并认为该图对于多跳推理可能不是必需的。——HGN</p>
+<p>Nan Shao, Yiming Cui, Ting Liu, Wang, and Guop- ing Hu Hu. 2020. Is graph structure necessary for multi-hop reasoningt. <em>arXiv preprint arXiv:2004.03096</em>.</p>
+<hr>
+<p>Asai et al. (2020) proposes a new graph-based recurrent method to find evidence documents as reasoning paths, which is more focused on information retrieval.提出了一种新的基于图的递归方法来寻找证据文档作为推理路径，更侧重于信息检索。——HGN</p>
+<p>Akari Asai, Kazuma Hashimoto, Hannaneh Hajishirzi, Richard Socher, and Caiming Xiong. 2020. Learning to retrieve reasoning paths over wikipedia graph for question answering. In <em>ICLR</em>.</p>
+<hr>
+<p><strong>(已读)</strong>HGN 2020 提出的模型构建了一个层次图，有效地探索了不同粒度之间的关系，并使用不同的节点来执行不同的任务。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Coding-Zuo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2021/04/29/%E9%98%85%E8%AF%BB%E7%90%86%E8%A7%A3%E6%96%87%E7%8C%AE%E6%A2%B3%E7%90%86/">http://example.com/2021/04/29/%E9%98%85%E8%AF%BB%E7%90%86%E8%A7%A3%E6%96%87%E7%8C%AE%E6%A2%B3%E7%90%86/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">Coding-Zuo</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/GNN-nlp/">GNN&amp;nlp</a></div><div class="post_share"><div class="addthis_inline_share_toolbox"></div><script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=null" async="async"></script></div></div><div class="post-reward"><div class="reward-button button--animated"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/05/01/%E6%B5%B7%E5%8D%8E%E9%98%85%E8%AF%BB%E7%90%86%E8%A7%A3%E6%AF%94%E8%B5%9B%E5%A4%8D%E7%9B%98/"><img class="prev-cover" src="https://i.loli.net/2021/05/01/dizZGI2DktTPlJj.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">海华阅读理解比赛复盘</div></div></a></div><div class="next-post pull-right"><a href="/2021/04/29/Hierarchical-Graph-Network-for-Multi-hop-Question-Answering/"><img class="next-cover" src="https://i.loli.net/2021/04/29/l7rNGkt916yqXW5.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Hierarchical Graph Network for Multi-hop Question Answering</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/03/27/Cognitive-Graph-for-Multi-Hop-Reading-Comprehension-at-Scale-ACL2019/" title="Cognitive Graph for Multi-Hop Reading Comprehension at Scale(ACL2019)"><img class="cover" src="https://i.loli.net/2021/03/27/548YCMeHJnoBtDZ.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-03-27</div><div class="title">Cognitive Graph for Multi-Hop Reading Comprehension at Scale(ACL2019)</div></div></a></div><div><a href="/2021/04/29/Hierarchical-Graph-Network-for-Multi-hop-Question-Answering/" title="Hierarchical Graph Network for Multi-hop Question Answering"><img class="cover" src="https://i.loli.net/2021/04/29/l7rNGkt916yqXW5.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-04-29</div><div class="title">Hierarchical Graph Network for Multi-hop Question Answering</div></div></a></div><div><a href="/2021/03/22/HopRetriever-Retrieve-Hops-over-Wikipedia-to-Answer-Complex-Questions-AAAI2020/" title="HopRetriever:Retrieve Hops over Wikipedia to Answer Complex Questions(AAAI2020)"><img class="cover" src="https://z3.ax1x.com/2021/03/23/6T4MDg.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-03-22</div><div class="title">HopRetriever:Retrieve Hops over Wikipedia to Answer Complex Questions(AAAI2020)</div></div></a></div><div><a href="/2021/03/27/Multi-hop-Reading-Comprehension-across-Multiple-Documents-by-Reasoning-over-Heterogeneous-Graphs/" title="Multi-hop Reading Comprehension across Multiple Documents by Reasoning over Heterogeneous Graphs"><img class="cover" src="https://i.loli.net/2021/03/27/fCj9ordWQJygFIA.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-03-27</div><div class="title">Multi-hop Reading Comprehension across Multiple Documents by Reasoning over Heterogeneous Graphs</div></div></a></div><div><a href="/2021/04/22/Select-Answer-and-Explain-Interpretable-Multi-hop-Reading-Comprehension-over-Multiple-Documents/" title="Select, Answer and Explain-Interpretable Multi-hop Reading Comprehension over Multiple Documents"><img class="cover" src="https://i.loli.net/2021/04/22/qcORiXUfsp7DHMg.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-04-22</div><div class="title">Select, Answer and Explain-Interpretable Multi-hop Reading Comprehension over Multiple Documents</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%98%85%E8%AF%BB%E7%90%86%E8%A7%A3%E6%96%87%E7%8C%AE%E6%A2%B3%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">阅读理解文献梳理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E8%B7%B3QA"><span class="toc-number">1.1.</span> <span class="toc-text">多跳QA</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E5%9C%A8%E4%BB%BB%E5%8A%A1%E4%B8%AD%E5%AD%A6%E4%B9%A0%E7%9A%84%E5%A4%9A%E8%B7%B3%E6%8E%A8%E7%90%86%E8%A1%8C%E4%B8%BA%E3%80%82"><span class="toc-number">1.1.1.</span> <span class="toc-text">模型在任务中学习的多跳推理行为。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8EGNN%E7%9B%B8%E5%85%B3%E7%9A%84"><span class="toc-number">1.1.2.</span> <span class="toc-text">与GNN相关的</span></a></li></ol></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By Coding-Zuo</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my BLOG</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    loader: {
+      source: {
+        '[tex]/amsCd': '[tex]/amscd'
+      }
+    },
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        addClass: [200,() => {
+          document.querySelectorAll('mjx-container:not([display=\'true\']').forEach( node => {
+            const target = node.parentNode
+            if (!target.classList.contains('has-jax')) {
+              target.classList.add('mathjax-overflow')
+            }
+          })
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>if (document.getElementsByClassName('mermaid').length) {
+  if (window.mermaidJsLoad) mermaid.init()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(() => {
+      window.mermaidJsLoad = true
+      mermaid.initialize({
+        theme: 'default',
+      })
+      false && mermaid.init()
+    })
+  }
+}</script></div><script src="/js/custom.js"></script><script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script src="//code.tidio.co/mak6nokafytw9mgrsuzglwzfxiy3fpdl.js" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
