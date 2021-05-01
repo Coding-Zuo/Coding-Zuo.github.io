@@ -1,28 +1,330 @@
-extends includes/layout.pug
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Multi-hop Reading Comprehension across Multiple Documents by Reasoning over Heterogeneous Graphs | Coding-Zuo</title><meta name="keywords" content="GNN&amp;nlp"><meta name="author" content="Coding-Zuo"><meta name="copyright" content="Coding-Zuo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="Multi-hop Reading Comprehension across Multiple Documents by Reasoning over Heterogeneous Graphs京东出品19年采用异质图网络的一篇多跳阅读理解，这篇是在WikiHopQA数据集上，在没有使用预训练语言模型的情况下第一次超过人类表现。20年还有一篇在HotpotQA上的，过两天准备也读一读。前一阵子用京东">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Multi-hop Reading Comprehension across Multiple Documents by Reasoning over Heterogeneous Graphs">
+<meta property="og:url" content="http://example.com/2021/03/27/Multi-hop-Reading-Comprehension-across-Multiple-Documents-by-Reasoning-over-Heterogeneous-Graphs/index.html">
+<meta property="og:site_name" content="Coding-Zuo">
+<meta property="og:description" content="Multi-hop Reading Comprehension across Multiple Documents by Reasoning over Heterogeneous Graphs京东出品19年采用异质图网络的一篇多跳阅读理解，这篇是在WikiHopQA数据集上，在没有使用预训练语言模型的情况下第一次超过人类表现。20年还有一篇在HotpotQA上的，过两天准备也读一读。前一阵子用京东">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2021/03/27/fCj9ordWQJygFIA.png">
+<meta property="article:published_time" content="2021-03-27T13:36:42.000Z">
+<meta property="article:modified_time" content="2021-04-18T16:04:59.421Z">
+<meta property="article:author" content="Coding-Zuo">
+<meta property="article:tag" content="GNN&amp;nlp">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/03/27/fCj9ordWQJygFIA.png"><link rel="shortcut icon" href="https://i.loli.net/2021/03/22/reFlcYOnP3dSuJX.png"><link rel="canonical" href="http://example.com/2021/03/27/Multi-hop-Reading-Comprehension-across-Multiple-Documents-by-Reasoning-over-Heterogeneous-Graphs/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-04-19 00:04:59'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
 
-block content
-  article#post(class="")
-    #article-container.post-content!=page.content
-    include includes/post/post-copyright.pug
-    .tag_share
-      if (theme.post_meta.post.tags)
-        .post-meta__tag-list
-          each item, index in page.tags.data
-            a(href=url_for(item.path)).post-meta__tags #[=item.name]
-      include includes/share/index.pug
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
         
-    if theme.reward.enable
-      !=partial('includes/post/reward', {}, {cache:theme.fragment_cache})
-
-    //- ad
-    if theme.ad && theme.ad.post
-      .post-ad!=theme.ad.post
-
-    include includes/pagination.pug
-    if theme.related_post && theme.related_post.enable
-      != related_posts(page,site.posts)
-
-    if page.comments !== false && theme.comments && theme.comments.use
-      - var commentsJsLoad = true
-      !=partial('includes/comments/index', {}, {cache:theme.fragment_cache})
-      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    })(window)</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sviptzk/HexoStaticFile@latest/Hexo/css/footer.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css"><meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="Coding-Zuo" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://i.loli.net/2021/03/22/YP2oqk7lOAfceTD.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">35</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">7</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://i.loli.net/2021/03/27/fCj9ordWQJygFIA.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Coding-Zuo</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Multi-hop Reading Comprehension across Multiple Documents by Reasoning over Heterogeneous Graphs</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-03-27T13:36:42.000Z" title="发表于 2021-03-27 21:36:42">2021-03-27</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-04-18T16:04:59.421Z" title="更新于 2021-04-19 00:04:59">2021-04-19</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Multi-hop Reading Comprehension across Multiple Documents by Reasoning over Heterogeneous Graphs"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Multi-hop-Reading-Comprehension-across-Multiple-Documents-by-Reasoning-over-Heterogeneous-Graphs"><a href="#Multi-hop-Reading-Comprehension-across-Multiple-Documents-by-Reasoning-over-Heterogeneous-Graphs" class="headerlink" title="Multi-hop Reading Comprehension across Multiple Documents by Reasoning over Heterogeneous Graphs"></a>Multi-hop Reading Comprehension across Multiple Documents by Reasoning over Heterogeneous Graphs</h1><p>京东出品19年采用异质图网络的一篇多跳阅读理解，这篇是在WikiHopQA数据集上，在没有使用预训练语言模型的情况下第一次超过人类表现。20年还有一篇在HotpotQA上的，过两天准备也读一读。前一阵子用京东在线客服和智能语音客服的时候，感觉效果不错，果然发现这两篇文章。</p>
+<p>先说一下WikiHopQA</p>
+<p>训练集43,738个样本，开发集5129个。候选答案个数2-79个之间，平均19.8个。文档数3-63个，平均13.7篇。每篇文档的字数4-2046字，平均100.4个字。该数据集的难度在于，要从多篇文章中找相关文档，还要依据多篇文章做推理。推理跳数的增加，与问题的相关性越来越小，统计距离较远，非参数化的检索方法如传统的TF-IDF，无法搜索到最终答案所在的上下文。如下图：</p>
+<p><img src="https://i.loli.net/2021/03/27/IrqT6k5tdo9Az37.png" alt=""></p>
+<p>每个样本包含字段：dict_keys([‘answer’, ‘id’, ‘candidates’, ‘query’, ‘supports’])</p>
+<p>目前主要做法有三种思路：构造推理链，一般用RNN网络进行链式推理；从网络模型角度改进；构造graph，利用GCN，GAT等方法在图上推理。</p>
+<p>和HotpotQA一样都是属于多跳阅读理解数据集。针对一个问题给出多个支撑文档，来做推理。可看之前的文章<a target="_blank" rel="noopener" href="https://coding-zuo.github.io/2021/03/23/HotpotQA%E6%95%B0%E6%8D%AE%E9%9B%86/">HotpotQA数据集</a></p>
+<p>不同的是，WikiHopQA给出了候选答案，可以看成是多项选择题。</p>
+<h2 id="创新点"><a href="#创新点" class="headerlink" title="创新点"></a>创新点</h2><p>提出Heterogeneous Document-Entity  graph (HDE graph) ，可以从候选答案、文档和实体中，聚合不同级别的信息粒度。</p>
+<p>使得不同类型的节点之间能够进行丰富的信息交互，从而便于精确的推理。不同类型的节点与不同类型的边相连，以突出查询、文档和候选之间呈现的各种结构信息。</p>
+<h2 id="如何设计"><a href="#如何设计" class="headerlink" title="如何设计"></a>如何设计</h2><p><img src="https://i.loli.net/2021/03/28/disz9JgGEIf5u1C.png" alt=""></p>
+<p>数据集提供的是候选答案、问题和一系列文档。分布作为输入，分别表示为：$C_q, q(s,r,?), S_q $</p>
+<p>其中，$q(s,r,?)$  内分别表示为主体、关系和位置客体。任务是预测查询的正确答案$a^*$。</p>
+<p>首先将这些输入文字，映射成词向量，分别为 $X_q\in R^{l_q\times d}$ 、$X_s^i\in R^{l_s^i\times d}$ 其中i为第i个词、  $, X_c^j\in R^{l_c^j\times d}$  其中j为第j个词。</p>
+<p>$l$ 为每段文字长度 ，d为词向量维度。</p>
+<p>这就是上图中的最下面一层。</p>
+<hr>
+<p>再往上一层encoder采用的是双向GRU，分别对C/q/S 的上下文信息进行编码。</p>
+<p>编码后的维度是  $ H_q\in R^{l_q\times h}$  、 $H_s^i\in R^{l_s^i\times h}$ 、 $H_c^j\in R^{l_c^j\times h}$   其中h是RNN输出维度。</p>
+<p>再观察上图，发现在encoder上面一层，Documents上面和其他两个地方不同，中间加了一个实体提取。</p>
+<p>是作者发现有些通过查询query和候选答案C，在文档中提取被提及的实体。提取到每个mentions的开始位置和结束位置。</p>
+<p>每一次提及都被视为一个实体Entiry。第i个文档提出的实体表示为 $H_s^i, M\in R^{l_m\times h}$   , $l_m$ 是实体长度。</p>
+<hr>
+<p>再向上一层，是co-attention协同注意力机制，特意读了下协同注意力DCN那篇文章<a target="_blank" rel="noopener" href="https://coding-zuo.github.io/2021/03/25/%E5%8D%8F%E5%90%8C%E6%B3%A8%E6%84%8F%E5%8A%9B%E5%92%8C%E8%87%AA%E6%B3%A8%E6%84%8F%E5%8A%9B%E7%9A%84%E5%8C%BA%E5%88%AB/">协同注意力和自注意力的区别(DCN+)</a></p>
+<p>用到这个任务上其实就是一个协同每两个特征来提取新特征。</p>
+<p>通俗上讲，Q和S 相互co-attention就是带着问题看文章，读完文章看问题。C和Q做带着选项看问题。</p>
+<p>拿RNN输出的问题序列$H_q \in R^{l_q\times h}$ 和文档$H_s^i\in R^{l_s^i\times h}$为例计算过程如下：</p>
+<script type="math/tex; mode=display">
+\begin{equation}\begin{split} 
+    A^i_{qs} = H_s^i(H_q)^T  \in R^{l_s^i\times l_q}
+    \end{split}\end{equation}</script><p>得到查询和每个字的点积打分。</p>
+<p>为简化起见，在后面的上下文中，我们使用上标i，它表示对第i个文档的操作。</p>
+<script type="math/tex; mode=display">
+\begin{equation}\begin{split} 
+    C_q &= softmax(A_{qs}^T)H_s \in R^{l_q\times h}\\
+    C_s &= softmax(A_{qs})H_q \in R^{l_s\times h}
+    \end{split}\end{equation}</script><p>进一步使用GRU ,f 对共同参与的文档上下文进行编码</p>
+<script type="math/tex; mode=display">
+\begin{equation}\begin{split} 
+    D_s = f(softmax(A_{qs})C_q)\in R^{l_s\times h}
+    \end{split}\end{equation}</script><p>最终拼接</p>
+<script type="math/tex; mode=display">
+\begin{equation}\begin{split} 
+   S_{ca} =[C_s;D_s] \in R^{l_s\times 2h}
+    \end{split}\end{equation}</script><p>同样的co-attention应用在query和候选，query和实体得到 $C<em>{CA},E</em>{ca}$ 。</p>
+<p>注意，作者不在查询和对应于查询主题的实体之间共同关注，因为查询主题已经是查询的一部分。为了保持维度的一致性，应用了一个具有tanh激活函数的单层多感知器(MLP)，将查询主题实体的维数增加到2h。</p>
+<p>这个查询主题query subject到底是什么我有点疑问。</p>
+<hr>
+<p>再往上是一个自注意力池化。</p>
+<p>当co-attention产生文档的查询感知上下文表示时，自关注集合被设计为通过选择重要的查询感知信息将顺序上下文表示转换为固定维度的非顺序特征向量。</p>
+<script type="math/tex; mode=display">
+\begin{equation}\begin{split} 
+    a_s&=softmax(MLP(S_ca))\in R^{l_s\times 1}\\
+    s_{sa}&= a_s^TS_{ca} \in R^{1\times 2h}
+    \end{split}\end{equation}</script><p>同样，对每个实体和候选，可得到  $c<em>{sa}, e</em>{sa}$  。</p>
+<hr>
+<p>再接下来就是构建异质图了。</p>
+<p><img src="https://i.loli.net/2021/03/28/AtPhugd79czJ3k2.png" alt=""></p>
+<p>一共三种类型的节点，绿色是文档节点、蓝色是实体节点、黄色是候选答案节点。</p>
+<p>七种建边规则：</p>
+<ul>
+<li>文档节点和候选节点：如果候选节点在文档中出现时建立一条边。</li>
+<li>文档节点和实体节点：如果实体节点从这个文档中提取出来建立一条边。</li>
+<li>候选节点和实体节点：如果实体节点被候选答案提及建立一条边。</li>
+<li>两个实体节点之间：如果他们在同一个文档中被提取时建立一条边。</li>
+<li>两个实体节点之间: 如果他们被相同的候选或问题提及，且实体在不同的文档中时建立一条边。</li>
+<li>所有的候选节点相互连接</li>
+<li>不满足以上条件的不进行相连。</li>
+</ul>
+<h2 id="HGN传播聚合机制"><a href="#HGN传播聚合机制" class="headerlink" title="HGN传播聚合机制"></a>HGN传播聚合机制</h2><p>信息传递</p>
+<script type="math/tex; mode=display">
+\begin{equation}\begin{split} 
+    z_i^k = \sum_{r\in R} \frac{1}{|N_i^r|} \sum_{j\in N_i^r} f_r(h_j^k)
+    \end{split}\end{equation}</script><p>其中R 是所有边的类型</p>
+<p>$N_i^r$ 是 第i个节点边类型是r的邻居集合</p>
+<p>$h_j^k$ 是第j个邻居节点的第k层表达</p>
+<p>$h_j^0$ 是self-attention的输出</p>
+<p>$f_r$ 是MLP</p>
+<p>$z_i^k$ 是第i个节点第k层的局和信息</p>
+<p>可以与变换更新后的节点i：</p>
+<script type="math/tex; mode=display">
+\begin{equation}\begin{split} 
+    u_i^k = f_s(h_i^k) + z_i^k
+    \end{split}\end{equation}</script><p>$f_s$ :MLP</p>
+<p>为了解决多层GNN的过平滑问题，作者采用了加门控的方式。</p>
+<script type="math/tex; mode=display">
+\begin{equation}\begin{split} 
+    g_i^k &= sigmoid(f_g([u_i^k;h_i^k]))\\
+    h_i^{h+1} &= tanh(u_i^k)\odot g_i^k + h_i^k \odot (1-g_i^k)
+    \end{split}\end{equation}</script><p>$\odot$ :element-wise product = element-wise multiplication = Hadamard product</p>
+<p>含义：两个矩阵对应位置元素进行乘积</p>
+<p>以上的$f$ 都是单层MLP 输出维度为2h</p>
+<h2 id="最终预测"><a href="#最终预测" class="headerlink" title="最终预测"></a>最终预测</h2><p>使用候选节点和与候选提及相对应的实体节点的最终节点表示来计算分类分数：</p>
+<script type="math/tex; mode=display">
+\begin{equation}\begin{split} 
+    a = f_C(H^C)+ACC_{max}(f_E(H^E))
+    \end{split}\end{equation}</script><p>$H^C \in R^{C\times 2h}$ , C是候选数量</p>
+<p>$H^M \in R^{M\times 2h}$ , M是节点数量</p>
+<p>$f_C,f_E$ 两层MLP</p>
+<p>$ACC_{max}$ :是对属于同一候选者的实体的分数取最大值的操作。</p>
+<p>隐含层大小为输入维的一半，输出维数为1，我们将可预测节点和实体节点的得分直接相加，作为多个候选者的最终得分。因此，输出分数向量$a∈r^{c×1}$给出了所有候选的分布。由于任务是多类分类，采用交叉熵损失作为训练目标，以a和标签作为输入。</p>
+<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><p><img src="https://i.loli.net/2021/03/28/ZMIraibAGWv9VL8.png" alt=""></p>
+<p><img src="https://i.loli.net/2021/03/28/3JDMT6lNtiWIBQf.png" alt=""></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Coding-Zuo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2021/03/27/Multi-hop-Reading-Comprehension-across-Multiple-Documents-by-Reasoning-over-Heterogeneous-Graphs/">http://example.com/2021/03/27/Multi-hop-Reading-Comprehension-across-Multiple-Documents-by-Reasoning-over-Heterogeneous-Graphs/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">Coding-Zuo</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/GNN-nlp/">GNN&amp;nlp</a></div><div class="post_share"><div class="addthis_inline_share_toolbox"></div><script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=null" async="async"></script></div></div><div class="post-reward"><div class="reward-button button--animated"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/03/27/Cognitive-Graph-for-Multi-Hop-Reading-Comprehension-at-Scale-ACL2019/"><img class="prev-cover" src="https://i.loli.net/2021/03/27/548YCMeHJnoBtDZ.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Cognitive Graph for Multi-Hop Reading Comprehension at Scale(ACL2019)</div></div></a></div><div class="next-post pull-right"><a href="/2021/03/27/Pytorch%E5%A4%9AGPU%E5%B9%B6%E8%A1%8C%E5%AE%9E%E4%BE%8B/"><img class="next-cover" src="https://i.loli.net/2021/03/27/bBWz3dgpP2AIHGJ.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Pytorch多GPU并行实例</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/03/27/Cognitive-Graph-for-Multi-Hop-Reading-Comprehension-at-Scale-ACL2019/" title="Cognitive Graph for Multi-Hop Reading Comprehension at Scale(ACL2019)"><img class="cover" src="https://i.loli.net/2021/03/27/548YCMeHJnoBtDZ.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-03-27</div><div class="title">Cognitive Graph for Multi-Hop Reading Comprehension at Scale(ACL2019)</div></div></a></div><div><a href="/2021/04/29/Hierarchical-Graph-Network-for-Multi-hop-Question-Answering/" title="Hierarchical Graph Network for Multi-hop Question Answering"><img class="cover" src="https://i.loli.net/2021/04/29/l7rNGkt916yqXW5.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-04-29</div><div class="title">Hierarchical Graph Network for Multi-hop Question Answering</div></div></a></div><div><a href="/2021/03/22/HopRetriever-Retrieve-Hops-over-Wikipedia-to-Answer-Complex-Questions-AAAI2020/" title="HopRetriever:Retrieve Hops over Wikipedia to Answer Complex Questions(AAAI2020)"><img class="cover" src="https://z3.ax1x.com/2021/03/23/6T4MDg.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-03-22</div><div class="title">HopRetriever:Retrieve Hops over Wikipedia to Answer Complex Questions(AAAI2020)</div></div></a></div><div><a href="/2021/04/22/Select-Answer-and-Explain-Interpretable-Multi-hop-Reading-Comprehension-over-Multiple-Documents/" title="Select, Answer and Explain-Interpretable Multi-hop Reading Comprehension over Multiple Documents"><img class="cover" src="https://i.loli.net/2021/04/22/qcORiXUfsp7DHMg.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-04-22</div><div class="title">Select, Answer and Explain-Interpretable Multi-hop Reading Comprehension over Multiple Documents</div></div></a></div><div><a href="/2021/04/29/阅读理解文献梳理/" title="阅读理解文献梳理"><img class="cover" src="https://i.loli.net/2021/04/29/Jv1COaYBUDrIPm9.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-04-29</div><div class="title">阅读理解文献梳理</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Multi-hop-Reading-Comprehension-across-Multiple-Documents-by-Reasoning-over-Heterogeneous-Graphs"><span class="toc-number">1.</span> <span class="toc-text">Multi-hop Reading Comprehension across Multiple Documents by Reasoning over Heterogeneous Graphs</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E6%96%B0%E7%82%B9"><span class="toc-number">1.1.</span> <span class="toc-text">创新点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E8%AE%BE%E8%AE%A1"><span class="toc-number">1.2.</span> <span class="toc-text">如何设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HGN%E4%BC%A0%E6%92%AD%E8%81%9A%E5%90%88%E6%9C%BA%E5%88%B6"><span class="toc-number">1.3.</span> <span class="toc-text">HGN传播聚合机制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E7%BB%88%E9%A2%84%E6%B5%8B"><span class="toc-number">1.4.</span> <span class="toc-text">最终预测</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C"><span class="toc-number">1.5.</span> <span class="toc-text">实验</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By Coding-Zuo</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my BLOG</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    loader: {
+      source: {
+        '[tex]/amsCd': '[tex]/amscd'
+      }
+    },
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        addClass: [200,() => {
+          document.querySelectorAll('mjx-container:not([display=\'true\']').forEach( node => {
+            const target = node.parentNode
+            if (!target.classList.contains('has-jax')) {
+              target.classList.add('mathjax-overflow')
+            }
+          })
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>if (document.getElementsByClassName('mermaid').length) {
+  if (window.mermaidJsLoad) mermaid.init()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(() => {
+      window.mermaidJsLoad = true
+      mermaid.initialize({
+        theme: 'default',
+      })
+      false && mermaid.init()
+    })
+  }
+}</script></div><script src="/js/custom.js"></script><script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script src="//code.tidio.co/mak6nokafytw9mgrsuzglwzfxiy3fpdl.js" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

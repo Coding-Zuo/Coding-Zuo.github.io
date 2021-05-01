@@ -1,7 +1,313 @@
-extends includes/layout.pug
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Coding-Zuo - Coding And Studying</title><meta name="keywords" content="NLP zuoyuhui"><meta name="author" content="Coding-Zuo"><meta name="copyright" content="Coding-Zuo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="我的建议是看开点、、、">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Coding-Zuo">
+<meta property="og:url" content="http://example.com/index.html">
+<meta property="og:site_name" content="Coding-Zuo">
+<meta property="og:description" content="我的建议是看开点、、、">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2021/03/22/YP2oqk7lOAfceTD.jpg">
+<meta property="article:author" content="Coding-Zuo">
+<meta property="article:tag" content="NLP zuoyuhui">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/03/22/YP2oqk7lOAfceTD.jpg"><link rel="shortcut icon" href="https://i.loli.net/2021/03/22/reFlcYOnP3dSuJX.png"><link rel="canonical" href="http://example.com/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: false,
+  isHome: true,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2021-05-01 17:21:26'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
 
-block content
-  include ./includes/mixins/post-ui.pug
-  #recent-posts.recent-posts
-    +postUI
-    include includes/pagination.pug
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    })(window)</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sviptzk/HexoStaticFile@latest/Hexo/css/footer.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css"><meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="Coding-Zuo" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://i.loli.net/2021/03/22/YP2oqk7lOAfceTD.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">35</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">7</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background-image: url('https://i.loli.net/2021/03/22/Td23imqYWsLGcJA.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Coding-Zuo</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="site-info"><h1 id="site-title">Coding-Zuo</h1><div id="site-subtitle"><span id="subtitle"></span></div><div id="site_social_icons"><a class="social-icon" href="https://github.com/Coding-Zuo" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="/zzuuoo666@sina.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2021/05/01/%E6%B5%B7%E5%8D%8E%E9%98%85%E8%AF%BB%E7%90%86%E8%A7%A3%E6%AF%94%E8%B5%9B%E5%A4%8D%E7%9B%98/" title="海华阅读理解比赛复盘">     <img class="post_bg" src="https://i.loli.net/2021/05/01/dizZGI2DktTPlJj.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="海华阅读理解比赛复盘"></a></div><div class="recent-post-info"><a class="article-title" href="/2021/05/01/%E6%B5%B7%E5%8D%8E%E9%98%85%E8%AF%BB%E7%90%86%E8%A7%A3%E6%AF%94%E8%B5%9B%E5%A4%8D%E7%9B%98/" title="海华阅读理解比赛复盘">海华阅读理解比赛复盘</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2021-05-01T02:29:30.000Z" title="发表于 2021-05-01 10:29:30">2021-05-01</time></span></div><div class="content">海华阅读理解比赛复盘比赛详情、EMA、Baseline，本文主要记录提分点和模型改进的验证
+参考上文 海华中文阅读理解比赛梳理/多卡并行/transformers
+github
+数据增强数据增强的办法很多参考 https://zhuanlan.zhihu.com/p/145521255
+我只采用了句子乱序和数据回译，都是将增强数据和原始数据挨着放到数据集中，在训练的时候停用shuffle。(可能有其他方法：每条数据根据概率来选择性增强)，我这种可能会让数据集臃肿，质量下降。
+句子乱序没有提分，也没有降很多。
+原因参考：从知觉谈中文乱序不影响阅读的原因
+代码：https://github.com/Coding-Zuo/MRC_multiChoice/blob/main/train/data_process.py 中的data_enhancement_sentence_order
+数据回译和句子乱序一样和回译到的数据和原始数据挨着放到数据集，没有提分，可能是回译到的数据质量不好。
+使用的是百度API，百度限制一个账户免费200万字符，如果超了就多注册几个账户薅羊毛。
+代码：https:// ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2021/04/29/%E9%98%85%E8%AF%BB%E7%90%86%E8%A7%A3%E6%96%87%E7%8C%AE%E6%A2%B3%E7%90%86/" title="阅读理解文献梳理">     <img class="post_bg" src="https://i.loli.net/2021/04/29/Jv1COaYBUDrIPm9.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="阅读理解文献梳理"></a></div><div class="recent-post-info"><a class="article-title" href="/2021/04/29/%E9%98%85%E8%AF%BB%E7%90%86%E8%A7%A3%E6%96%87%E7%8C%AE%E6%A2%B3%E7%90%86/" title="阅读理解文献梳理">阅读理解文献梳理</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2021-04-29T08:49:50.000Z" title="发表于 2021-04-29 16:49:50">2021-04-29</time></span></div><div class="content">阅读理解文献梳理多跳QA模型在任务中学习的多跳推理行为。QFE (Nishida et al., 2019) regards evidence extraction as a query-focused summarization task, and reformulates the query in each hop.    将证据提取作为以查询为中心的摘要任务，并在每一跳中重构查询。—— HGN
+Kosuke Nishida, Kyosuke Nishida, Masaaki Nagata, Atsushi Otsuka, Itsumi Saito, Hisako Asano, and Junji Tomita. 2019. Answering while summarizing: Multi-task learning for multi-hop qa with evidence extraction. In ACL.
+
+ DecompRC (Min et al., 2019b) decomposes a compositional question into simpler s ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2021/04/29/Hierarchical-Graph-Network-for-Multi-hop-Question-Answering/" title="Hierarchical Graph Network for Multi-hop Question Answering">     <img class="post_bg" src="https://i.loli.net/2021/04/29/l7rNGkt916yqXW5.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Hierarchical Graph Network for Multi-hop Question Answering"></a></div><div class="recent-post-info"><a class="article-title" href="/2021/04/29/Hierarchical-Graph-Network-for-Multi-hop-Question-Answering/" title="Hierarchical Graph Network for Multi-hop Question Answering">Hierarchical Graph Network for Multi-hop Question Answering</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2021-04-29T05:19:33.000Z" title="发表于 2021-04-29 13:19:33">2021-04-29</time></span></div><div class="content">Hierarchical Graph Network for Multi-hop Question Answeringhttps://arxiv.org/pdf/1911.03631.pdf
+这篇文章也是HotpotQA数据集上的，在干扰项排行榜和全维基排行榜都曾是前列。
+</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2021/04/29/%E4%BA%8C%E5%88%86%E6%A8%A1%E6%9D%BF/" title="二分模板">     <img class="post_bg" src="https://i.loli.net/2021/04/29/dLPGqVw5RaiyAY9.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="二分模板"></a></div><div class="recent-post-info"><a class="article-title" href="/2021/04/29/%E4%BA%8C%E5%88%86%E6%A8%A1%E6%9D%BF/" title="二分模板">二分模板</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2021-04-29T01:23:15.000Z" title="发表于 2021-04-29 09:23:15">2021-04-29</time></span></div><div class="content">二分模板https://www.acwing.com/problem/content/791/
+二分的本质不是单调性, 单调性的题目一定可以二分, 可以二分的题目不一定有单调性
+二分的本质是边界二分法用于查找, 每次都选择答案所在的区间再次进行查找, 当区间长度为 1时, 就是答案
+
+
+根据 check(mid)来判断 r和 l的取值范围
+根据取值范围选择 mid是否有 + 1操作
+mid归于左边, r = mid, mid选择 不 +1
+mid归于右边, l = mid, mid选择 +1
+
+
+
+123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354import java.io.BufferedReader;import java.io.IOException;import java.io.InputStreamReader;import java.util.Arrays;public class 模板_二分 &#123;    public ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2021/04/28/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E6%A8%A1%E6%9D%BF/" title="归并排序模板">     <img class="post_bg" src="https://i.loli.net/2021/04/28/QxTA8pnszOZjKLU.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="归并排序模板"></a></div><div class="recent-post-info"><a class="article-title" href="/2021/04/28/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E6%A8%A1%E6%9D%BF/" title="归并排序模板">归并排序模板</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2021-04-28T01:16:02.000Z" title="发表于 2021-04-28 09:16:02">2021-04-28</time></span></div><div class="content">归并排序模板分治思想
+
+
+确定分界点：$mid = (l+r)/2$
+
+先递归分成左右两边
+
+将两个有序数组合并成一个有序序列——归并
+使用两个指针：这个过程时间复杂度为$O(n)$
+
+
+
+整体时间复杂度$O(nlogn)$
+因为分层用了$logn$次
+
+1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253import java.io.BufferedReader;import java.io.IOException;import java.io.InputStreamReader;public class 模板_归并排序 &#123;    public static void main(String[] args) throws IOException &#123;        BufferedReader input = new BufferedReader(new InputStreamReader(System.in));       ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2021/04/26/Ubantu18-04%E5%AE%89%E8%A3%85NVIDIA%E9%A9%B1%E5%8A%A8-cuda10-1-cuDNN-Tensorflow2-1-0/" title="Ubantu18.04安装NVIDIA驱动+cuda10.1+cuDNN+Tensorflow2.1.0">     <img class="post_bg" src="https://i.loli.net/2021/04/26/laJmVeKNDUboWOz.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Ubantu18.04安装NVIDIA驱动+cuda10.1+cuDNN+Tensorflow2.1.0"></a></div><div class="recent-post-info"><a class="article-title" href="/2021/04/26/Ubantu18-04%E5%AE%89%E8%A3%85NVIDIA%E9%A9%B1%E5%8A%A8-cuda10-1-cuDNN-Tensorflow2-1-0/" title="Ubantu18.04安装NVIDIA驱动+cuda10.1+cuDNN+Tensorflow2.1.0">Ubantu18.04安装NVIDIA驱动+cuda10.1+cuDNN+Tensorflow2.1.0</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2021-04-26T02:18:40.000Z" title="发表于 2021-04-26 10:18:40">2021-04-26</time></span></div><div class="content">Ubantu18-04安装NVIDIA驱动-cuda10-1-cuDNN-Tensorflow2-1-0注意：TensorFlow2.1 要求 你的GPU算力要达到3.5，检查自己GPU算力
+安装和卸载NVIDIA驱动首先要确保驱动已经卸载干净
+12sudo apt-get purge nvidia*sudo apt-get autoremove
+检查自己GPU版本，之后到官网去下载，这种办法安装比较稳妥，其他网络安装办法有时候出错不知道咋回事。
+1lshw -numeric -C display
+
+下载驱动网址：https://www.nvidia.cn/Download/index.aspx?lang=cn
+
+禁用Nouveau
+1234567891011121314Nouveau驱动禁用方法：sudo gedit &#x2F;etc&#x2F;modprobe.d&#x2F;blacklist.conf或者sudo vim &#x2F;etc&#x2F;modprobe.d&#x2F;blacklist.conf 在最后两行添加： blacklist nouveauoptions ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2021/04/26/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F%E6%A8%A1%E6%9D%BF/" title="快速排序模板">     <img class="post_bg" src="https://i.loli.net/2021/04/26/nUgh2oyCsFAESXj.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="快速排序模板"></a></div><div class="recent-post-info"><a class="article-title" href="/2021/04/26/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F%E6%A8%A1%E6%9D%BF/" title="快速排序模板">快速排序模板</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2021-04-26T01:56:51.000Z" title="发表于 2021-04-26 09:56:51">2021-04-26</time></span></div><div class="content">快速排序模板
+
+先确定分界点：$q[l] 、 q[(l+r)/2]、 q[r]$ 或随机
+调整区间：小于等于x的在左半边，大于等于x的在右半边 (如何去调整)
+递归处理左右两段
+
+实现暴力：
+
+声明两个数组 a[] 、b[]
+将$q[l~r]$ 遍历 
+如果 $q[i] \le x$ 放到a[]中   
+如果 $q[i] \ge x$ 放到b[]中   
+再将a、b数组放回q中
+
+优美：
+用两个指针，swap
+关于JAVA中IO流类：BufferredReader的简单用法
+bufferreader要比scanner快
+123456789101112131415161718192021222324252627282930313233343536373839404142434445464748package code;import java.io.BufferedReader;import java.io.IOException;import java.io.InputStreamReader;import java.util.Collections;public class 快排模板  ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2021/04/24/DP%E5%88%86%E6%9E%90%E2%80%94%E2%80%94%E7%9F%B3%E5%AD%90%E5%90%88%E5%B9%B6/" title="DP分析——石子合并">     <img class="post_bg" src="https://i.loli.net/2021/04/24/RSyOKaXCNZEt3r6.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="DP分析——石子合并"></a></div><div class="recent-post-info"><a class="article-title" href="/2021/04/24/DP%E5%88%86%E6%9E%90%E2%80%94%E2%80%94%E7%9F%B3%E5%AD%90%E5%90%88%E5%B9%B6/" title="DP分析——石子合并">DP分析——石子合并</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2021-04-24T02:19:10.000Z" title="发表于 2021-04-24 10:19:10">2021-04-24</time></span></div><div class="content">DP分析——石子合并设有 NN 堆石子排成一排，其编号为 1，2，3，…，N。
+每堆石子有一定的质量，可以用一个整数来描述，现在要将这 N 堆石子合并成为一堆。
+每次只能合并相邻的两堆，合并的代价为这两堆石子的质量之和，合并后与这两堆石子相邻的石子将和新堆相邻，合并时由于选择的顺序不同，合并的总代价也不相同。
+例如有 4 堆石子分别为 1 3 5 2， 我们可以先合并 1、2堆，代价为 4，得到 4 5 2， 又合并 1，2 堆，代价为 9，得到 9 2 ，再合并得到 11，总代价为 4+9+11=244+9+11=24；
+如果第二步是先合并 2，3 堆，则代价为 7，得到 4 7，最后一次合并代价为 11，总代价为 4+7+11=22。
+问题是：找出一种合理的方法，使总的代价最小，输出最小代价。
+输入格式第一行一个数 N 表示石子的堆数 N。
+第二行 N 个数，表示每堆石子的质量(均不超过 1000)。
+输出格式输出一个整数，表示最小代价。
+数据范围1≤N≤300     1≤N≤300
+输入样例：1241 3 5 2
+输出样例：122
+解
+
+12345678910111213141 ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2021/04/22/Select-Answer-and-Explain-Interpretable-Multi-hop-Reading-Comprehension-over-Multiple-Documents/" title="Select, Answer and Explain-Interpretable Multi-hop Reading Comprehension over Multiple Documents">     <img class="post_bg" src="https://i.loli.net/2021/04/22/qcORiXUfsp7DHMg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Select, Answer and Explain-Interpretable Multi-hop Reading Comprehension over Multiple Documents"></a></div><div class="recent-post-info"><a class="article-title" href="/2021/04/22/Select-Answer-and-Explain-Interpretable-Multi-hop-Reading-Comprehension-over-Multiple-Documents/" title="Select, Answer and Explain-Interpretable Multi-hop Reading Comprehension over Multiple Documents">Select, Answer and Explain-Interpretable Multi-hop Reading Comprehension over Multiple Documents</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2021-04-21T16:47:09.000Z" title="发表于 2021-04-22 00:47:09">2021-04-22</time></span></div><div class="content">Select, Answer and Explain: Interpretable Multi-hop Reading Comprehension over Multiple Documents摘要选择、回答和解释(SAE)系统解决多文档RC问题。
+首先主要创新，用文档分类器过滤掉与答案无关的文档，从而减少分散注意力的信息量。
+然后将所选择的答案相关文档输入到模型以联合预测答案和支持句子。
+该模型在答案预测的表征层和支持句子预测的句子层都设置了多任务学习目标，
+并在这两个任务之间进行了基于注意力的交互，对模型进行了优化。
+关键词：过滤无关文档、多任务学习、混合注意力交互
+
+在HotpotQA中什么是gold docHotpotQA通过为答案提供支持句来鼓励可解释的QA模型，这些支持句通常来自多个文档，如果文档包含答案或包含对答案的支持句，则称为“黄金文档”。
+应答文本，它可以是一段文本或“是/否”。
+作者从答案和支持句标签导出GOLD文档标签。我们使用 $D_i$ 表示文档 i：如果Di是黄金文档，则标记为1，否则标记为0。还将答案类型标记为以下注释之一：“Span”、“Yes”和“N ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2021/04/20/DP%E5%88%86%E6%9E%90%E6%B3%95%E2%80%94%E2%80%9401%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98/" title="DP分析法--01背包问题">     <img class="post_bg" src="https://i.loli.net/2021/04/20/JeAwNzKWdGXaSC2.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="DP分析法--01背包问题"></a></div><div class="recent-post-info"><a class="article-title" href="/2021/04/20/DP%E5%88%86%E6%9E%90%E6%B3%95%E2%80%94%E2%80%9401%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98/" title="DP分析法--01背包问题">DP分析法--01背包问题</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2021-04-20T01:14:15.000Z" title="发表于 2021-04-20 09:14:15">2021-04-20</time></span></div><div class="content">DP分析法—01背包问题从集合角度来分析DP问题，DP问题的题目一般都是从有限集中求得最值的问题。
+
+01背包问题
+有 N 件物品和一个容量是 V 的背包。每件物品只能使用一次。
+第 i 件物品的体积是 $v_i$，价值是 $w_i$。
+求解将哪些物品装入背包，可使这些物品的总体积不超过背包容量，且总价值最大。输出最大价值。
+输入格式第一行两个整数，N，V，用空格隔开，分别表示物品数量和背包容积。
+接下来有 N 行，每行两个整数 $v_i,w_i$，用空格隔开，分别表示第 i 件物品的体积和价值。
+输出格式输出一个整数，表示最大价值。
+数据范围0&lt;N,V≤10000&lt;N,V≤10000&lt;vi,wi≤10000&lt;vi,wi≤1000
+输入样例123454 51 22 43 44 5
+输出样例：18
+解最多$2^N$, 从$2^N$ 个方案里找总价值最大的方案。——有限集合的最值问题
+状态表示：
+
+选择问题一般$f(i,j)$ 第一维表示前i个物品,第二维是限制 (经验)
+
+集合：所有只考虑前i个物品，且总体积不超过j的选法的集合。
+
+属性：集合中每一个方案的最大价 ...</div></div></div><nav id="pagination"><div class="pagination"><span class="page-number current">1</span><a class="page-number" href="/page/2/#content-inner">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/#content-inner">4</a><a class="extend next" rel="next" href="/page/2/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="https://i.loli.net/2021/03/22/YP2oqk7lOAfceTD.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">Coding-Zuo</div><div class="author-info__description">我的建议是看开点、、、</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">35</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">7</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Coding-Zuo"><i class="fab fa-github"></i><span>Let's Github</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/Coding-Zuo" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="/zzuuoo666@sina.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">用力去思考🤔</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/05/01/%E6%B5%B7%E5%8D%8E%E9%98%85%E8%AF%BB%E7%90%86%E8%A7%A3%E6%AF%94%E8%B5%9B%E5%A4%8D%E7%9B%98/" title="海华阅读理解比赛复盘"><img src="https://i.loli.net/2021/05/01/dizZGI2DktTPlJj.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="海华阅读理解比赛复盘"/></a><div class="content"><a class="title" href="/2021/05/01/%E6%B5%B7%E5%8D%8E%E9%98%85%E8%AF%BB%E7%90%86%E8%A7%A3%E6%AF%94%E8%B5%9B%E5%A4%8D%E7%9B%98/" title="海华阅读理解比赛复盘">海华阅读理解比赛复盘</a><time datetime="2021-05-01T02:29:30.000Z" title="发表于 2021-05-01 10:29:30">2021-05-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/04/29/%E9%98%85%E8%AF%BB%E7%90%86%E8%A7%A3%E6%96%87%E7%8C%AE%E6%A2%B3%E7%90%86/" title="阅读理解文献梳理"><img src="https://i.loli.net/2021/04/29/Jv1COaYBUDrIPm9.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="阅读理解文献梳理"/></a><div class="content"><a class="title" href="/2021/04/29/%E9%98%85%E8%AF%BB%E7%90%86%E8%A7%A3%E6%96%87%E7%8C%AE%E6%A2%B3%E7%90%86/" title="阅读理解文献梳理">阅读理解文献梳理</a><time datetime="2021-04-29T08:49:50.000Z" title="发表于 2021-04-29 16:49:50">2021-04-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/04/29/Hierarchical-Graph-Network-for-Multi-hop-Question-Answering/" title="Hierarchical Graph Network for Multi-hop Question Answering"><img src="https://i.loli.net/2021/04/29/l7rNGkt916yqXW5.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Hierarchical Graph Network for Multi-hop Question Answering"/></a><div class="content"><a class="title" href="/2021/04/29/Hierarchical-Graph-Network-for-Multi-hop-Question-Answering/" title="Hierarchical Graph Network for Multi-hop Question Answering">Hierarchical Graph Network for Multi-hop Question Answering</a><time datetime="2021-04-29T05:19:33.000Z" title="发表于 2021-04-29 13:19:33">2021-04-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/04/29/%E4%BA%8C%E5%88%86%E6%A8%A1%E6%9D%BF/" title="二分模板"><img src="https://i.loli.net/2021/04/29/dLPGqVw5RaiyAY9.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="二分模板"/></a><div class="content"><a class="title" href="/2021/04/29/%E4%BA%8C%E5%88%86%E6%A8%A1%E6%9D%BF/" title="二分模板">二分模板</a><time datetime="2021-04-29T01:23:15.000Z" title="发表于 2021-04-29 09:23:15">2021-04-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/04/28/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E6%A8%A1%E6%9D%BF/" title="归并排序模板"><img src="https://i.loli.net/2021/04/28/QxTA8pnszOZjKLU.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="归并排序模板"/></a><div class="content"><a class="title" href="/2021/04/28/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E6%A8%A1%E6%9D%BF/" title="归并排序模板">归并排序模板</a><time datetime="2021-04-28T01:16:02.000Z" title="发表于 2021-04-28 09:16:02">2021-04-28</time></div></div></div></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/DataGame/" style="font-size: 1.26em; color: #999fa8">DataGame</a> <a href="/tags/GNN/" style="font-size: 1.18em; color: #999ca1">GNN</a> <a href="/tags/GNN-cv/" style="font-size: 1.18em; color: #999ca1">GNN&cv</a> <a href="/tags/GNN-nlp/" style="font-size: 1.34em; color: #99a3b0">GNN&nlp</a> <a href="/tags/GPU/" style="font-size: 1.1em; color: #999">GPU</a> <a href="/tags/nlp/" style="font-size: 1.42em; color: #99a6b7">nlp</a> <a href="/tags/%E5%88%B7%E9%A2%98/" style="font-size: 1.5em; color: #99a9bf">刷题</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>归档</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/05/"><span class="card-archive-list-date">五月 2021</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/04/"><span class="card-archive-list-date">四月 2021</span><span class="card-archive-list-count">19</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/03/"><span class="card-archive-list-date">三月 2021</span><span class="card-archive-list-count">13</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/01/"><span class="card-archive-list-date">一月 2021</span><span class="card-archive-list-count">2</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">35</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"></div></div><div class="webinfo-item"><div class="item-name">本站总访问量 :</div><div class="item-count" id="busuanzi_value_site_pv"></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2021-05-01T09:21:26.624Z"></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By Coding-Zuo</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my BLOG</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>function subtitleType () {
+  if (true) { 
+    var typed = new Typed("#subtitle", {
+      strings: "今日事&#44;今日畢,Never put off till tomorrow what you can do today".split(","),
+      startDelay: 300,
+      typeSpeed: 150,
+      loop: true,
+      backSpeed: 50
+    })
+  } else {
+    document.getElementById("subtitle").innerHTML = '今日事&#44;今日畢'
+  }
+}
+
+if (true) {
+  if (typeof Typed === 'function') {
+    subtitleType()
+  } else {
+    getScript('https://cdn.jsdelivr.net/npm/typed.js/lib/typed.min.js').then(subtitleType)
+  }
+} else {
+  subtitleType()
+}</script><script>if (document.getElementsByClassName('mermaid').length) {
+  if (window.mermaidJsLoad) mermaid.init()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(() => {
+      window.mermaidJsLoad = true
+      mermaid.initialize({
+        theme: 'default',
+      })
+      false && mermaid.init()
+    })
+  }
+}</script></div><script src="/js/custom.js"></script><script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script src="//code.tidio.co/mak6nokafytw9mgrsuzglwzfxiy3fpdl.js" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
