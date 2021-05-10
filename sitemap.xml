@@ -16,6 +16,13 @@
   </url>
   
   <url>
+    <loc>http://example.com/2021/04/29/%E9%98%85%E8%AF%BB%E7%90%86%E8%A7%A3%E6%96%87%E7%8C%AE%E6%A2%B3%E7%90%86/</loc>
+    
+    <lastmod>2021-05-10</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://example.com/2021/05/06/DP%E2%80%94%E2%80%94%E6%9C%80%E5%A4%A7%E5%AD%90%E5%BA%8F%E5%92%8C/</loc>
     
     <lastmod>2021-05-06</lastmod>
@@ -40,13 +47,6 @@
     <loc>http://example.com/2021/04/06/%E6%B5%B7%E5%8D%8E%E4%B8%AD%E6%96%87%E9%98%85%E8%AF%BB%E7%90%86%E8%A7%A3%E6%AF%94%E8%B5%9B%E6%A2%B3%E7%90%86-%E5%A4%9A%E5%8D%A1%E5%B9%B6%E8%A1%8C-transformers/</loc>
     
     <lastmod>2021-05-01</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://example.com/2021/04/29/%E9%98%85%E8%AF%BB%E7%90%86%E8%A7%A3%E6%96%87%E7%8C%AE%E6%A2%B3%E7%90%86/</loc>
-    
-    <lastmod>2021-04-30</lastmod>
     
   </url>
   
@@ -305,13 +305,6 @@
   </url>
   
   <url>
-    <loc>http://example.com/tags/GNN-cv/</loc>
-    <lastmod>2021-05-10</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>http://example.com/tags/GNN-nlp/</loc>
     <lastmod>2021-05-10</lastmod>
     <changefreq>daily</changefreq>
@@ -341,6 +334,13 @@
   
   <url>
     <loc>http://example.com/tags/Meta-Learning/</loc>
+    <lastmod>2021-05-10</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/tags/GNN-cv/</loc>
     <lastmod>2021-05-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
