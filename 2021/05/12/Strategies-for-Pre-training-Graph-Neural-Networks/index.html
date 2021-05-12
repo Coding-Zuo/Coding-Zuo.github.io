@@ -1,0 +1,342 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Strategies for Pre-training Graph Neural Networks | Coding-Zuo</title><meta name="keywords" content="GNN"><meta name="author" content="Coding-Zuo"><meta name="copyright" content="Coding-Zuo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="Strategies for Pre-training Graph Neural Networks目前深度学习各个领域的预训练都搞的热火朝天，GNN也是肯定要搞的。那么预训练之后下一个热潮会是什么呢？ ICLR2020 首次系统的探索了大规模GNN预训练 提出了一种结合节点级和图级表示的预训练方法来训练模型。 在节点级，使用了两种自监督方法，即上下文预测和属性预测。 在图形级，使用有监督的图级属性">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Strategies for Pre-training Graph Neural Networks">
+<meta property="og:url" content="http://example.com/2021/05/12/Strategies-for-Pre-training-Graph-Neural-Networks/index.html">
+<meta property="og:site_name" content="Coding-Zuo">
+<meta property="og:description" content="Strategies for Pre-training Graph Neural Networks目前深度学习各个领域的预训练都搞的热火朝天，GNN也是肯定要搞的。那么预训练之后下一个热潮会是什么呢？ ICLR2020 首次系统的探索了大规模GNN预训练 提出了一种结合节点级和图级表示的预训练方法来训练模型。 在节点级，使用了两种自监督方法，即上下文预测和属性预测。 在图形级，使用有监督的图级属性">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2021/05/12/kKueobtGSrE8m1U.png">
+<meta property="article:published_time" content="2021-05-12T09:10:47.000Z">
+<meta property="article:modified_time" content="2021-05-12T15:47:33.007Z">
+<meta property="article:author" content="Coding-Zuo">
+<meta property="article:tag" content="GNN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/05/12/kKueobtGSrE8m1U.png"><link rel="shortcut icon" href="https://i.loli.net/2021/03/22/reFlcYOnP3dSuJX.png"><link rel="canonical" href="http://example.com/2021/05/12/Strategies-for-Pre-training-Graph-Neural-Networks/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.json","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-05-12 23:47:33'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    })(window)</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sviptzk/HexoStaticFile@latest/Hexo/css/footer.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css"><meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="Coding-Zuo" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://i.loli.net/2021/03/22/YP2oqk7lOAfceTD.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">39</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">8</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://i.loli.net/2021/05/12/kKueobtGSrE8m1U.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Coding-Zuo</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Strategies for Pre-training Graph Neural Networks</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-05-12T09:10:47.000Z" title="发表于 2021-05-12 17:10:47">2021-05-12</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-05-12T15:47:33.007Z" title="更新于 2021-05-12 23:47:33">2021-05-12</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Strategies for Pre-training Graph Neural Networks"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Strategies-for-Pre-training-Graph-Neural-Networks"><a href="#Strategies-for-Pre-training-Graph-Neural-Networks" class="headerlink" title="Strategies for Pre-training Graph Neural Networks"></a>Strategies for Pre-training Graph Neural Networks</h1><p>目前深度学习各个领域的预训练都搞的热火朝天，GNN也是肯定要搞的。那么预训练之后下一个热潮会是什么呢？</p>
+<p>ICLR2020 首次系统的探索了大规模GNN预训练</p>
+<p>提出了一种结合节点级和图级表示的预训练方法来训练模型。</p>
+<p>在节点级，使用了两种自监督方法，即上下文预测和属性预测。</p>
+<p>在图形级，使用有监督的图级属性预测和结构相似性预测</p>
+<p>同时作者建立了两个新的预训练数据集，2M graph的化学数据集和一个有395K graph的生物数据集。</p>
+<p>接下来介绍作者这么做的理由</p>
+<h2 id="发现"><a href="#发现" class="headerlink" title="发现"></a>发现</h2><p>因为对于特定任务的有标签数据是很稀少的，但无标签数据却有很多，所以为了充分利用无标签数据，各种自监督方法开始兴起。</p>
+<p>所以作者分别在图级和节点级层面上提出了两大类预测方法</p>
+<ul>
+<li>属性预测：属性mask(节点)、有监督的属性预测(图级)</li>
+<li>结构预测：上下文预测(节点)、结构相似性预测(图级)</li>
+</ul>
+<p>以往的一些研究表明(Xu et al., 2017; Ching et al., 2018; Wang et al., 2019),一个成功的迁移学习不仅仅是增加与下游任务来自同一领域的标注好的预训练数据集的数量。相反，它需要大量的领域专业知识来仔细选择与感兴趣的下游任务相关的示例和目标标签。否则，知识从相关的预训练任务转移到新的下游任务可能会损害泛化，这被称为负迁移(Rosenstein等人，2005年)，并极大地限制了预训练模型的适用性和可靠性。</p>
+<p>作者研究发现朴素的策略要么在整个图的层面上预先训练GNN，要么在单个节点层面上预先训练GNN，所给出的改进有限，甚至可能导致许多下游任务的负迁移。在只有图级的预训练下大约有1/4的任务出现了负迁移。</p>
+<p><img src="https://i.loli.net/2021/05/12/z5CEtxbX9Tj1WwN.png" alt=""></p>
+<p>图(a.i)当仅使用节点级预训练时，可以很好地分离不同形状的节点(语义上不同的节点)，但汇集节点级嵌入创建的结果，图嵌入是不可分离的(图嵌入由+和−表示)</p>
+<p>图(a.ii)仅在图级预训练的情况下，图嵌入可以很好地分离，但是单个节点的嵌入并不一定捕获它们特定于领域的语义。</p>
+<p>图(a.iii) 高质量的节点嵌入使得不同类型的节点能够很好地分开，同时嵌入空间也是可组合的。这允许对整个图形进行准确和健壮的表示，并允许将预先训练的模型健壮地传输到各种下游任务。</p>
+<h2 id="预训练策略"><a href="#预训练策略" class="headerlink" title="预训练策略"></a>预训练策略</h2><p>在预训练策略的技术核心是在单个节点以及整个图的级别预先训练。这一概念鼓励GNN在两个级别捕获特定域的语义。</p>
+<h3 id="节点级预训练"><a href="#节点级预训练" class="headerlink" title="节点级预训练"></a>节点级预训练</h3><p>两种自监督方法，上下文预测和属性mask。</p>
+<p><img src="https://i.loli.net/2021/05/12/RFS46a2tozyNGkp.png" alt=""></p>
+<p>图(a)在上下文预测中，子图是所选中心节点周围的K跳邻域，其中K是GNN层的数量，上图中设置为K=2。环境定义为中心节点r1-和r2-Hop之间的周围图结构，上图中使用r1=1和r2=4。</p>
+<p>图(b) 在属性mask中，输入节点/边属性(例如，分子图中的原子类型)被随机mask，并且要求GNN预测它们。</p>
+<h4 id="上下文预测：利用图结构的分布性"><a href="#上下文预测：利用图结构的分布性" class="headerlink" title="上下文预测：利用图结构的分布性"></a>上下文预测：利用图结构的分布性</h4><p>使用子图来预测其周围的图结构。目标是预先训练GNN，以便它将出现在类似结构上下文中的节点映射到附近的嵌入。</p>
+<p>通过三个步骤：</p>
+<ul>
+<li><p>邻居节点和上下文图</p>
+<p>对于每个节点v，定义v的邻居和上下文图。因为GNN信息聚合的是K层邻居，所以节点v的嵌入$h_v$ 依赖于距离v至多k跳节点。上下文图由两个超参数r1和r2来描述，并且它表示远离v的r1跳和r2跳之间的子图(即它是宽度为r2−r1的环)。并且r1&lt;K，以便在邻域和上下文图之间共享一些节点，我们将这些节点称为上下文锚节点。这些锚节点提供关于邻居图和上下文图如何彼此连接的信息。</p>
+</li>
+<li><p>使用一个辅助GNN把上下文编码成固定向量</p>
+<p>由于图的组合性，直接预测上下文图是很困难的。这与自然语言处理不同，在自然语言处理中，单词来自固定和有限的词汇表。为了实现上下文预测，将上下文图编码为固定长度的向量。为此，引入一个上下文GNN作为辅助编码，就是图中的GNN‘。首先用其获得上下文图中的节点嵌入，然后对上下文锚点的嵌入进行平均，得到固定长度的上下文嵌入。对于图G中的节点v，将其对应的上下文嵌入表示为$c^G_v$</p>
+</li>
+<li><p>负采样</p>
+<p>主要的GNN编码邻居节点获取节点的embedding——$h<em>v^{(K)}$，上下文GNN编码上下文图获取上下文embedding——$c^G_v$。学习目标是一个二分类：是否特定邻域和特定上下文图是否属于同一节点。$\sigma(h^{(k)T}_v c</em>{v’}^{G’}) \approx 1 {\text{v and v’ are the same nodes}}$</p>
+<p>让v‘=v并且G’=G(即正例)，或者我们从随机选择的图G‘中随机抽样v’(即负例)。</p>
+</li>
+</ul>
+<h4 id="属性mask-利用图属性的分布性"><a href="#属性mask-利用图属性的分布性" class="headerlink" title="属性mask:利用图属性的分布性"></a>属性mask:利用图属性的分布性</h4><p>目标是通过学习图结构上节点/边属性的分布规律来获取领域知识。</p>
+<p>属性mask有节点mask和属性mask两类</p>
+<p>工作原理：掩蔽节点/边缘属性，然后让GNN基于相邻结构预测这些属性，这参考了bert的mask。</p>
+<p>具体地说，通过用特殊的屏蔽指示符替换输入节点/边属性(例如分子图中的原子类型)来随机屏蔽它们。然后应用GNNs来获得相应的节点/边嵌入(边嵌入:为边的端点的节点嵌入之和来获得)。</p>
+<p>最后，在嵌入的基础上应用线性模型来预测被mask的节点/边属性。有趣的是bert的mask其实相当于在全连通的token图上应用了消息传递。</p>
+<p>在图结构数据中是对非全连通图进行操作，目的是捕捉节点/边属性在不同图结构上的分布规律。</p>
+<h3 id="图级别预训练"><a href="#图级别预训练" class="headerlink" title="图级别预训练"></a>图级别预训练</h3><p>我们的目标是确保节点和图嵌入都是高质量的，以便图嵌入是健壮的，并且可以跨下游任务传输。</p>
+<p>有两个用于图级预训练的选项：预测整个图的特定于域的属性(监督标签)，或者预测图结构。</p>
+<h4 id="有监督的图级属性预测"><a href="#有监督的图级属性预测" class="headerlink" title="有监督的图级属性预测"></a>有监督的图级属性预测</h4><p>由于图形级表示 $h_G$ 直接用于对下游预测任务进行微调，希望将特定于域的信息直接编码成 $h_G$。</p>
+<p>考虑了一种对图表示进行预训练的实用方法：图级多任务监督预训练，用于联合预测单个图的不同监督标签集。例如，在分子性质预测中，我们可以预先训练GNN来预测到目前为止实验测量的分子的所有性质。在蛋白质功能预测中，目标是预测给定的蛋白质是否具有给定的功能，我们可以预先训练GNN来预测到目前为止已经验证的各种蛋白质功能的存在。</p>
+<p>重要的是，单独进行大量的多任务图级预训练可能无法给出可转移的图级表示。(问题来了)</p>
+<p>这是因为一些有监督的预训练任务可能与下游感兴趣的任务无关，甚至会损害下游的绩效（负迁移）。一种解决办法是选择“真正相关的”有监督的训练前任务，只对这些任务进行训练前GNN训练。然而，这样的解决方案成本极高，因为选择相关任务需要大量的领域专业知识，并且需要针对不同的下游任务分别进行预训练。</p>
+<p>为了缓解这个问题，作者的见解是，多任务监督的预训练只提供图形级的监督；因此，创建图形级嵌入的本地节点嵌入可能没有意义。这种无用的节点嵌入可能会加剧负迁移问题，因为许多不同的预训练任务在节点嵌入空间中更容易相互干扰。受此启发，在执行图级预训练之前，先通过上文描述的节点级预训练方法在单个节点级别对GNN进行正则化。正如作者所料，组合策略产生了更多可转移的图形表示。并且在没有专家选择监督的预训练任务的情况下稳健地改善了下游性能。</p>
+<h4 id="结构相似性预测"><a href="#结构相似性预测" class="headerlink" title="结构相似性预测"></a>结构相似性预测</h4><p>目标是对两个图的结构相似性进行建模</p>
+<p>此类任务的示例包括对图形编辑距离进行建模(Bai等人，2019年)或预测图形结构相似性(Navarin等人，2018年)。</p>
+<p>这里好像作者感觉比较难没有全部实现，留到了以后的工作中</p>
+<h3 id="总体预训练策略"><a href="#总体预训练策略" class="headerlink" title="总体预训练策略"></a>总体预训练策略</h3><p>预训练策略是首先进行节点级的自监督预训练，然后进行图级多任务监督的预训练。当GNN预训练完成后，我们对下游任务的预训练GNN模型进行微调。具体地说，我们在图级表示的基础上添加线性分类器来预测下游的图标签。随后以端到端的方式微调整个模型，即预先训练的GNN和下游线性分类器。</p>
+<h2 id="进一步相关工作"><a href="#进一步相关工作" class="headerlink" title="进一步相关工作"></a>进一步相关工作</h2><p>关于图中单个节点的无监督表示学习的文献非常丰富，大致分为两类。</p>
+<p>第一类是使用基于局部随机行走的目标的方法(Grover&amp;Leskovec，2016；Perozzi等人，2014；Don等人，2015)以及例如通过预测边的存在来重建图的邻接矩阵的方法。</p>
+<p>在第二类中是诸如Deep Graph Infomax的方法，其训练最大化局部节点表示和聚集的全局图表示之间的互信息的节点编码器。(基于对比学习互信息的最近也要研究研究)</p>
+<p>这两种方法都鼓励附近的节点具有相似的嵌入表示，最初是针对节点分类和链路预测提出和评估的。然而，这对于图级预测任务来说可能是次优的，在图级预测任务中，捕捉局部邻域的结构相似性通常比捕捉图中节点的位置信息更重要</p>
+<p>所以该预训练策略既考虑了节点级的预训练任务，也考虑了图级的预训练任务，并且正如在实验中所显示的，为了使预训练模型获得良好的性能，必须同时使用这两种类型的任务。</p>
+<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><p><img src="https://i.loli.net/2021/05/12/cFBosvWCfURYdhx.png" alt=""></p>
+<p>阴影单元格表示负迁移，即预训练模型的ROC-AUC比未预训练模型的ROC-AUC差。借此说明两个级别共用的重要性。</p>
+<p><img src="https://i.loli.net/2021/05/12/HvFtBiY5RadqGMw.png" alt=""></p>
+<p>在有无预培训的情况下测试不同GNN架构的ROC-AUC(%)性能。</p>
+<p>这里表达能力越强的结构预训练效果越好，表达能力较弱的GNN收益较小，甚至有时未负。这一发现证实了先前的观察结果(例如，Erhan等人)。(2010))，使用富有表现力的模型对于充分利用预培训至关重要，当用于表达能力有限的模型(如GCN、GraphSAGE和GAT)时，预培训甚至会影响性能。</p>
+<p>并且GAT的表现反而下降了不少。作者认为GAT属于表达能力有限的模型，还有人认为GAT attention的参数比较多，模型结构比较复杂导致。</p>
+<p><img src="https://i.loli.net/2021/05/12/kFYCKXIvcU2iLeZ.png" alt=""></p>
+</article><div class="post-reward"><div class="reward-button button--animated"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2021/05/09/Meta-Learning-%E6%9D%8E%E5%AE%8F%E6%AF%85/"><img class="next-cover" src="https://i.loli.net/2021/05/09/yRPuWigSB62wzTC.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Meta Learning(李宏毅)</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/03/30/Heterogeneous-Graph-Neural-Network/" title="Heterogeneous Graph Neural Network"><img class="cover" src="https://i.loli.net/2021/03/30/joZhFfytV4YGSBg.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-03-30</div><div class="title">Heterogeneous Graph Neural Network</div></div></a></div><div><a href="/2021/05/08/Learning-to-Pre-train-Graph-Neural-Networks/" title="Learning to Pre-train Graph Neural Networks"><img class="cover" src="https://i.loli.net/2021/05/09/Cw8D7HJGL5fy3kp.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-05-08</div><div class="title">Learning to Pre-train Graph Neural Networks</div></div></a></div><div><a href="/2021/04/08/图神经网络的对抗攻击/" title="图神经网络的对抗攻击"><img class="cover" src="https://i.loli.net/2021/04/08/HrO6Jo4ksEhWDZU.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-04-08</div><div class="title">图神经网络的对抗攻击</div></div></a></div></div></div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Coding-Zuo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2021/05/12/Strategies-for-Pre-training-Graph-Neural-Networks/">http://example.com/2021/05/12/Strategies-for-Pre-training-Graph-Neural-Networks/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">Coding-Zuo</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/GNN/">GNN</a></div><div class="post_share"><div class="addthis_inline_share_toolbox"></div><script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=null" async="async"></script></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Strategies-for-Pre-training-Graph-Neural-Networks"><span class="toc-number">1.</span> <span class="toc-text">Strategies for Pre-training Graph Neural Networks</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%91%E7%8E%B0"><span class="toc-number">1.1.</span> <span class="toc-text">发现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%84%E8%AE%AD%E7%BB%83%E7%AD%96%E7%95%A5"><span class="toc-number">1.2.</span> <span class="toc-text">预训练策略</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8A%82%E7%82%B9%E7%BA%A7%E9%A2%84%E8%AE%AD%E7%BB%83"><span class="toc-number">1.2.1.</span> <span class="toc-text">节点级预训练</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%8A%E4%B8%8B%E6%96%87%E9%A2%84%E6%B5%8B%EF%BC%9A%E5%88%A9%E7%94%A8%E5%9B%BE%E7%BB%93%E6%9E%84%E7%9A%84%E5%88%86%E5%B8%83%E6%80%A7"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">上下文预测：利用图结构的分布性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B1%9E%E6%80%A7mask-%E5%88%A9%E7%94%A8%E5%9B%BE%E5%B1%9E%E6%80%A7%E7%9A%84%E5%88%86%E5%B8%83%E6%80%A7"><span class="toc-number">1.2.1.2.</span> <span class="toc-text">属性mask:利用图属性的分布性</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%BE%E7%BA%A7%E5%88%AB%E9%A2%84%E8%AE%AD%E7%BB%83"><span class="toc-number">1.2.2.</span> <span class="toc-text">图级别预训练</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%89%E7%9B%91%E7%9D%A3%E7%9A%84%E5%9B%BE%E7%BA%A7%E5%B1%9E%E6%80%A7%E9%A2%84%E6%B5%8B"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">有监督的图级属性预测</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%93%E6%9E%84%E7%9B%B8%E4%BC%BC%E6%80%A7%E9%A2%84%E6%B5%8B"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">结构相似性预测</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E4%BD%93%E9%A2%84%E8%AE%AD%E7%BB%83%E7%AD%96%E7%95%A5"><span class="toc-number">1.2.3.</span> <span class="toc-text">总体预训练策略</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C"><span class="toc-number">1.3.</span> <span class="toc-text">进一步相关工作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C"><span class="toc-number">1.4.</span> <span class="toc-text">实验</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By Coding-Zuo</div><div class="footer_custom_text">Hi, welcome to my BLOG</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    loader: {
+      source: {
+        '[tex]/amsCd': '[tex]/amscd'
+      }
+    },
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        addClass: [200,() => {
+          document.querySelectorAll('mjx-container:not([display=\'true\']').forEach( node => {
+            const target = node.parentNode
+            if (!target.classList.contains('has-jax')) {
+              target.classList.add('mathjax-overflow')
+            }
+          })
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>if (document.getElementsByClassName('mermaid').length) {
+  if (window.mermaidJsLoad) mermaid.init()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(() => {
+      window.mermaidJsLoad = true
+      mermaid.initialize({
+        theme: 'default',
+      })
+      false && mermaid.init()
+    })
+  }
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'd652112bf81876e00118',
+      clientSecret: 'a5abed418c7cc2736af5b4d0cbd7ff97d460a5b3',
+      repo: 'Coding-Zuo.github.io',
+      owner: 'Coding-Zuo',
+      admin: ['Coding-Zuo'],
+      id: '77f3dda90595f394208dee349fa32684',
+      language: 'zh-CN',
+      perPage: 10,
+      distractionFreeMode: false,
+      pagerDirection: 'last',
+      createIssueManually: false,
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script src="/js/custom.js"></script><script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script src="//code.tidio.co/mak6nokafytw9mgrsuzglwzfxiy3fpdl.js" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
