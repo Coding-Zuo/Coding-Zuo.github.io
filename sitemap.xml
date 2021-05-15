@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://example.com/2021/05/15/GPT-GNN-Generative-Pre-Training-of-Graph-Neural-Networks/</loc>
+    
+    <lastmod>2021-05-15</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://example.com/2021/04/26/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F%E6%A8%A1%E6%9D%BF/</loc>
     
     <lastmod>2021-05-14</lastmod>
