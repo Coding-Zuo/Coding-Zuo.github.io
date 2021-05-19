@@ -340,6 +340,13 @@
 
   
   <url>
+    <loc>http://example.com/tags/DataGame/</loc>
+    <lastmod>2021-05-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://example.com/tags/GNN-cv/</loc>
     <lastmod>2021-05-19</lastmod>
     <changefreq>daily</changefreq>
@@ -354,14 +361,14 @@
   </url>
   
   <url>
-    <loc>http://example.com/tags/%E5%88%B7%E9%A2%98/</loc>
+    <loc>http://example.com/tags/GNN-nlp/</loc>
     <lastmod>2021-05-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>http://example.com/tags/GNN-nlp/</loc>
+    <loc>http://example.com/tags/%E5%88%B7%E9%A2%98/</loc>
     <lastmod>2021-05-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -376,13 +383,6 @@
   
   <url>
     <loc>http://example.com/tags/GNN/</loc>
-    <lastmod>2021-05-19</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://example.com/tags/DataGame/</loc>
     <lastmod>2021-05-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
