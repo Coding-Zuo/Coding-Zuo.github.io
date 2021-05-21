@@ -1,0 +1,356 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Unsupervised Multi-hop Question Answering by Question Generation | Coding-Zuo</title><meta name="keywords" content="GNN&amp;nlp"><meta name="author" content="Coding-Zuo"><meta name="copyright" content="Coding-Zuo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="Unsupervised Multi-hop Question Answering by Question Generation第一个研究无监督多跳QA的。 MQA-QG致力于探索在不参考任何人工标记的多跳问答对的情况下训练性能良好的多跳QA模型的可能性。 无标签数据源分为同构和异构，即作者考虑了两种数据源，一种是结构化的表格文本数据，一种是纯文本数据。 如果推理链中只有一种数据源的叫同构，两种数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Unsupervised Multi-hop Question Answering by Question Generation">
+<meta property="og:url" content="http://example.com/2021/05/21/Unsupervised-Multi-hop-Question-Answering-by-Question-Generation/index.html">
+<meta property="og:site_name" content="Coding-Zuo">
+<meta property="og:description" content="Unsupervised Multi-hop Question Answering by Question Generation第一个研究无监督多跳QA的。 MQA-QG致力于探索在不参考任何人工标记的多跳问答对的情况下训练性能良好的多跳QA模型的可能性。 无标签数据源分为同构和异构，即作者考虑了两种数据源，一种是结构化的表格文本数据，一种是纯文本数据。 如果推理链中只有一种数据源的叫同构，两种数">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2021/05/21/aiCYTZSPzWl8fGF.png">
+<meta property="article:published_time" content="2021-05-21T13:30:26.000Z">
+<meta property="article:modified_time" content="2021-05-21T17:01:32.274Z">
+<meta property="article:author" content="Coding-Zuo">
+<meta property="article:tag" content="GNN&amp;nlp">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/05/21/aiCYTZSPzWl8fGF.png"><link rel="shortcut icon" href="https://i.loli.net/2021/03/22/reFlcYOnP3dSuJX.png"><link rel="canonical" href="http://example.com/2021/05/21/Unsupervised-Multi-hop-Question-Answering-by-Question-Generation/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.json","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-05-22 01:01:32'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    })(window)</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sviptzk/HexoStaticFile@latest/Hexo/css/footer.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css"><meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="Coding-Zuo" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://i.loli.net/2021/03/22/YP2oqk7lOAfceTD.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">45</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">8</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://i.loli.net/2021/05/21/aiCYTZSPzWl8fGF.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Coding-Zuo</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Unsupervised Multi-hop Question Answering by Question Generation</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-05-21T13:30:26.000Z" title="发表于 2021-05-21 21:30:26">2021-05-21</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-05-21T17:01:32.274Z" title="更新于 2021-05-22 01:01:32">2021-05-22</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Unsupervised Multi-hop Question Answering by Question Generation"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Unsupervised-Multi-hop-Question-Answering-by-Question-Generation"><a href="#Unsupervised-Multi-hop-Question-Answering-by-Question-Generation" class="headerlink" title="Unsupervised Multi-hop Question Answering by Question Generation"></a>Unsupervised Multi-hop Question Answering by Question Generation</h1><p>第一个研究无监督多跳QA的。</p>
+<p>MQA-QG致力于探索在不参考任何人工标记的多跳问答对的情况下训练性能良好的多跳QA模型的可能性。</p>
+<p>无标签数据源分为同构和异构，即作者考虑了两种数据源，一种是结构化的表格文本数据，一种是纯文本数据。</p>
+<p>如果推理链中只有一种数据源的叫同构，两种数据源的叫异构。</p>
+<p>仅使用生成的训练数据，和有监督的性能做对比，对于Hybridge QA和HotpotQA数据集分别有61%和83%的有监督学习性能。其中hotpotQA(同构数据)，Hybridge QA(异构数据)。</p>
+<h2 id="大体过程"><a href="#大体过程" class="headerlink" title="大体过程"></a>大体过程</h2><p>从每个数据源中选择或生成相关信息，将多个信息整合成一个问题。</p>
+<ul>
+<li><p>首先定义一系列operators去检索或生成相关信息。</p>
+</li>
+<li><p>然后定义六个推理图每个对应于一种类型的多跳问题，且是建立在operators之上的计算图。</p>
+</li>
+</ul>
+<p><img src="https://i.loli.net/2021/05/21/dz9iH1rRSjg68ox.png" alt=""></p>
+<p>如上图，是生成table2text的问题。给出输入$(table, text)$ ，桥梁实体Jenson Button被operators找出来，他链接了文本数据和表格数据。</p>
+<p>然后再用一个叫 (QGwithEnt operator)的操作生成了右边的一个简单的问题：简森巴顿是什么时候出生？</p>
+<p>左边被 (DescribeEnt operator) 生成了一个描述桥梁实体的句子：简森巴顿是2004年美国大奖赛排名第4位的车手。</p>
+<p>最后再由 BridgeBlend operator 混合成一个多跳问题：2004年美国大奖赛排名第四的车手是什么时候出生的？</p>
+<h2 id="具体方法"><a href="#具体方法" class="headerlink" title="具体方法"></a>具体方法</h2><p>给一个问题 q 和一系列文本 $C = {C_1,…,C_n}$ 其中 $C_i$ 可能是文章、table，如果推广到多模态还可能是image。</p>
+<p>QA model 表示为 $p_{\theta}(a|q,C)$</p>
+<p>在本文中，作者只考虑两跳问题，并将所需的上下文表示为 $C_i$ 和 $C_j$。</p>
+<p>主要有三个成分分别是 </p>
+<ul>
+<li>operators：由规则或现成的预训练模型实现的原子操作，用于从输入上下文 $(C_i、C_j)$ 检索、生成或融合相关信息。</li>
+<li>reasoning graphs：不同的推理图定义了不同类型的以operators构建的多跳QA推理链。通过执行推理图生成训练 (q，a) 对。</li>
+<li>question filtration：去除不相关和不自然的(q，a)对，给出多跳问答的最终训练集D。</li>
+</ul>
+<p><img src="https://i.loli.net/2021/05/21/zQhscxV4MLRoWwn.png" alt=""></p>
+<h3 id="Operators"><a href="#Operators" class="headerlink" title="Operators"></a>Operators</h3><p>定义了8个基本operator ，分为三种类型：</p>
+<ul>
+<li>选择：从单个上下文中检索相关信息</li>
+<li>生成：从单个上下文中生成信息</li>
+<li>融合：将多个检索或生成的信息进行融合，以构造多跳问题。</li>
+</ul>
+<h4 id="FindBridge"><a href="#FindBridge" class="headerlink" title="FindBridge"></a>FindBridge</h4><p>大多数多跳问题依赖于连接不同输入上下文的实体整合多条信息，即桥梁实体。</p>
+<p>FindBridge将两个上下文 $(C_i、C_j)$ 作为输入，并提取出现在 $C_i$ 和 $C_j$ 中的实体作为桥实体。如在第一个图中，提取“Jenson Button”作为桥实体。</p>
+<h3 id="FindComEnt"><a href="#FindComEnt" class="headerlink" title="FindComEnt"></a>FindComEnt</h3><p>在生成比较类型的多跳问题时，我们需要决定为桥实体比较什么属性。</p>
+<p>Find-Coment提取潜在的可比性，从文本中提取具有NER类型的实体作为比较属性(国籍、位置、日期时间和数字)。</p>
+<p><img src="https://i.loli.net/2021/05/21/desLTyfBGOnzgqR.png" alt=""></p>
+<p>如上图的 #1 步骤</p>
+<h4 id="QGwithAns和QGwithEnt"><a href="#QGwithAns和QGwithEnt" class="headerlink" title="QGwithAns和QGwithEnt"></a>QGwithAns和QGwithEnt</h4><p>这两个都是生成简单的单跳问题的， 随后会被用来合成多跳问题。</p>
+<p>作者使用预培训好的Google T5模型微调在SQuAD来实现这两个操作员。给定上下文-问题-答案三元组训练集D={(c，q，a)}，我们在两个任务上联合微调模型。给定上下文-问题-答案三元组训练集 $D={(c，q，a)}$ ，在两个任务上联合微调模型。</p>
+<ul>
+<li>QGwithAns的目标是生成一个问题Q，其中a为答案，给定(c，a)为输入。</li>
+<li>QGwithEnt旨在生成包含特定实体e的问题Q，给定(c，e)作为输入。</li>
+</ul>
+<p><img src="https://i.loli.net/2021/05/21/IR6M35PrYKt91ba.png" alt=""></p>
+<h4 id="CompBlend"><a href="#CompBlend" class="headerlink" title="CompBlend"></a>CompBlend</h4><p>基于两个单跳问题Q1和Q2组成比较型多跳问题。这两个问题询问两个不同实体e1和e2的相同比较属性p。我们通过将p、e1和e2填入预定义模板来形成多跳问题。</p>
+<p><img src="https://i.loli.net/2021/05/21/yiafYuGkUSeWl4B.png" alt=""></p>
+<h4 id="DescribeEnt"><a href="#DescribeEnt" class="headerlink" title="DescribeEnt"></a>DescribeEnt</h4><p>给定table $T$ 和表中的目标实体 e，DescribeEnt operator 基于T中的信息生成描述实体 e 的语句。使用GPT-TabGen模型，该模型首先使用模板将T 变成文档 $P_T$，然后将 $P_T$ 送到GPT-2生成输出句子 Y</p>
+<p><img src="https://i.loli.net/2021/05/22/W9gHwV2PKpRtulr.png" alt=""></p>
+<p>为了避免 $P_T$中存在不相关信息，应用了一个仅描述目标实体所在行的模板。然后，在 ToTTo 数据集上通过最大化 $p(Y|P_T;β)$ 的来微调模型，β表示模型参数。ToTTo 数据集是一种受控的表格到文本生成的大规模数据集。</p>
+<h4 id="QuesToSent"><a href="#QuesToSent" class="headerlink" title="QuesToSent"></a>QuesToSent</h4><p>通过应用《Transforming question answering datasets into natural language inference datasets》定义的语言规则将问题Q转换成其陈述形式s。</p>
+<h4 id="BridgeBlend"><a href="#BridgeBlend" class="headerlink" title="BridgeBlend"></a>BridgeBlend</h4><p>基于1)桥接实体e。2)包含e的单跳问题q。3)描述e的句子s。组成桥接型多跳问题。</p>
+<p><img src="https://i.loli.net/2021/05/22/Rqj6PJW5kCOnS7x.png" alt=""></p>
+<p>作者通过应用简单但有效的规则来实现这一点，该规则将 Q中的桥接实体 e替换为 “the [MASK] that s”，并采用预训练的Bert-Large来填充[MASK]。</p>
+<h3 id="Reasoning-Graphs"><a href="#Reasoning-Graphs" class="headerlink" title="Reasoning Graphs"></a>Reasoning Graphs</h3><p>基于以上的operators ，作者定义了6种类型的推理图，生成不同类型的问题。</p>
+<p> 每个问题都是有向无环图 G，每个G对应一个operator。</p>
+<p>一共有四类：</p>
+<ul>
+<li>Table-to-Text：表格和文本之间的桥接式问题，答案来自文本。</li>
+<li>Text-to-Table ：表格和文本之间的桥接式问题，答案来自表格。</li>
+<li>Text-to-Text : 桥接类型，两边都是文本。</li>
+<li>Comparison：基于两篇文章的比较型问题。</li>
+</ul>
+<p>通过执行每个推理图来生成QA对。通过定义新的算子和推理图，可以很容易地扩展到其他模态和推理链。</p>
+<p><img src="https://i.loli.net/2021/05/22/9fWtj7U2vu4lbIi.png" alt=""></p>
+<p><img src="https://i.loli.net/2021/05/22/aAs6NjF2TlPYiQd.png" alt=""></p>
+<p><img src="https://i.loli.net/2021/05/22/mnT1JuCsK25ZrVx.png" alt=""></p>
+<h3 id="Question-Filtration"><a href="#Question-Filtration" class="headerlink" title="Question Filtration"></a>Question Filtration</h3><p>使用了两种方法来提炼生成的QA对的质量</p>
+<ul>
+<li>Filtration：使用预先训练的gpt-2模型来过滤解决那些不流利或不自然的问题。选择困惑度最低的前N个样本作为生成的数据集来训练多跳QA模型。</li>
+<li>Paraphrasing：基于BART模型训练一个问题解释模型来解释每个生成的问题。</li>
+</ul>
+<p>实验表明，过滤给QA模型带来了明显的改进。然而，在实验中展示了释义产生了更多类似人类的问题，但是引入了语义漂移问题，从而损害了QA性能。</p>
+<p>为了生成更自然的问题，我们试图训练一个基于BART的问题释义模型，以对每个生成的问题进行语法分析。观察到，通过将原问题的冗余部分改写成更简洁的表达，释义确实产生了更多的流行性问题。然而，释义引入了“语义漂移”问题，即释义后的疑问句改变了原疑问句的语义。我们认为这会影响QA性能，因为它会产生问答不一致的嘈杂样本。</p>
+<p>作者认为在无监督多跳问答中，对于生成的问题，语义的忠实性比流利性更重要。这就解释了为什么设计手工制作的推理图来保证语义的忠实性。然而，如何在保持语义忠实性的同时生成流畅的类人问题是未来的一个重要方向。</p>
+<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><p>对于Hybridge QA，问题按其答案是来自表格(56%)还是来自段落(44%)进行划分。大约80%的Hybridge QA问题需要桥接式推理。</p>
+<p><img src="https://i.loli.net/2021/05/22/TpgkmquVjYtrPMf.png" alt=""></p>
+<p>在Hybridge QA和HotpotQA上的QA性能。</p>
+<p><img src="https://i.loli.net/2021/05/22/IUMvlYxrGH4j8WC.png" alt=""></p>
+<p><img src="https://i.loli.net/2021/05/22/AKh2cWJMs9UYrn3.png" alt=""></p>
+</article><div class="post-reward"><div class="reward-button button--animated"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2021/05/19/Is-Graph-Structure-Necessary-for-Multi-hop-Question-Answering/"><img class="next-cover" src="https://i.loli.net/2021/05/19/tcWOdjqYngKiszM.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Is Graph Structure Necessary for Multi-hop Question Answering?</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/03/27/Cognitive-Graph-for-Multi-Hop-Reading-Comprehension-at-Scale-ACL2019/" title="Cognitive Graph for Multi-Hop Reading Comprehension at Scale(ACL2019)"><img class="cover" src="https://i.loli.net/2021/03/27/548YCMeHJnoBtDZ.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-03-27</div><div class="title">Cognitive Graph for Multi-Hop Reading Comprehension at Scale(ACL2019)</div></div></a></div><div><a href="/2021/04/29/Hierarchical-Graph-Network-for-Multi-hop-Question-Answering/" title="Hierarchical Graph Network for Multi-hop Question Answering"><img class="cover" src="https://i.loli.net/2021/04/29/l7rNGkt916yqXW5.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-04-29</div><div class="title">Hierarchical Graph Network for Multi-hop Question Answering</div></div></a></div><div><a href="/2021/03/22/HopRetriever-Retrieve-Hops-over-Wikipedia-to-Answer-Complex-Questions-AAAI2020/" title="HopRetriever:Retrieve Hops over Wikipedia to Answer Complex Questions(AAAI2020)"><img class="cover" src="https://z3.ax1x.com/2021/03/23/6T4MDg.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-03-22</div><div class="title">HopRetriever:Retrieve Hops over Wikipedia to Answer Complex Questions(AAAI2020)</div></div></a></div><div><a href="/2021/05/19/Is-Graph-Structure-Necessary-for-Multi-hop-Question-Answering/" title="Is Graph Structure Necessary for Multi-hop Question Answering?"><img class="cover" src="https://i.loli.net/2021/05/19/tcWOdjqYngKiszM.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-05-19</div><div class="title">Is Graph Structure Necessary for Multi-hop Question Answering?</div></div></a></div><div><a href="/2021/03/27/Multi-hop-Reading-Comprehension-across-Multiple-Documents-by-Reasoning-over-Heterogeneous-Graphs/" title="Multi-hop Reading Comprehension across Multiple Documents by Reasoning over Heterogeneous Graphs"><img class="cover" src="https://i.loli.net/2021/03/27/fCj9ordWQJygFIA.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-03-27</div><div class="title">Multi-hop Reading Comprehension across Multiple Documents by Reasoning over Heterogeneous Graphs</div></div></a></div><div><a href="/2021/04/22/Select-Answer-and-Explain-Interpretable-Multi-hop-Reading-Comprehension-over-Multiple-Documents/" title="Select, Answer and Explain-Interpretable Multi-hop Reading Comprehension over Multiple Documents"><img class="cover" src="https://i.loli.net/2021/04/22/qcORiXUfsp7DHMg.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-04-22</div><div class="title">Select, Answer and Explain-Interpretable Multi-hop Reading Comprehension over Multiple Documents</div></div></a></div></div></div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Coding-Zuo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2021/05/21/Unsupervised-Multi-hop-Question-Answering-by-Question-Generation/">http://example.com/2021/05/21/Unsupervised-Multi-hop-Question-Answering-by-Question-Generation/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">Coding-Zuo</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/GNN-nlp/">GNN&amp;nlp</a></div><div class="post_share"><div class="addthis_inline_share_toolbox"></div><script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=null" async="async"></script></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Unsupervised-Multi-hop-Question-Answering-by-Question-Generation"><span class="toc-number">1.</span> <span class="toc-text">Unsupervised Multi-hop Question Answering by Question Generation</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%A7%E4%BD%93%E8%BF%87%E7%A8%8B"><span class="toc-number">1.1.</span> <span class="toc-text">大体过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B7%E4%BD%93%E6%96%B9%E6%B3%95"><span class="toc-number">1.2.</span> <span class="toc-text">具体方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Operators"><span class="toc-number">1.2.1.</span> <span class="toc-text">Operators</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#FindBridge"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">FindBridge</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FindComEnt"><span class="toc-number">1.2.2.</span> <span class="toc-text">FindComEnt</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#QGwithAns%E5%92%8CQGwithEnt"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">QGwithAns和QGwithEnt</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CompBlend"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">CompBlend</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#DescribeEnt"><span class="toc-number">1.2.2.3.</span> <span class="toc-text">DescribeEnt</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#QuesToSent"><span class="toc-number">1.2.2.4.</span> <span class="toc-text">QuesToSent</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#BridgeBlend"><span class="toc-number">1.2.2.5.</span> <span class="toc-text">BridgeBlend</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Reasoning-Graphs"><span class="toc-number">1.2.3.</span> <span class="toc-text">Reasoning Graphs</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Question-Filtration"><span class="toc-number">1.2.4.</span> <span class="toc-text">Question Filtration</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C"><span class="toc-number">1.3.</span> <span class="toc-text">实验</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By Coding-Zuo</div><div class="footer_custom_text">Hi, welcome to my BLOG</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    loader: {
+      source: {
+        '[tex]/amsCd': '[tex]/amscd'
+      }
+    },
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        addClass: [200,() => {
+          document.querySelectorAll('mjx-container:not([display=\'true\']').forEach( node => {
+            const target = node.parentNode
+            if (!target.classList.contains('has-jax')) {
+              target.classList.add('mathjax-overflow')
+            }
+          })
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>if (document.getElementsByClassName('mermaid').length) {
+  if (window.mermaidJsLoad) mermaid.init()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(() => {
+      window.mermaidJsLoad = true
+      mermaid.initialize({
+        theme: 'default',
+      })
+      false && mermaid.init()
+    })
+  }
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'd652112bf81876e00118',
+      clientSecret: 'a5abed418c7cc2736af5b4d0cbd7ff97d460a5b3',
+      repo: 'Coding-Zuo.github.io',
+      owner: 'Coding-Zuo',
+      admin: ['Coding-Zuo'],
+      id: '5b98361dceb8583b14e376925439d1f3',
+      language: 'zh-CN',
+      perPage: 10,
+      distractionFreeMode: false,
+      pagerDirection: 'last',
+      createIssueManually: false,
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script src="/js/custom.js"></script><script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script src="//code.tidio.co/mak6nokafytw9mgrsuzglwzfxiy3fpdl.js" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
