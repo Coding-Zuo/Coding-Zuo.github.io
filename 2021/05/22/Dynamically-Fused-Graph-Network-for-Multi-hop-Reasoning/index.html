@@ -1,0 +1,352 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Dynamically Fused Graph Network for Multi-hop Reasoning | Coding-Zuo</title><meta name="keywords" content="GNN&amp;nlp"><meta name="author" content="Coding-Zuo"><meta name="copyright" content="Coding-Zuo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="Dynamically Fused Graph Network for Multi-hop Reasoning受人类分步推理行为的启发，提出了动态融合图网络(DFGN)，回答那些需要多个分散证据并在这些证据上进行推理的问题。不依赖于任何额外的预定义知识基础，能回答开放领域中的问题。 大体过程 给出了一个问题和三个段落。DFGN通过从多个段落构造实体图，预测动态掩码选择子图，沿着图传播信息，最后将图">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Dynamically Fused Graph Network for Multi-hop Reasoning">
+<meta property="og:url" content="http://example.com/2021/05/22/Dynamically-Fused-Graph-Network-for-Multi-hop-Reasoning/index.html">
+<meta property="og:site_name" content="Coding-Zuo">
+<meta property="og:description" content="Dynamically Fused Graph Network for Multi-hop Reasoning受人类分步推理行为的启发，提出了动态融合图网络(DFGN)，回答那些需要多个分散证据并在这些证据上进行推理的问题。不依赖于任何额外的预定义知识基础，能回答开放领域中的问题。 大体过程 给出了一个问题和三个段落。DFGN通过从多个段落构造实体图，预测动态掩码选择子图，沿着图传播信息，最后将图">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2021/05/22/Vq7zjt64kiUQfEv.png">
+<meta property="article:published_time" content="2021-05-22T04:35:49.000Z">
+<meta property="article:modified_time" content="2021-05-22T08:34:06.616Z">
+<meta property="article:author" content="Coding-Zuo">
+<meta property="article:tag" content="GNN&amp;nlp">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/05/22/Vq7zjt64kiUQfEv.png"><link rel="shortcut icon" href="https://i.loli.net/2021/03/22/reFlcYOnP3dSuJX.png"><link rel="canonical" href="http://example.com/2021/05/22/Dynamically-Fused-Graph-Network-for-Multi-hop-Reasoning/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.json","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-05-22 16:34:06'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    })(window)</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sviptzk/HexoStaticFile@latest/Hexo/css/footer.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css"><meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="Coding-Zuo" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://i.loli.net/2021/03/22/YP2oqk7lOAfceTD.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">47</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">8</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://i.loli.net/2021/05/22/Vq7zjt64kiUQfEv.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Coding-Zuo</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Dynamically Fused Graph Network for Multi-hop Reasoning</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-05-22T04:35:49.000Z" title="发表于 2021-05-22 12:35:49">2021-05-22</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-05-22T08:34:06.616Z" title="更新于 2021-05-22 16:34:06">2021-05-22</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Dynamically Fused Graph Network for Multi-hop Reasoning"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Dynamically-Fused-Graph-Network-for-Multi-hop-Reasoning"><a href="#Dynamically-Fused-Graph-Network-for-Multi-hop-Reasoning" class="headerlink" title="Dynamically Fused Graph Network for Multi-hop Reasoning"></a>Dynamically Fused Graph Network for Multi-hop Reasoning</h1><p>受人类分步推理行为的启发，提出了动态融合图网络(DFGN)，回答那些需要多个分散证据并在这些证据上进行推理的问题。不依赖于任何额外的预定义知识基础，能回答开放领域中的问题。</p>
+<h2 id="大体过程"><a href="#大体过程" class="headerlink" title="大体过程"></a>大体过程</h2><p><img src="https://i.loli.net/2021/05/22/OzWcZmVIGBq9yut.png" alt=""></p>
+<p>给出了一个问题和三个段落。DFGN通过从多个段落构造实体图，预测动态掩码选择子图，沿着图传播信息，最后将图中的信息传回文本来定位答案，从而对事实进行多步推理。节点是实体引用，带颜色节点表示潜在实体。边由共现关系构造而成，每一步都由DFGN选择灰色圆圈内的子图来处理。</p>
+<h2 id="挑战"><a href="#挑战" class="headerlink" title="挑战"></a>挑战</h2><ol>
+<li>由于并不是每个文档都包含相关信息，基于多跳文本的问答需要从多个段落中滤除噪声并提取有用信息。</li>
+</ol>
+<blockquote>
+<p>作者思路: 通过DFGN这种多轮迭代的动态实体图来解决，如上图DFGN每一轮都通过掩码预测模块在动态图上生成和推理，其中不相关的实体被屏蔽，只有推理远被保留也就是灰色圆圈内的子图，这种做法缓解了误差的传播问题。</p>
+<p>此外，DFGN的预测mask的过程可隐含地导出推理链，可以解释推理结果。针对开放域语料库基本真值推理链难以定义和标注的问题，提出了一种可行的弱监督掩码学习方法。提出了一种新的度量来评估预测推理链和构建的实体图的质量。</p>
+</blockquote>
+<p>但这样做有用的信息被mask了怎么办？怎么确定的mask范围？其实是用了注意力机制计算实体的权重，后文写。</p>
+<ol>
+<li>不能直接从实体图中提取出答案，现实中，答案可能不在所提取的实体图的实体中。</li>
+</ol>
+<blockquote>
+<p>作者思路：在DFGN中设计了一个fusion处理模块，不仅将信息从文档聚合到实体图(Doc2graph)，还将实体图的信息传播回文档表示(Raph2doc)。通过文档token和实体在每一跳迭代地执行融合过程，然后从文档令牌获得最终结果答案。Doc2graph和Graph2doc的融合过程以及动态实体图共同改善了文档信息和实体图之间的交互性，从而减少了噪声，从而提高了答案的准确性。</p>
+</blockquote>
+<p>相当于在tokens的表达中加入了推理图中的推理信息，这个思想还是挺不错的。</p>
+<h2 id="具体过程"><a href="#具体过程" class="headerlink" title="具体过程"></a>具体过程</h2><p>模仿人类对QA的推理过程。从查询感兴趣的实体开始，聚焦于开始实体周围的单词，连接到在邻居中发现的或由相同表面信息链接的某些相关实体，重复该步骤以形成推理链，并且落在可能是答案的某个实体或片段上。</p>
+<p>DFGN包含五个组件：</p>
+<p><img src="https://i.loli.net/2021/05/22/DMpXHmNs6PYVbad.png" alt=""></p>
+<ul>
+<li>段落选择子网络</li>
+<li>实体图构建模块</li>
+<li>编码层</li>
+<li>用于多跳推理的融合模块</li>
+<li>最终预测层</li>
+</ul>
+<h3 id="Fusion-Block"><a href="#Fusion-Block" class="headerlink" title="Fusion Block"></a>Fusion Block</h3><p>这里只着重写一下Fusion Block</p>
+<p>在为查询Q和上下文C计算嵌入后，剩下的挑战是如何识别支持实体和潜在答案的文本跨度。</p>
+<p>Fusion Block从 $Q_0$和 $C_0$ 开始，寻找一步支持实体。</p>
+<ol>
+<li>通过计算实体嵌入从tokens将信息传递到实体(Doc2Graph Flow)</li>
+<li>在实体图上进行信息传递</li>
+<li>传递信息从实体图到文本tokens(Graph2Doc flow)</li>
+</ol>
+<p><img src="https://i.loli.net/2021/05/22/zlremMsBCHVwILJ.png" alt=""></p>
+<h4 id="Doc2Graph-Flow"><a href="#Doc2Graph-Flow" class="headerlink" title="Doc2Graph Flow"></a>Doc2Graph Flow</h4><p>由于通过NER工具识别每个实体，因此利用与实体相关联的文本跨度来计算实体嵌入(Doc2Graph)。</p>
+<p>为此，作者定义了一个 M 是01矩阵，$M<em>{i,j}$ 的值意思是，如果第 $i$ 个token在第j个实体的范围内，则 $M</em>{i,j}=1$</p>
+<p>这个 M 用于选择与实体相关联的文本范围。这其实是一个池化操作，将上下文C 的嵌入变成了实体E的嵌入 。</p>
+<p>$E<em>{t-1} = [e</em>{t-1,1},…,e_{t-1,N}] \in R^{2d_2\times N}$  这个模块作者定位 Tok2Ent，就是上图的左边部分。</p>
+<h4 id="Dynamic-Graph-Attention"><a href="#Dynamic-Graph-Attention" class="headerlink" title="Dynamic Graph Attention"></a>Dynamic Graph Attention</h4><p>然后是图中的中间部分，动态图注意力部分。</p>
+<p>在从输入上下文Ct−1获得实体嵌入后，我们应用图神经网络将节点信息传播给它们的邻居。我们提出了一种动态图注意机制来模仿人类的循序渐进的探索和推理行为。与q越相关，邻居节点从附近接收的信息越多。</p>
+<p>首先通过在实体上创建 Soft Mask 来识别与查询相关的节点。它充当信息看门人，即只允许与查询有关的那些实体节点传播信息。</p>
+<p>使用查询嵌入和实体嵌入之间的注意力网络来预测 Soft Mask $m_t$，其目的是表示第 t 个推理步骤中的开始实体：</p>
+<script type="math/tex; mode=display">
+\begin{equation}\begin{split} 
+ \hat q^{(t-1)} &= MeanPooling(Q^{t-1}) \\
+ \gamma^{(t)}_i &= \frac {\hat q^{(t-1)} V^{(t)} e_i^{(t-1)} }{\sqrt{d_2}}\\
+ m^{(t)} &= \sigma([\gamma^{(t)}_1,...,\gamma_{N}^{(t)}]) \\
+ \hat E^{(t-1)} &= [m_1^{(t)}e_1^{(t-1)} ,..., m^{(t)}_N e_{N}^{(t-1)}]
+    \end{split}\end{equation}</script><p>其实就是用注意力机制计算每个实体嵌入的权重。$V_t$ 是线性映射矩阵。</p>
+<p>总之就是通过Soft Mask，得到想要的开始推理的实体，并将它送入图中初始化。噪声信息不放入图中，相当于过滤掉。</p>
+<blockquote>
+<p>此外，作者引入一个弱监督信号来诱导每个 Fusion Block 处的软掩码来匹配启发式掩码。对于每个训练案例，启发式掩码包含从查询中检测到的开始掩码，并且通过对相邻矩阵应用广度优先搜索(BFS)获得的附加BFS掩码给出开始掩码。然后，将预测的软掩码和启发式之间的二进制交叉熵损失添加到目标。（跳过那些无法从查询中检测到起始掩码的情况）。</p>
+</blockquote>
+<p>在送入图后的信息聚合方式是使用的GAT，但有一点作者和以前的GAT不同，</p>
+<p>在Dynamic Graph Attention中，每个节点隐层的列进行求和，形成一个新的实体状态，其中包含它从邻居收到的全部信息：</p>
+<script type="math/tex; mode=display">
+e_i^{(t)} =ReLU(\sum_{j\in B_i} \alpha_{j,i}^{(t)} h_j^{(t)})</script><p>其中 $B_i$ 是邻居实体集合中的第 i 个实体，所以一次更新后的实体表达为 $E^{(t)} =[e_1^{(t)},…,e_N^{(t)}] $</p>
+<h4 id="Updating-Query"><a href="#Updating-Query" class="headerlink" title="Updating Query"></a>Updating Query</h4><p>一条推理链包含多个步骤，每一步新访问的实体就是下一步的起始实体。</p>
+<p>为了预测下一步期望的起始实体，引入了一种Updating Query机制，通过当前步骤的实体嵌入来更新查询嵌入。</p>
+<script type="math/tex; mode=display">
+Q^{(t)} = Bi-Attention(Q^{(t-1)},E^{(t)})</script><h4 id="Graph-to-Document-Flow"><a href="#Graph-to-Document-Flow" class="headerlink" title="Graph to Document Flow"></a>Graph to Document Flow</h4><p>利用Tok2Ent和动态图关注度，实现了实体级的推理步骤。然而，不受限制的答案仍然无法追溯。</p>
+<p>为了解决这个问题，开发了一个Graph2Doc模块来保持信息从实体回流到上下文中的tokens。因此，与答案有关的文本跨度可以在上下文中本地化。</p>
+<p>使用Doc2Graph Flow中一样的M矩阵，将$C_{t-1}$ 中的先前tokens嵌入和 对应于该令牌的关联实体嵌入对应回来。</p>
+<p>M中的每一行对应一个令牌，因此如果该令牌出现在实体的提及中，就使用它从 $E_t$ 中选择一个实体的嵌入。利用LSTM层进一步处理该信息，以产生下一级上下文表示： $C^{(t)} = LSTM([C^{(t-1)}, ME^{(t)T}])$</p>
+<h3 id="Prediction"><a href="#Prediction" class="headerlink" title="Prediction"></a>Prediction</h3><p>有四个输出维度，1.支持句，2.答案的开始位置，3.答案的结束位置，4.答案的类型。</p>
+<p>使用四个同构的LSTM $F_i$ 是逐层堆叠的。最后Fusion Block的上下文表示被发送到第一个LSTM $F_0$。每个$F_i$输出的logits为$  O∈R^{m×d2}$   ，并计算这些logit上的交叉熵损失。</p>
+<p><img src="https://i.loli.net/2021/05/22/6ov3shgtbaNZWDP.png" alt=""></p>
+<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><p><img src="https://i.loli.net/2021/05/22/udk43YL7pFQDCZX.png" alt=""></p>
+<h3 id="作者提出的推理链质量的衡量标准"><a href="#作者提出的推理链质量的衡量标准" class="headerlink" title="作者提出的推理链质量的衡量标准"></a>作者提出的推理链质量的衡量标准</h3><p>ESP(实体级支持)分数</p>
+<blockquote>
+<p>推理链是实体图上的一条有向路径，因此高质量的实体图是良好推理的基础。由于NER模型的精度有限和图结构的不完备性，31.3%的发展集中的情况不能进行完整的推理过程，其中至少有一个支持语句不能通过实体图到达，即在这个句子中没有实体被NER模型识别。我们将这类情况命名为“缺失支撑实体”，这种情况的比率可以用来评价图的构造质量。<br>下面，在给出ESP(实体级支持)分数之前，我们首先给出几个定义。</p>
+</blockquote>
+<p><img src="https://i.loli.net/2021/05/22/Eft6vqQFXSKu7ek.png" alt=""></p>
+<h3 id="案例分析"><a href="#案例分析" class="headerlink" title="案例分析"></a>案例分析</h3><p><img src="https://i.loli.net/2021/05/22/ryUW4c5s7VbQwKx.png" alt=""></p>
+</article><div class="post-reward"><div class="reward-button button--animated"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2021/05/22/120%E4%B8%89%E8%A7%92%E5%BD%A2%E6%9C%80%E5%B0%8F%E8%B7%AF%E5%BE%84%E5%92%8C/"><img class="next-cover" src="https://i.loli.net/2021/05/22/cCSgh27ltmZ9R5Q.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">120三角形最小路径和</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/03/27/Cognitive-Graph-for-Multi-Hop-Reading-Comprehension-at-Scale-ACL2019/" title="Cognitive Graph for Multi-Hop Reading Comprehension at Scale(ACL2019)"><img class="cover" src="https://i.loli.net/2021/03/27/548YCMeHJnoBtDZ.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-03-27</div><div class="title">Cognitive Graph for Multi-Hop Reading Comprehension at Scale(ACL2019)</div></div></a></div><div><a href="/2021/03/22/HopRetriever-Retrieve-Hops-over-Wikipedia-to-Answer-Complex-Questions-AAAI2020/" title="HopRetriever:Retrieve Hops over Wikipedia to Answer Complex Questions(AAAI2020)"><img class="cover" src="https://z3.ax1x.com/2021/03/23/6T4MDg.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-03-22</div><div class="title">HopRetriever:Retrieve Hops over Wikipedia to Answer Complex Questions(AAAI2020)</div></div></a></div><div><a href="/2021/05/19/Is-Graph-Structure-Necessary-for-Multi-hop-Question-Answering/" title="Is Graph Structure Necessary for Multi-hop Question Answering?"><img class="cover" src="https://i.loli.net/2021/05/19/tcWOdjqYngKiszM.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-05-19</div><div class="title">Is Graph Structure Necessary for Multi-hop Question Answering?</div></div></a></div><div><a href="/2021/04/29/Hierarchical-Graph-Network-for-Multi-hop-Question-Answering/" title="Hierarchical Graph Network for Multi-hop Question Answering"><img class="cover" src="https://i.loli.net/2021/04/29/l7rNGkt916yqXW5.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-04-29</div><div class="title">Hierarchical Graph Network for Multi-hop Question Answering</div></div></a></div><div><a href="/2021/03/27/Multi-hop-Reading-Comprehension-across-Multiple-Documents-by-Reasoning-over-Heterogeneous-Graphs/" title="Multi-hop Reading Comprehension across Multiple Documents by Reasoning over Heterogeneous Graphs"><img class="cover" src="https://i.loli.net/2021/03/27/fCj9ordWQJygFIA.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-03-27</div><div class="title">Multi-hop Reading Comprehension across Multiple Documents by Reasoning over Heterogeneous Graphs</div></div></a></div><div><a href="/2021/04/22/Select-Answer-and-Explain-Interpretable-Multi-hop-Reading-Comprehension-over-Multiple-Documents/" title="Select, Answer and Explain-Interpretable Multi-hop Reading Comprehension over Multiple Documents"><img class="cover" src="https://i.loli.net/2021/04/22/qcORiXUfsp7DHMg.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-04-22</div><div class="title">Select, Answer and Explain-Interpretable Multi-hop Reading Comprehension over Multiple Documents</div></div></a></div></div></div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Coding-Zuo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2021/05/22/Dynamically-Fused-Graph-Network-for-Multi-hop-Reasoning/">http://example.com/2021/05/22/Dynamically-Fused-Graph-Network-for-Multi-hop-Reasoning/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">Coding-Zuo</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/GNN-nlp/">GNN&amp;nlp</a></div><div class="post_share"><div class="addthis_inline_share_toolbox"></div><script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=null" async="async"></script></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Dynamically-Fused-Graph-Network-for-Multi-hop-Reasoning"><span class="toc-number">1.</span> <span class="toc-text">Dynamically Fused Graph Network for Multi-hop Reasoning</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%A7%E4%BD%93%E8%BF%87%E7%A8%8B"><span class="toc-number">1.1.</span> <span class="toc-text">大体过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%91%E6%88%98"><span class="toc-number">1.2.</span> <span class="toc-text">挑战</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B7%E4%BD%93%E8%BF%87%E7%A8%8B"><span class="toc-number">1.3.</span> <span class="toc-text">具体过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Fusion-Block"><span class="toc-number">1.3.1.</span> <span class="toc-text">Fusion Block</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Doc2Graph-Flow"><span class="toc-number">1.3.1.1.</span> <span class="toc-text">Doc2Graph Flow</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Dynamic-Graph-Attention"><span class="toc-number">1.3.1.2.</span> <span class="toc-text">Dynamic Graph Attention</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Updating-Query"><span class="toc-number">1.3.1.3.</span> <span class="toc-text">Updating Query</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Graph-to-Document-Flow"><span class="toc-number">1.3.1.4.</span> <span class="toc-text">Graph to Document Flow</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Prediction"><span class="toc-number">1.3.2.</span> <span class="toc-text">Prediction</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C"><span class="toc-number">1.4.</span> <span class="toc-text">实验</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%9C%E8%80%85%E6%8F%90%E5%87%BA%E7%9A%84%E6%8E%A8%E7%90%86%E9%93%BE%E8%B4%A8%E9%87%8F%E7%9A%84%E8%A1%A1%E9%87%8F%E6%A0%87%E5%87%86"><span class="toc-number">1.4.1.</span> <span class="toc-text">作者提出的推理链质量的衡量标准</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%E5%88%86%E6%9E%90"><span class="toc-number">1.4.2.</span> <span class="toc-text">案例分析</span></a></li></ol></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By Coding-Zuo</div><div class="footer_custom_text">Hi, welcome to my BLOG</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    loader: {
+      source: {
+        '[tex]/amsCd': '[tex]/amscd'
+      }
+    },
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        addClass: [200,() => {
+          document.querySelectorAll('mjx-container:not([display=\'true\']').forEach( node => {
+            const target = node.parentNode
+            if (!target.classList.contains('has-jax')) {
+              target.classList.add('mathjax-overflow')
+            }
+          })
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>if (document.getElementsByClassName('mermaid').length) {
+  if (window.mermaidJsLoad) mermaid.init()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(() => {
+      window.mermaidJsLoad = true
+      mermaid.initialize({
+        theme: 'default',
+      })
+      false && mermaid.init()
+    })
+  }
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'd652112bf81876e00118',
+      clientSecret: 'a5abed418c7cc2736af5b4d0cbd7ff97d460a5b3',
+      repo: 'Coding-Zuo.github.io',
+      owner: 'Coding-Zuo',
+      admin: ['Coding-Zuo'],
+      id: 'e894b9bd01e75ac4dda24c1338a511b0',
+      language: 'zh-CN',
+      perPage: 10,
+      distractionFreeMode: false,
+      pagerDirection: 'last',
+      createIssueManually: false,
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script src="/js/custom.js"></script><script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script src="//code.tidio.co/mak6nokafytw9mgrsuzglwzfxiy3fpdl.js" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
