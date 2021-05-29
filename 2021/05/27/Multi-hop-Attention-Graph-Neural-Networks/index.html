@@ -1,0 +1,348 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Multi-hop Attention Graph Neural Networks | Coding-Zuo</title><meta name="keywords" content="GNN"><meta name="author" content="Coding-Zuo"><meta name="copyright" content="Coding-Zuo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="Multi-hop Attention Graph Neural NetworksGAT中的attention运算只能关注节点相连节点表达，这种机制不考虑不直接相连但又有很重要信息的节点表达。 所以提出了多跳注意力图神经网络(MAGNA)，这是一种将多跳上下文信息融入到注意力计算的每一层的方法。 其将注意力分数分散到整个网络，相当于增加了每一层的GNN的“感受野”。  如左图，考虑A和D节点，普通">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Multi-hop Attention Graph Neural Networks">
+<meta property="og:url" content="http://example.com/2021/05/27/Multi-hop-Attention-Graph-Neural-Networks/index.html">
+<meta property="og:site_name" content="Coding-Zuo">
+<meta property="og:description" content="Multi-hop Attention Graph Neural NetworksGAT中的attention运算只能关注节点相连节点表达，这种机制不考虑不直接相连但又有很重要信息的节点表达。 所以提出了多跳注意力图神经网络(MAGNA)，这是一种将多跳上下文信息融入到注意力计算的每一层的方法。 其将注意力分数分散到整个网络，相当于增加了每一层的GNN的“感受野”。  如左图，考虑A和D节点，普通">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2021/05/27/SiYNaTvcVfu8hlb.png">
+<meta property="article:published_time" content="2021-05-27T02:27:12.000Z">
+<meta property="article:modified_time" content="2021-05-28T07:37:09.904Z">
+<meta property="article:author" content="Coding-Zuo">
+<meta property="article:tag" content="GNN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/05/27/SiYNaTvcVfu8hlb.png"><link rel="shortcut icon" href="https://i.loli.net/2021/03/22/reFlcYOnP3dSuJX.png"><link rel="canonical" href="http://example.com/2021/05/27/Multi-hop-Attention-Graph-Neural-Networks/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.json","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-05-28 15:37:09'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    })(window)</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sviptzk/HexoStaticFile@latest/Hexo/css/footer.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css"><meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="Coding-Zuo" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://i.loli.net/2021/03/22/YP2oqk7lOAfceTD.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">50</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://i.loli.net/2021/05/27/SiYNaTvcVfu8hlb.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Coding-Zuo</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Multi-hop Attention Graph Neural Networks</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-05-27T02:27:12.000Z" title="发表于 2021-05-27 10:27:12">2021-05-27</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-05-28T07:37:09.904Z" title="更新于 2021-05-28 15:37:09">2021-05-28</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Multi-hop Attention Graph Neural Networks"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Multi-hop-Attention-Graph-Neural-Networks"><a href="#Multi-hop-Attention-Graph-Neural-Networks" class="headerlink" title="Multi-hop Attention Graph Neural Networks"></a>Multi-hop Attention Graph Neural Networks</h1><p>GAT中的attention运算只能关注节点相连节点表达，这种机制不考虑不直接相连但又有很重要信息的节点表达。</p>
+<p>所以提出了多跳注意力图神经网络(MAGNA)，这是一种将多跳上下文信息融入到注意力计算的每一层的方法。</p>
+<p>其将注意力分数分散到整个网络，相当于增加了每一层的GNN的“感受野”。</p>
+<p><img src="https://i.loli.net/2021/05/27/xCrtn9LhXwiZ7sK.png" alt=""></p>
+<p>如左图，考虑A和D节点，普通的attention层只计算直接相连节点的注意力分数，如$\alpha<em>{A,D}$ , 但如果C的信息很重要，$\alpha</em>{C,D}=0$ 关注度却为0。并且，单个GAT层中A和D节点之间的运算只依赖于自己的表达，而不依赖于它们的图邻域上下文。其相当于每一层只关注了一阶邻居范围的感受野，虽然堆叠多层GNN可以扩大这个范围，但GNN层数一多就会有过平滑的问题。</p>
+<p>再看右图，MAGNA 层的改进方法是</p>
+<ul>
+<li>通过扩散多跳注意力捕捉$\alpha’<em>{D,C}$  表达为 $\alpha’</em>{D,C} = f([\alpha<em>{B,C},\alpha</em>{D,B}])$</li>
+<li>基于图邻接矩阵的权值，通过分散注意力来考虑节点之间的所有路径，从而增强图结构学习。MAGNA利用D的节点特征进行A和B之间的注意力计算，这意味着MAGNA中的两跳注意力是基于上下文的。</li>
+</ul>
+<p>总之，GAT中的一跳注意机制限制了探索更广泛的图形结构与注意权重之间关系的能力。</p>
+<p>本文提出了多跳注意图神经网络(MAGNA)，这是一种针对图结构数据的有效的多跳自注意机制。Magna使用了一种新颖的图形注意力扩散层(图1)，其中我们首先计算边上的注意力权重(用实心箭头表示)，然后使用边上的注意力权重通过注意力扩散过程计算断开的节点对之间的自我注意力权重(虚线箭头)。</p>
+<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><h3 id="参数定义"><a href="#参数定义" class="headerlink" title="参数定义"></a>参数定义</h3><p>图 $G =(V,E)$ , $E\in V\times V$ ,  V 节点集有 $N_n$ 个 ，E 边集有 $N_e$ 个</p>
+<p>节点 v 到其类型的映射为 $\phi: V \rightarrow \Tau$ , 边e 到其关系类型的映射 $\psi : E \rightarrow R$</p>
+<p>节点的embedding : $X \in \mathbb{R}^{N_n\times d_n}$ , 边的embedding: $R\in \mathbb{R}^{N_r\times d_r}$</p>
+<p>其中 $N_n = |V|, N_r=|R|$ , $d_n,d_r$ 是节点和边类型的embedding维度。</p>
+<p>Embedding 的每行 $x_i = X[i:]$ 表示节点 $v_i (1\le i\le N_n)$ 的embedding ， $r_j=R[j:] ,  r_j(1\le j\le N_r)$  </p>
+<p>首先看一下MAGNA 模块的整体结构</p>
+<p><img src="https://i.loli.net/2021/05/27/sd32RDYOLyvK64l.png" alt=""></p>
+<p>有点像Transformer block，现在GNN的包装越来越往Transformer based模型上靠了。</p>
+<p>他传入节点和关系embedding，会首先经历一个对于每个节点的多头注意力层（这里和GAT一样），然后是注意力扩散、 Layer Norm、前向传播层和两个残差链接。</p>
+<h3 id="Multi-hop-Attention-Diffusion"><a href="#Multi-hop-Attention-Diffusion" class="headerlink" title="Multi-hop Attention Diffusion"></a>Multi-hop Attention Diffusion</h3><p>Attention diffusion是每一层中用于计算MAGNA‘s的attention分数。首先第一阶段，计算每一条边上的attention分数。第二阶段，用扩散注意力计算多条邻居的注意力。</p>
+<h4 id="Edge-Attention-Computation"><a href="#Edge-Attention-Computation" class="headerlink" title="Edge Attention Computation."></a>Edge Attention Computation.</h4><p>在每一层 $l$ 处，为每个三元组 $(v_i，r_k，v_j)$ 计算矢量消息。 为了计算在 $l+1$ 层的表示，将关联的三元组的所有消息聚合成一条消息，然后使用该消息更新 $v_j^{l+1}$。</p>
+<p>在第一阶段， 一个边 $(v_i,r_k,v_j)$ 的注意力分数是由以下计算而来：</p>
+<script type="math/tex; mode=display">
+s_{i,k,j}^{(l)} = LeakyRelu(v_a^{(l)} tanh(W_h^{(l)} h_i^{(l)} || W_t^{(l)}h_j^{(l)} || W_r^{(l)}r_k))</script><p>$ W_h^{(l)} , W_t^{(l)}\in \mathbb{R}^{d^{(l)}\times d^{(l)}} , W_r^{(l)}\in \mathbb{R}^{d^{(l)}\times d_r} , v_a^{(l)}\in \mathbb{R }^{1\times 3d^{(l)}}$   可共享的可训练参数。</p>
+<p>$h_i^{(l)}\in \mathbb{R}^{d^{(l)}}$ 是第 $l$ 层第 $i$ 个节点的embedding。 $h_i^{(0)} = x_i$</p>
+<p>$r_k (1\le k \le N_r)$ 是可训练的第 $k$ 个关系类型的embedding</p>
+<p>将上式应用到graph中的每一条边后，得到 attention score matrix $ S^{(l)}$:</p>
+<script type="math/tex; mode=display">
+S^{(l)}_{i,j} =
+\begin{cases}
+s_{i,j,k}^{(l)}, &\ (v_i,r_k,v_j)\ appears\ in\ G\\
+\infty, &otherwise
+\end{cases}</script><p>随后，我们通过对得分矩阵 $S^{(l)}$ 执行逐行Softmax来获得注意力矩阵 $A^{(l)}_{i,j} = Softamax(S^{(l)})$</p>
+<p>$A^{(l)}_{i,j}$ 就定义为在第 $l$ 层中当 从节点 $j$ 和 节点 $i$ 聚合消息时的关注值。</p>
+<p>这里其实和GAT差不多 只是多了不同种边和节点。 </p>
+<h4 id="Attention-Diffusion-for-Multi-hop-Neighbors"><a href="#Attention-Diffusion-for-Multi-hop-Neighbors" class="headerlink" title="Attention Diffusion for Multi-hop Neighbors"></a>Attention Diffusion for Multi-hop Neighbors</h4><p>通过以下注意力扩散过程，在网络中将计算不直接连接的节点之间的注意力。</p>
+<p>该过程基于1-hop 注意力矩阵A的幂 为：</p>
+<script type="math/tex; mode=display">
+A = \sum^{\infty}_{i=0}\theta_iA^i \\
+where \sum_{i=0}^{\infty}\theta_i = 1 \ and \ \theta_i \gt 0</script><p>其中 $\theta<em>i$ 是 attention decay factor 并且 $\theta_i \gt \theta</em>{i+1}$ ，</p>
+<p>注意矩阵的幂 $A^i$ 给出了从节点 $h$ 到节点 $t$ 的长度为 $i$ 的关系路径的数量，从而增加了注意的感受野。</p>
+<p>重要的是，该机制允许两个节点之间的注意力不仅取决于它们之前的层表示，而且还考虑到节点之间的路径，从而有效地在不直接连接的节点之间创建 attention shotcuts</p>
+<p>在实现过程中，作者使用几何分布 (geometric distribution)    $θ_i=α(1−α)^i$，其中 $α∈(0，1]$  。</p>
+<p>该选择基于the inductive bias ，即较远的节点在消息聚合中应该被较小的权重，并且具有到目标节点的不同关系路径长度的节点以独立的方式被顺序加权。</p>
+<p>此外，请注意，如果定义$θ<em>0=α∈(0，1] ，A_0=I$ ，则上面的公式。利用关注矩阵A和移动概率 $α$ ，给出了图上的<a target="_blank" rel="noopener" href="https://blog.csdn.net/likeyou1314918273/article/details/106895794/">Personal Page Rank</a>。因此，扩散注意力权重 $A</em>{i,j}$ 可以看作是节点 $j$ 对节点 $i$ 的影响。 </p>
+<p>同时对与目标节点关系路径长度不同的节点权重应该相互独立。因此，本文定义了基于特征聚合的graph attention diffusion：</p>
+<script type="math/tex; mode=display">
+AttDiff(G,H^{(l)}, \Theta) = A H^{(l)}</script><p> 其中 $\Theta$ 为注意力参数集合。 </p>
+<h4 id="Approximate-Computation-for-Attention-Diffusio"><a href="#Approximate-Computation-for-Attention-Diffusio" class="headerlink" title="Approximate Computation for Attention Diffusio"></a>Approximate Computation for Attention Diffusio</h4><p>对于大图，公式（3）的计算开销巨大，而DAGCN需要通过 $AH^l$进行信息聚合，本文通过定义一个数列 $Z^K$, 当 $K \rightarrow \infty$时，该数列能收敛到$AH^l$的值：</p>
+<script type="math/tex; mode=display">
+Z^0 = H^L, Z^{k+1} = (1-\alpha)AZ^{(k)} + \alpha Z^0 \\
+lim_{K\rightarrow \infty} Z^{K} = AH^{l}</script><p>证明请参考原文。上述的近似使得attention的复杂度保持在$O(|E|)$。很多真实世界网络具有小世界（small-world ）特征，在这种情况下，较小的K值就足够。对于具有较大直径的图，选择较大的K和较小 $\alpha$ 。</p>
+<h3 id="Multi-hop-Attention-based-GNN-Architecture"><a href="#Multi-hop-Attention-based-GNN-Architecture" class="headerlink" title="Multi-hop Attention based GNN Architecture"></a>Multi-hop Attention based GNN Architecture</h3><p>图2提供了可多次堆叠的MAGNA block 的架构概览。</p>
+<h4 id="Multi-head-Graph-Attention-Diffusion-Layer"><a href="#Multi-head-Graph-Attention-Diffusion-Layer" class="headerlink" title="Multi-head Graph Attention Diffusion Layer"></a>Multi-head Graph Attention Diffusion Layer</h4><p>在不同的视角联合关注来自不同表示子空间的信息。</p>
+<script type="math/tex; mode=display">
+\begin{equation}\begin{split} 
+ \hat H^{(l)} &= MultiHead(G, \hat H^{(l)}) =(||_{i=1}^M head_i) W_o \\
+head_i &=  AttDiff(G, \hat H^{(l)}, \Theta_i) \\
+\hat H^{(l)} &= LayerNorm(H^{(l)})
+    \end{split}\end{equation}</script><p>方程中以递归的方式计算注意力扩散。增加了层归一化，有助于稳定递归计算过程。</p>
+<h4 id="Deep-Aggregation"><a href="#Deep-Aggregation" class="headerlink" title="Deep Aggregation"></a>Deep Aggregation</h4><p>此外，还包含一个完全连接的前馈子层，它由两层前馈网络组成。我们还在两个子层中添加了层标准化和残差连接，从而为每个block提供了更具表现力的聚合步骤</p>
+<script type="math/tex; mode=display">
+\begin{equation}\begin{split} 
+ \hat H^{(l+1)} &= \hat H^{(l)} + H^{(l)} \\
+ H^{(l+1)} &= W_2^{(l)} ReLU(W_1^{(l)} LayerNorm(\hat H^{(l+1)})) + \hat H^{(l+1)}
+    \end{split}\end{equation}</script><h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><p><img src="https://i.loli.net/2021/05/28/rVp3kq5IsGweYgR.png" alt=""></p>
+<p><img src="https://i.loli.net/2021/05/28/ZzVJehsHGlPoFiY.png" alt=""></p>
+<h2 id="Reviewer"><a href="#Reviewer" class="headerlink" title="Reviewer"></a>Reviewer</h2><blockquote>
+<p>The central question of the reviewers’ discussion was whether the contribution of this paper was significant enough or too incremental. The discussion emphasized relevant literature which already considers multi-hop attention (e.g. <a target="_blank" rel="noopener" href="https://openreview.net/forum?id=rkKvBAiiz">https://openreview.net/forum?id=rkKvBAiiz</a> [Cucurull et al.], <a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/document/8683050">https://ieeexplore.ieee.org/document/8683050</a> [Feng et al.], <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2001.07620">https://arxiv.org/abs/2001.07620</a> [Isufi et al.]), and which should have served as baseline. In particular, the experiment suggested by R3 was in line with some of these previous works, which consider “a multi-hop adjacency matrix “ as a way to increase the GAT’s receptive field. This was as opposed to preserving the 1-hop adjacency matrix used in the original GAT and stacking multiple layers to enlarge the receptive field, which as noted by the authors, may result in over-smoothed node features. The reviewers acknowledged that there is indeed as slight difference between the formulation proposed in the paper and the one in e.g. [Cucurull et al.]. The difference consists in calculating attention and then computing the powers with a decay factor vs. increasing the receptive field first by using powers of the adjacency matrix and then computing attention. Still, the multi-hop GAT baseline of [Cucurull et al.] could be extended to use a multi-hop adjacency matrix computed with the diffusion process from [Klicpera 2019], as suggested by R3. In light of these works and the above-mentioned missing baselines, the reviewers agreed that the contribution may be viewed as rather incremental (combining multi-hop graph attention with graph diffusion). The discussion also highlighted the potential of the presented spectral analysis, which could be strengthened by developing new insights in order to become a stronger contribution (see R2’s suggestions).</p>
+<p>Proposed methodology being more powerful than GAT is arguable:<br>When the attention scores for indirectly connected neighbors are still computed based on the immediate neighbors’ attention scores, it is not convincing enough to be argued as more powerful than GAT, which learns attention scores over contextualized immediate neighbors.Also, the approximate realization of the model described in Eqn: 5 follows a message-passing style to propagate attention scores. Suppose it is to be argued that standard message-passing-based diffusion is not powerful enough to get a good immediate neighbor representation that encodes neighbors’ information from far away. In that case, it is not immediately clear how a similar diffusion, when used for propagating attention scores from immediate neighbors to neighbors multiple hops away, will be more powerful. </p>
+</blockquote>
+</article><div class="post-reward"><div class="reward-button button--animated"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2021/05/24/GCC-Graph-Contrastive-Coding-for-Graph-Neural-Network-Pre-Training/"><img class="next-cover" src="https://i.loli.net/2021/05/24/1m9JndkQAEqhfML.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">GCC: Graph Contrastive Coding for Graph Neural Network Pre-Training</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/05/24/GCC-Graph-Contrastive-Coding-for-Graph-Neural-Network-Pre-Training/" title="GCC: Graph Contrastive Coding for Graph Neural Network Pre-Training"><img class="cover" src="https://i.loli.net/2021/05/24/1m9JndkQAEqhfML.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-05-24</div><div class="title">GCC: Graph Contrastive Coding for Graph Neural Network Pre-Training</div></div></a></div><div><a href="/2021/05/15/GPT-GNN-Generative-Pre-Training-of-Graph-Neural-Networks/" title="GPT-GNN: Generative Pre-Training of Graph Neural Networks"><img class="cover" src="https://i.loli.net/2021/05/15/E1H5xL7lm3nt8AD.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-05-15</div><div class="title">GPT-GNN: Generative Pre-Training of Graph Neural Networks</div></div></a></div><div><a href="/2021/03/30/Heterogeneous-Graph-Neural-Network/" title="Heterogeneous Graph Neural Network"><img class="cover" src="https://i.loli.net/2021/03/30/joZhFfytV4YGSBg.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-03-30</div><div class="title">Heterogeneous Graph Neural Network</div></div></a></div><div><a href="/2021/05/08/Learning-to-Pre-train-Graph-Neural-Networks/" title="Learning to Pre-train Graph Neural Networks"><img class="cover" src="https://i.loli.net/2021/05/09/Cw8D7HJGL5fy3kp.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-05-08</div><div class="title">Learning to Pre-train Graph Neural Networks</div></div></a></div><div><a href="/2021/05/12/Strategies-for-Pre-training-Graph-Neural-Networks/" title="Strategies for Pre-training Graph Neural Networks"><img class="cover" src="https://i.loli.net/2021/05/12/kKueobtGSrE8m1U.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-05-12</div><div class="title">Strategies for Pre-training Graph Neural Networks</div></div></a></div><div><a href="/2021/04/08/图神经网络的对抗攻击/" title="图神经网络的对抗攻击"><img class="cover" src="https://i.loli.net/2021/04/08/HrO6Jo4ksEhWDZU.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-04-08</div><div class="title">图神经网络的对抗攻击</div></div></a></div></div></div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Coding-Zuo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2021/05/27/Multi-hop-Attention-Graph-Neural-Networks/">http://example.com/2021/05/27/Multi-hop-Attention-Graph-Neural-Networks/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">Coding-Zuo</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/GNN/">GNN</a></div><div class="post_share"><div class="addthis_inline_share_toolbox"></div><script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=null" async="async"></script></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Multi-hop-Attention-Graph-Neural-Networks"><span class="toc-number">1.</span> <span class="toc-text">Multi-hop Attention Graph Neural Networks</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95"><span class="toc-number">1.1.</span> <span class="toc-text">方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E6%95%B0%E5%AE%9A%E4%B9%89"><span class="toc-number">1.1.1.</span> <span class="toc-text">参数定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Multi-hop-Attention-Diffusion"><span class="toc-number">1.1.2.</span> <span class="toc-text">Multi-hop Attention Diffusion</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Edge-Attention-Computation"><span class="toc-number">1.1.2.1.</span> <span class="toc-text">Edge Attention Computation.</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Attention-Diffusion-for-Multi-hop-Neighbors"><span class="toc-number">1.1.2.2.</span> <span class="toc-text">Attention Diffusion for Multi-hop Neighbors</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Approximate-Computation-for-Attention-Diffusio"><span class="toc-number">1.1.2.3.</span> <span class="toc-text">Approximate Computation for Attention Diffusio</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Multi-hop-Attention-based-GNN-Architecture"><span class="toc-number">1.1.3.</span> <span class="toc-text">Multi-hop Attention based GNN Architecture</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Multi-head-Graph-Attention-Diffusion-Layer"><span class="toc-number">1.1.3.1.</span> <span class="toc-text">Multi-head Graph Attention Diffusion Layer</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Deep-Aggregation"><span class="toc-number">1.1.3.2.</span> <span class="toc-text">Deep Aggregation</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C"><span class="toc-number">1.2.</span> <span class="toc-text">实验</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reviewer"><span class="toc-number">1.3.</span> <span class="toc-text">Reviewer</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By Coding-Zuo</div><div class="footer_custom_text">Hi, welcome to my BLOG</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    loader: {
+      source: {
+        '[tex]/amsCd': '[tex]/amscd'
+      }
+    },
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        addClass: [200,() => {
+          document.querySelectorAll('mjx-container:not([display=\'true\']').forEach( node => {
+            const target = node.parentNode
+            if (!target.classList.contains('has-jax')) {
+              target.classList.add('mathjax-overflow')
+            }
+          })
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>if (document.getElementsByClassName('mermaid').length) {
+  if (window.mermaidJsLoad) mermaid.init()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(() => {
+      window.mermaidJsLoad = true
+      mermaid.initialize({
+        theme: 'default',
+      })
+      false && mermaid.init()
+    })
+  }
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'd652112bf81876e00118',
+      clientSecret: 'a5abed418c7cc2736af5b4d0cbd7ff97d460a5b3',
+      repo: 'Coding-Zuo.github.io',
+      owner: 'Coding-Zuo',
+      admin: ['Coding-Zuo'],
+      id: 'e9489ec3f6972c41052ecab53d9b2441',
+      language: 'zh-CN',
+      perPage: 10,
+      distractionFreeMode: false,
+      pagerDirection: 'last',
+      createIssueManually: false,
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script src="/js/custom.js"></script><script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script src="//code.tidio.co/mak6nokafytw9mgrsuzglwzfxiy3fpdl.js" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
