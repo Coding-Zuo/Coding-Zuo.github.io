@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://example.com/2021/05/29/Pytorch-RNN%E4%B9%8Bpack-padded-sequence-%E5%92%8Cpad-packed-sequence/</loc>
+    
+    <lastmod>2021-05-29</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://example.com/2021/05/27/Multi-hop-Attention-Graph-Neural-Networks/</loc>
     
     <lastmod>2021-05-28</lastmod>
@@ -439,6 +446,13 @@
   
   <url>
     <loc>http://example.com/tags/%E9%85%8D%E7%BD%AE%E8%AE%B0%E5%BD%95/</loc>
+    <lastmod>2021-05-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/tags/pytorch/</loc>
     <lastmod>2021-05-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
