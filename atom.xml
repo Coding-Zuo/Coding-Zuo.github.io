@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2021-06-10T10:00:09.167Z</updated>
+  <updated>2021-06-10T11:42:47.256Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -21,8 +21,15 @@
     <link href="http://example.com/2021/06/10/TRANSFORMER-XH-MULTI-EVIDENCE-REASONING-WITH-EXTRA-HOP-ATTENTION/"/>
     <id>http://example.com/2021/06/10/TRANSFORMER-XH-MULTI-EVIDENCE-REASONING-WITH-EXTRA-HOP-ATTENTION/</id>
     <published>2021-06-10T09:58:11.000Z</published>
-    <updated>2021-06-10T10:00:09.167Z</updated>
+    <updated>2021-06-10T11:42:47.256Z</updated>
     
+    <content type="html"><![CDATA[<h1 id="TRANSFORMER-XH-MULTI-EVIDENCE-REASONING-WITH-EXTRA-HOP-ATTENTION"><a href="#TRANSFORMER-XH-MULTI-EVIDENCE-REASONING-WITH-EXTRA-HOP-ATTENTION" class="headerlink" title="TRANSFORMER-XH: MULTI-EVIDENCE REASONING WITH EXTRA HOP ATTENTION"></a>TRANSFORMER-XH: MULTI-EVIDENCE REASONING WITH EXTRA HOP ATTENTION</h1><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>提出Transformer-XH配有eXtra Hop attention以完全数据驱动的方式实现了结构化文本的内在建模。</p><p>完全数据驱动应该是指不仅可以处理序列结构的数据，还可以处理图结构。</p><p>eXtra Hop attention 除了关注每个序列内的记号外，还可以连接的文本序列之间跳跃</p><p>因此文档之间传播信息和构建全局上下文表示来更好地进行联合多证据推理。</p><p>eXtra Hop attention的作用：</p><ul><li>当每段文本与其他证据相关时能够更全局地表示每段文本所贡献的证据</li><li>以一种自然的方式，通过必要的边信息传递对证据图联合推理</li></ul><h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><p>面临的第一个挑战就是由于transformer的softmax计算在所有token对上，很难处理长文本。</p><p> Transform-XL(eXtra Long) 通过将更长的文本(多段落文档) 分解成文本段序列  ${ X<em>1,…,X_r,…,X</em>{\zeta}}$ 来解决。</p><p>使用如下的公式计算在相邻文本段之间传播信息：</p><script type="math/tex; mode=display">\hat H_r^{l-1} = [cat(Freeze(H_{r-1}^{l-1}) ,H_r^{l-1})]</script><p>其中 $H_r^{l-1}$ 表示第 r 个文本段的第 $l-1$ 层Transformer表达。</p><p>新注意力机制中的 $Q,K,V$ 就表达为：</p><script type="math/tex; mode=display">\hat Q^T; \hat K^T; \hat V^T =  W^q\cdot \hat H^{l-1}_r; W^k\cdot \hat H^{l-1}_r; W^v \cdot \hat H^{l-1}_r</script><p>之后就还是送到缩放点积中。这一点处理长文本可能是参考了TransformerXL。</p><blockquote><p>Transformer-XL 的重要组件之一，<strong>Segment Recurrence Mechanism（段循环机制）</strong>想做的就是，能不能在前一段计算完后，将它计算出的隐状态都保存下来，存到一个 Memeory 中，之后在计算当前段的时候，<strong>将之前存下来的隐状态和当前段的隐状态拼起来，作为 Attention 机制的 K 和 V，从而获得更长的上下文信息</strong></p></blockquote><p><img src="https://i.loli.net/2021/06/10/5zH2Avr7IiXOl6d.png" alt=""></p><p>然而，在许多情况下，文本段被组织在线性序列之外的结构中。例如，文档由图形结构中的超链接连接，这种图形结构不容易简化为形成线性序列，从而禁止了Transformer-XL的递归方法。</p><p>下面将引出eXtra Hop attention 如下图</p><p><img src="https://i.loli.net/2021/06/10/lZicWgnPv4L1dz9.png" alt=""></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;TRANSFORMER-XH-MULTI-EVIDENCE-REASONING-WITH-EXTRA-HOP-ATTENTION&quot;&gt;&lt;a href=&quot;#TRANSFORMER-XH-MULTI-EVIDENCE-REASONING-WITH-EXTRA-HOP-A</summary>
+      
     
     
     
