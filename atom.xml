@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2021-06-23T02:33:27.490Z</updated>
+  <updated>2021-06-23T06:47:25.971Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Do Transformers Really Perform Bad for Graph Representation?</title>
+    <link href="http://example.com/2021/06/23/Do-Transformers-Really-Perform-Bad-for-Graph-Representation/"/>
+    <id>http://example.com/2021/06/23/Do-Transformers-Really-Perform-Bad-for-Graph-Representation/</id>
+    <published>2021-06-23T05:22:15.000Z</published>
+    <updated>2021-06-23T06:47:25.971Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="Do-Transformers-Really-Perform-Bad-for-Graph-Representation"><a href="#Do-Transformers-Really-Perform-Bad-for-Graph-Representation" class="headerlink" title="Do Transformers Really Perform Bad for Graph Representation?"></a>Do Transformers Really Perform Bad for Graph Representation?</h1><p>作者提出了一个建立在Transformer体系结构上可以对图进行出色表征的模型——Graphormer。</p><p>近来Transformer和Graph进行结合尝试的文章有：</p><ul><li>Graph transformer for graph-to-sequence learning. AAAI 2020.</li><li>A generalization of transformer networks to graphs. AAAI 2021. (GT)</li><li>Heterogeneous graph transformer.  2020.</li><li>Re-thinking graph transformers with spectral attention.   2021.  (&gt;GT)</li><li>Graph transformer.  2019.</li><li>Direct multi-hop attention based graph neural network. 2020</li><li>Graph transformer networks.   2019.</li><li>Graph-bert: Only attention is needed for learning graph representations. 2020</li></ul><p>虽然有很多利用Transformer进入图形领域的尝试，但唯一有效的方法是用Softmax attention 取代经典GNN变体中的一些关键模块(例如，特征聚合)。因此，Transformer体系结构是否适合于对图进行建模，以及如何使其在图表示学习中发挥作用，仍然是一个悬而未决的问题。</p><h2 id="本文要回答"><a href="#本文要回答" class="headerlink" title="本文要回答"></a>本文要回答</h2><p>How Transformers could perform well for graph representation learning?</p><p>作者解决办法：关键是要正确地将图的结构信息融入到模型中。</p><ol><li><p><em>Centrality Encoding</em>：捕捉节点在图中的重要性。在图中，不同的节点可以具有不同的重要性，例如，名人被认为比社交网络中的大多数网络用户更有影响力。然而，这种信息没有反映在self-attention模块中，因为它主要使用节点语义特征来计算相似度。</p><p>1.1. <em>degree centrality</em> ：利用度中心性进行Centrality Encoding，其中根据每个节点的度将可学习向量分配给每个节点，并将其添加到输入层中的节点特征。</p></li><li><p><em>Spatial Encoding</em> ：提出了一种新的空间编码来捕捉节点之间的结构关系。将图形结构化数据与其他结构化数据(例如语言、图像)区分开来的一个值得注意的几何属性是不存在用于嵌入图形的规范网格，结点只能位于非欧几里德空间中，并且由边连接。作者使用任意两个节点之间的<strong>最短路径距离</strong>作为示例，将其编码为Softmax关注度中的偏置项，以帮助模型准确地捕捉图中的空间相关性。</p><p>2.1. 此外，有时edge特征中还包含额外的空间信息，例如分子图中两个原子之间的键类型。设计了一种新的Edge Encoding方法，将这种信号进一步带入Transformer layers。</p></li></ol>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;Do-Transformers-Really-Perform-Bad-for-Graph-Representation&quot;&gt;&lt;a href=&quot;#Do-Transformers-Really-Perform-Bad-for-Graph-Representation&quot; </summary>
+      
+    
+    
+    
+    
+    <category term="GNN&amp;nlp" scheme="http://example.com/tags/GNN-nlp/"/>
+    
+  </entry>
   
   <entry>
     <title>Avoiding Reasoning Shortcuts- Adversarial Evaluation, Training, and Model Development for Multi-Hop QA</title>
@@ -432,28 +454,6 @@
     
     
     <category term="GNN" scheme="http://example.com/tags/GNN/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Meta Learning(李宏毅)</title>
-    <link href="http://example.com/2021/05/09/Meta-Learning-%E6%9D%8E%E5%AE%8F%E6%AF%85/"/>
-    <id>http://example.com/2021/05/09/Meta-Learning-%E6%9D%8E%E5%AE%8F%E6%AF%85/</id>
-    <published>2021-05-09T15:15:57.000Z</published>
-    <updated>2021-05-16T11:03:17.552Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="Meta-Learning"><a href="#Meta-Learning" class="headerlink" title="Meta Learning"></a>Meta Learning</h1><p>李宏毅：<a href="https://www.bilibili.com/video/BV15b411g7Wd?p=57&amp;spm_id_from=pageDriver">https://www.bilibili.com/video/BV15b411g7Wd?p=57&amp;spm_id_from=pageDriver</a></p><p>一个不错的科普：<a href="https://www.bilibili.com/video/BV1KB4y1c7gg?from=search&amp;seid=2922012165894972973">https://www.bilibili.com/video/BV1KB4y1c7gg?from=search&amp;seid=2922012165894972973</a></p><h2 id="什么是元学习"><a href="#什么是元学习" class="headerlink" title="什么是元学习"></a>什么是元学习</h2><p>Meta Learning = Learn to Learn (学习如何去做学习这件事)</p><p>机器在学习了很多task后，在获得过去的任务下所汲取的经验后，学习到了更多的学习技巧，成为了一个更厉害的学习者。</p><p>从而有一个新任务，他可以学的更快更好。</p><p>比如：task1你教机器去学语音识别，task2你教他去做图片识别，那么task3你让他去学习文字识别，那么他可能学的会更好。</p><p>元学习的输入是训练数据，输出的是可以用于下一个任务的function，function也就是万能函数模拟器神经网络的模型参数</p><script type="math/tex; mode=display">\begin{equation}\begin{split}  f^* = F(D_{train})    \end{split}\end{equation}</script><p>其中F 代表元学习算法，D是数据，f就是function。理解下图：</p><p><img src="https://i.loli.net/2021/05/09/rMLgmoSywHJcq5u.png" alt=""></p><h3 id="和机器学习的区别"><a href="#和机器学习的区别" class="headerlink" title="和机器学习的区别"></a>和机器学习的区别</h3><p>机器学习：定义一系列function—-&gt;定一个function好坏的指标——-&gt; 用gradient decent找到一个最好的function</p><p>元学习(也是找一个function)：定义一系列大Function——-&gt;定一个评价大Function好坏的指标——-&gt;找到一个最好的大Function</p><h3 id="和终身学习-Life-long-learning-有些像？"><a href="#和终身学习-Life-long-learning-有些像？" class="headerlink" title="和终身学习(Life-long learning)有些像？"></a>和终身学习(Life-long learning)有些像？</h3><p><a href="https://blog.csdn.net/zyy617532750/article/details/104217399">持续/终身学习</a>：是让同一个模型可以同时学会很多任务技能</p><p>而元学习是不同的任务仍然有不同的模型，我们期待的是模型通过以前的学习经历可以让他在未来别的任务上学的好。</p><h2 id="元学习过程"><a href="#元学习过程" class="headerlink" title="元学习过程"></a>元学习过程</h2><h3 id="定义一系列学习算法"><a href="#定义一系列学习算法" class="headerlink" title="定义一系列学习算法"></a>定义一系列学习算法</h3><p>为什么是一系列学习算法，其实不同的模型参数、不同的结构、不同的学习参数的组合都是不同的学习算法。</p><p><img src="https://i.loli.net/2021/05/09/P6iANVszETHWB37.png" alt=""></p><p>以梯度下降法为例，首先定义一个网络结构，初始化一个参数，通过训练数据计算一个梯度g，再通过学习率更新参数。</p><p>迭代多次最后得到最终参数$\hat \theta$</p><p>但上图中红色框框内的都是人为定义的。元学习就是想让这红框内的东西，不让人来设计，让机器根据先验知识来自己学习设计。</p><h3 id="评估function参数好坏"><a href="#评估function参数好坏" class="headerlink" title="评估function参数好坏"></a>评估function参数好坏</h3><p>让模型先学一些任务，去解一些问题看看。</p><p>比如Task1：用一些$D<em>{train}$ 数据去训练模型得到$f_1$ ,再用Task1的$D</em>{test}$ 去衡量 $f_1$ 得到一个loss $l_1$</p><p>一个任务不够，再多找些任务来</p><p>Task2：用一些$D<em>{train}$ 数据去训练模型得到$f_2$ ,再用Task2的$D</em>{test}$ 去衡量 $f_2$得到一个loss $l_2$</p><p>最后得到评价F好坏的Loss：</p><script type="math/tex; mode=display">\begin{equation}\begin{split}  L(F) &= \sum_{n=1}^Nl_n\\ F^* &= argmin_FL(F)    \end{split}\end{equation}</script><p>N 为任务数</p><p>meta learning 通常会把task的Train叫做Suppot set，Test叫做Query set</p><h2 id="MAML-Model-Agnostic-Meta-Learning"><a href="#MAML-Model-Agnostic-Meta-Learning" class="headerlink" title="MAML(Model Agnostic Meta-Learning)"></a>MAML(Model Agnostic Meta-Learning)</h2><p>学一个初始化的参数</p><script type="math/tex; mode=display">\begin{equation}\begin{split}  L(\phi) = \sum_{n=1}^N l^n(\hat \theta^n)    \end{split}\end{equation}</script><p>$\phi$ 输入的初始化参数，$\hat \theta^n$ 在第n个task上学出来的model，$\hat \theta^n$ 取决于$\phi$ </p><p>$l^n(\hat \theta^n)$: 把$\hat \theta^n$这组参数拿到第n个task的测试集中去看看效果怎么样</p><p>怎么确定初始化的参数好不好，就用初始化参数到不同task上去做训练</p><p>最小化$L(\phi)$ : $\phi \gets \phi-\alpha ▽_{\phi}L(\phi)$</p><h3 id="和迁移学习-Transfer-learning-预训练有些像？"><a href="#和迁移学习-Transfer-learning-预训练有些像？" class="headerlink" title="和迁移学习(Transfer learning) 预训练有些像？"></a>和迁移学习(Transfer learning) 预训练有些像？</h3><p>迁移学习：某一个任务的数据很少，但另外一个任务的数据多。就把model预训练在多的数据上，再fine-tuning在少的数据上。</p><p>他的loss function：</p><script type="math/tex; mode=display">\begin{equation}\begin{split}   L(\phi) = \sum_{n=1}^N l^n(\phi)    \end{split}\end{equation}</script><p>在MAML里面loss是用$\phi$ 训练完后的model计算出来的，是训练过后的model</p><p>在pretrain里是用现在这个model直接去下游任务中衡量表现怎么样。</p><p>有的文章把预训练改成MAML的形式，以缓解预训练任务和下游任务直接目标不同产生的gap。</p><p>在MAML中，我们不在意$\phi$ 在training task上的表现，在意的是用$\phi$ 训练出来的$\hat \theta^n$的表现如何</p><p>（面向的是<strong>学习的过程</strong>，并不是<strong>学习的结果</strong>）</p><p><img src="https://i.loli.net/2021/05/10/7V2Uua4g8e9R1tk.png" alt=""></p><p><img src="https://i.loli.net/2021/05/10/epRfZzxlFTgSjVI.png" alt=""></p><p>如上图虽然$\phi$ 本身表现不够好，但$\phi$经过训练以后可以变得很强 (潜力如何)</p><p>而pretrain在意的是现在这个$\phi$表现的怎么样，是在找寻在所有task都最好的$\phi$, 并不保证训练以后会得到好的 $ \hat \theta^n$ （现在表现如何）</p><p>并且MAML只训练很少的步数，因为</p><ul><li>为了快速</li><li>希望在训练一步就得到很好的结果</li><li>在使用算法模型时可以多update</li><li>为了适应Few-shot learning </li></ul><h3 id="Toy-Example"><a href="#Toy-Example" class="headerlink" title="Toy Example"></a>Toy Example</h3><p>每一个任务：</p><ul><li>给一个目标sin函数 $y = a sin(x+b)$ 其中 a、b 都是随机数，每一组 a、b 对应一条正弦曲线</li><li>从目标函数中采样k个点</li><li>使用采样点去估计目标函数</li></ul><p>希望拟合的y越好越好。随机采样不同的a和b就可以得到不同的任务。</p><p><img src="https://i.loli.net/2021/05/10/9YnTfrxqoBDgVCU.png" alt=""></p><h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p><a href="https://zhuanlan.zhihu.com/p/367684934">元学习-总结</a></p><p><a href="https://zhuanlan.zhihu.com/p/108503451">元学习（Meta-learning）——李宏毅老师教学视频笔记</a></p><p><a href="https://zhuanlan.zhihu.com/p/181709693">[meta-learning] 对MAML的深度解析</a></p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h1 id=&quot;Meta-Learning&quot;&gt;&lt;a href=&quot;#Meta-Learning&quot; class=&quot;headerlink&quot; title=&quot;Meta Learning&quot;&gt;&lt;/a&gt;Meta Learning&lt;/h1&gt;&lt;p&gt;李宏毅：&lt;a href=&quot;https://www.b</summary>
-      
-    
-    
-    
-    
-    <category term="ML&amp;DL" scheme="http://example.com/tags/ML-DL/"/>
     
   </entry>
   
