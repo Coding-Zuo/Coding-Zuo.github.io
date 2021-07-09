@@ -1,0 +1,320 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Heterogeneous Graph Transformer | Coding-Zuo</title><meta name="keywords" content="GNN"><meta name="author" content="Coding-Zuo"><meta name="copyright" content="Coding-Zuo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="Heterogeneous Graph Transformer提出了一种用于Web规模异构图建模的异构图Transformer(HGT)体系结构。 其一是设计了节点和边类型相关的参数来表征对每条边的异构attention，使得HGT能够维护不同类型的节点和边的专用表示。 其二为了处理Web规模的图形数据，我们设计了异构小批量图形采样算法HG Samples，以实现高效和可扩展的训练 作者使用的是O">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Heterogeneous Graph Transformer">
+<meta property="og:url" content="http://example.com/2021/07/09/Heterogeneous-Graph-Transformer/index.html">
+<meta property="og:site_name" content="Coding-Zuo">
+<meta property="og:description" content="Heterogeneous Graph Transformer提出了一种用于Web规模异构图建模的异构图Transformer(HGT)体系结构。 其一是设计了节点和边类型相关的参数来表征对每条边的异构attention，使得HGT能够维护不同类型的节点和边的专用表示。 其二为了处理Web规模的图形数据，我们设计了异构小批量图形采样算法HG Samples，以实现高效和可扩展的训练 作者使用的是O">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://z3.ax1x.com/2021/07/09/RxuSu4.png">
+<meta property="article:published_time" content="2021-07-09T09:18:10.000Z">
+<meta property="article:modified_time" content="2021-07-09T13:42:02.369Z">
+<meta property="article:author" content="Coding-Zuo">
+<meta property="article:tag" content="GNN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://z3.ax1x.com/2021/07/09/RxuSu4.png"><link rel="shortcut icon" href="https://i.loli.net/2021/03/22/reFlcYOnP3dSuJX.png"><link rel="canonical" href="http://example.com/2021/07/09/Heterogeneous-Graph-Transformer/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.json","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-07-09 21:42:02'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    })(window)</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sviptzk/HexoStaticFile@latest/Hexo/css/footer.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css"><meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="Coding-Zuo" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://i.loli.net/2021/03/22/YP2oqk7lOAfceTD.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">61</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://z3.ax1x.com/2021/07/09/RxuSu4.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Coding-Zuo</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Heterogeneous Graph Transformer</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-07-09T09:18:10.000Z" title="发表于 2021-07-09 17:18:10">2021-07-09</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-07-09T13:42:02.369Z" title="更新于 2021-07-09 21:42:02">2021-07-09</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Heterogeneous Graph Transformer"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Heterogeneous-Graph-Transformer"><a href="#Heterogeneous-Graph-Transformer" class="headerlink" title="Heterogeneous Graph Transformer"></a>Heterogeneous Graph Transformer</h1><p>提出了一种用于Web规模异构图建模的异构图Transformer(HGT)体系结构。</p>
+<p>其一是设计了节点和边类型相关的参数来表征对每条边的异构attention，使得HGT能够维护不同类型的节点和边的专用表示。</p>
+<p>其二为了处理Web规模的图形数据，我们设计了异构小批量图形采样算法HG Samples，以实现高效和可扩展的训练</p>
+<p>作者使用的是OAG学术图，其存在的异构关系如下图：</p>
+<p><img src="https://z3.ax1x.com/2021/07/09/RxMqUA.png" alt=""></p>
+<h2 id="要解决的问题"><a href="#要解决的问题" class="headerlink" title="要解决的问题"></a>要解决的问题</h2><p>GNN以前可以处理异质图是基于元路径的方法有PathSim, methpath2vec等。GNN火起来以后也出现了好多处理异质图的工作。</p>
+<p>作者认为面临着几个问题：首先，它们大多涉及为每种类型的异构图设计元路径，需要特定的领域知识；其次，它们要么简单地假设不同类型的节点/边共享相同的特征和表示空间，要么只针对节点类型或边类型保持不同的非共享权重，使得它们不足以捕捉异构图的属性；最后，其固有的设计和实现使得它们无法对Web规模的异构图进行建模。</p>
+<p>作者的目标是：保持节点和边类型的依赖表示，避免定制的元路径，并且能够扩展到Web规模的异构图。</p>
+<h3 id="做法："><a href="#做法：" class="headerlink" title="做法："></a>做法：</h3><h4 id="异质处理"><a href="#异质处理" class="headerlink" title="异质处理"></a>异质处理</h4><p>为了处理图的异构性，引入了节点和边型依赖的注意机制。HGT中的异构相互关注度不是参数化的，而是通过基于其元关系三元组分解每条边e=(s，t)来定义的，即 <s的节点类型、s&t之间的e的边类型、t的节点类型>。上图说明了异质学术图的元关系。使用这些元关系来参数化权重矩阵，以计算每条边上的关注度。因此，允许不同类型的节点和边保持其特定的表示空间。</p>
+<p>同时，不同类型的连接节点仍然可以交互、传递和汇聚消息，而不受其分布差距的限制。由于其体系结构的本质，HGT可以通过跨层的消息传递来融合来自不同类型的高阶邻居的信息，这可以被认为是“软”元路径。也就是说，即使HGT只将其一跳边作为输入，而不需要人工设计元路径，所提出的注意机制也可以自动和隐式地学习和提取对不同下游任务重要的“元路径”。</p>
+<h4 id="异质子图采样法"><a href="#异质子图采样法" class="headerlink" title="异质子图采样法"></a>异质子图采样法</h4><p>为了对Web规模的异构图进行建模，设计了第一个用于小批量GNN训练的异构子图采样算法HG Samples。它的主要思想是对不同类型节点比例相近的异构子图进行采样。此外，它还被设计成保持采样子图的稠密性，以最大限度地减少信息损失。有了HG-sample，所有的GNN模型都可以在任意大小的异构图上进行训练和推断。</p>
+<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><p>思想：利用异构图的元关系来参数化异构相互关注、消息传递和传播步骤的权重矩阵。</p>
+<p>有向图 $G = (V,E,A,R)$ ,  节点 $v \in V$，每个边$e \in E$ 。他们的类型映射函数为 $\tau(v):V \to A$ 、$\phi(e):E\to R$ </p>
+<h3 id="元关系"><a href="#元关系" class="headerlink" title="元关系"></a>元关系</h3><p>对于一个边 $e = (s,t)$ ，元关系定义为 $&lt;\tau(s),\phi(e),\tau(t)&gt;$ 。$\phi(e)^{-1}$ 是关系的反向表达。</p>
+<h3 id="HGT架构"><a href="#HGT架构" class="headerlink" title="HGT架构"></a>HGT架构</h3><p><img src="https://i.loli.net/2021/07/09/8CepfwW4dgEzsjc.png" alt=""></p>
+<p>主要的三个组件：Heterogeneous Mutual Attention、Heterogeneous Message Passin和特定于Target-Specific Aggregation。</p>
+<p>定义第$l$ 层的输出为 $H^l$, 也是第$l+1$层的输入。</p>
+<h4 id="Heterogeneous-Mutual-Attention"><a href="#Heterogeneous-Mutual-Attention" class="headerlink" title="Heterogeneous Mutual Attention"></a>Heterogeneous Mutual Attention</h4><p>首先计算源节点 s 到目标节点 t 之间的 Mutual Attention。</p>
+<p>针对问题是：通过使用一个权重矩阵W来假设s和t具有相同的特征分布。这种假设对于异构图通常是不正确的，因为在异构图中，每种类型的节点都可以有自己的特征分布。</p>
+<p>给出目标节点 t ，以及它的邻居节点 $s \in N(t)$ 它们可能属于不同的分布。通过元关系三元组 $&lt;\tau(s),\phi(e),\tau(t)&gt;$, 计算mutual attention。</p>
+<p>将目标节点t映射为query向量，将源节点s映射为key向量，并计算它们的点积作为关注度。</p>
+<p>与Vanilla Transformer相比关键区别在于，Vanilla Transformer对所有单词使用一组投影映射，HGT的每个元关系都应该有一组不同的投影权重。</p>
+<p>为了在保持不同关系特性的同时最大限度地实现参数共享，提出将交互算子的权重矩阵参数化为源节点投影、边投影和目标节点投影。</p>
+<p>对每个边$e=(s,t)$进行h heads attention :</p>
+<script type="math/tex; mode=display">
+\begin{equation}\begin{split} 
+ Attention_{HGT}(s,e,t) &= Softmax_{\forall s\in N(t)}(  \|_{i\in[1,h]} \text{ATT-head}^i(s,e,t) )\\
+\text {ATT-head}^i(s,e,t) &=(K^i(s) W^{ATT}_{\phi(e)}Q^i(t)^T) \cdot \frac{\mu<\tau(s),\phi(e),\tau(t)>}{\sqrt d} \\
+K^i(s) &= \text{K-Linear}_{\tau(s)}^i(H^{(l-1)}[s])\\
+Q^i(t) &= Q-Linear_{\tau(t)}^i (H^{(l-1)}[t])
+    \end{split}\end{equation}</script><p>$\text{ATT-head^i(s,e,t)}$ 是第 $i$ 个注意力头。$\text{K-Linear}^i_{\tau{(s)}}:R^d \to R^{\frac{d}{h}}$ 编码了源接地那s类型$\tau(s)$ 意味着每每个类型节点有独一无二的线性映射最大限度地对分布差异进行建模。</p>
+<p>然后计算Query和Key的相似度， 异构图的一个独特特征是在节点类型对之间可能存在不同的边类型(关系)，例如 $τ(S)$和$τ(T)$ 。因此，与直接计算查询和键向量之间的点积的Vanilla Transformer不同，我们为每个边类型$\phi(e)$保留了一个不同的基于边的矩阵 $W^{ATT}_{\phi(e)}\in R^{\frac{d}{h}\times \frac{d}{h}}$ 。这样，即使在相同的节点类型对之间，该模型也可以捕获不同的语义关系。</p>
+<p>此外，由于不是所有的关系对目标节点的贡献相等，我们增加了一个先验张量 $\mu\in R^{|A|\times |R|\times |A|}$ 表示每个元关系三元组的一般意义，作为对注意力的自适应缩放。</p>
+<p>最后，我们将注意力集中在一起，以获得每个节点对的attention向量。</p>
+<h4 id="Heterogeneous-Message-Passing"><a href="#Heterogeneous-Message-Passing" class="headerlink" title="Heterogeneous Message Passing"></a>Heterogeneous Message Passing</h4><p>在计算Mutual Attention的同时，将信息从源节点传递到目标节点。</p>
+<p>与attention过程类似，希望在消息传递过程中加入边的元关系，以缓解不同类型节点和边的分布差异。</p>
+<p>对于一对节点 $e=(s,t)$，我们通过以下公式计算其多头 Message:</p>
+<script type="math/tex; mode=display">
+\begin{equation}\begin{split} 
+ Message_{HGT(s,e,t)} &= \|_{i\in [1,h]} \text{MSG-head}^i(s,e,t)\\
+ \text{MSG-head}^i(s,e,t) &= \text{M-Linear}_{\tau(s)}^i(H^{(l-1)}[s])W^{MSG}_{\phi(e)}
+    \end{split}\end{equation}</script><h4 id="Target-Specific-Aggregation"><a href="#Target-Specific-Aggregation" class="headerlink" title="Target-Specific Aggregation"></a>Target-Specific Aggregation</h4><script type="math/tex; mode=display">
+\hat H^{(l)}[t] =  \oplus_{\forall s\in N(t)} (Attention_{HGT}(s,e,t) \cdot Message_{HGT}(s,e,t))</script><p>这将来自不同特征分布的所有近邻(源节点)的信息聚集到目标节点 t。</p>
+<p>最后一步是将目标节点t的向量映射回按其节点类型τ(T)索引的特定于类型的分布。为此，我们将线性投影A-线性τ(T)应用于更新后的向量H􏰅(L)[t]，随后是非线性激活和剩余连接[5]，如下所示：</p>
+<h3 id="HGSampling"><a href="#HGSampling" class="headerlink" title="HGSampling"></a>HGSampling</h3><p><img src="https://i.loli.net/2021/07/09/5yz2s4vhCZPINX9.png" alt=""></p>
+</article><div class="post-reward"><div class="reward-button button--animated"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2021/07/04/Transformer%E7%9A%84%E8%BE%85%E5%8A%A9/"><img class="next-cover" src="https://z3.ax1x.com/2021/07/04/RfL5Xd.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Transformer的辅助</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/05/24/GCC-Graph-Contrastive-Coding-for-Graph-Neural-Network-Pre-Training/" title="GCC: Graph Contrastive Coding for Graph Neural Network Pre-Training"><img class="cover" src="https://i.loli.net/2021/05/24/1m9JndkQAEqhfML.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-05-24</div><div class="title">GCC: Graph Contrastive Coding for Graph Neural Network Pre-Training</div></div></a></div><div><a href="/2021/05/15/GPT-GNN-Generative-Pre-Training-of-Graph-Neural-Networks/" title="GPT-GNN: Generative Pre-Training of Graph Neural Networks"><img class="cover" src="https://i.loli.net/2021/05/15/E1H5xL7lm3nt8AD.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-05-15</div><div class="title">GPT-GNN: Generative Pre-Training of Graph Neural Networks</div></div></a></div><div><a href="/2021/03/30/Heterogeneous-Graph-Neural-Network/" title="Heterogeneous Graph Neural Network"><img class="cover" src="https://i.loli.net/2021/03/30/joZhFfytV4YGSBg.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-03-30</div><div class="title">Heterogeneous Graph Neural Network</div></div></a></div><div><a href="/2021/05/08/Learning-to-Pre-train-Graph-Neural-Networks/" title="Learning to Pre-train Graph Neural Networks"><img class="cover" src="https://i.loli.net/2021/05/09/Cw8D7HJGL5fy3kp.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-05-08</div><div class="title">Learning to Pre-train Graph Neural Networks</div></div></a></div><div><a href="/2021/05/27/Multi-hop-Attention-Graph-Neural-Networks/" title="Multi-hop Attention Graph Neural Networks"><img class="cover" src="https://i.loli.net/2021/05/27/SiYNaTvcVfu8hlb.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-05-27</div><div class="title">Multi-hop Attention Graph Neural Networks</div></div></a></div><div><a href="/2021/05/12/Strategies-for-Pre-training-Graph-Neural-Networks/" title="Strategies for Pre-training Graph Neural Networks"><img class="cover" src="https://i.loli.net/2021/05/12/kKueobtGSrE8m1U.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-05-12</div><div class="title">Strategies for Pre-training Graph Neural Networks</div></div></a></div></div></div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Coding-Zuo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2021/07/09/Heterogeneous-Graph-Transformer/">http://example.com/2021/07/09/Heterogeneous-Graph-Transformer/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">Coding-Zuo</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/GNN/">GNN</a></div><div class="post_share"><div class="addthis_inline_share_toolbox"></div><script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=null" async="async"></script></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Heterogeneous-Graph-Transformer"><span class="toc-number">1.</span> <span class="toc-text">Heterogeneous Graph Transformer</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A6%81%E8%A7%A3%E5%86%B3%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">1.1.</span> <span class="toc-text">要解决的问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%81%9A%E6%B3%95%EF%BC%9A"><span class="toc-number">1.1.1.</span> <span class="toc-text">做法：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BC%82%E8%B4%A8%E5%A4%84%E7%90%86"><span class="toc-number">1.1.1.1.</span> <span class="toc-text">异质处理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BC%82%E8%B4%A8%E5%AD%90%E5%9B%BE%E9%87%87%E6%A0%B7%E6%B3%95"><span class="toc-number">1.1.1.2.</span> <span class="toc-text">异质子图采样法</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95"><span class="toc-number">1.2.</span> <span class="toc-text">方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%83%E5%85%B3%E7%B3%BB"><span class="toc-number">1.2.1.</span> <span class="toc-text">元关系</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HGT%E6%9E%B6%E6%9E%84"><span class="toc-number">1.2.2.</span> <span class="toc-text">HGT架构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Heterogeneous-Mutual-Attention"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">Heterogeneous Mutual Attention</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Heterogeneous-Message-Passing"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">Heterogeneous Message Passing</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Target-Specific-Aggregation"><span class="toc-number">1.2.2.3.</span> <span class="toc-text">Target-Specific Aggregation</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HGSampling"><span class="toc-number">1.2.3.</span> <span class="toc-text">HGSampling</span></a></li></ol></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By Coding-Zuo</div><div class="footer_custom_text">Hi, welcome to my BLOG</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    loader: {
+      source: {
+        '[tex]/amsCd': '[tex]/amscd'
+      }
+    },
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        addClass: [200,() => {
+          document.querySelectorAll('mjx-container:not([display=\'true\']').forEach( node => {
+            const target = node.parentNode
+            if (!target.classList.contains('has-jax')) {
+              target.classList.add('mathjax-overflow')
+            }
+          })
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>if (document.getElementsByClassName('mermaid').length) {
+  if (window.mermaidJsLoad) mermaid.init()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(() => {
+      window.mermaidJsLoad = true
+      mermaid.initialize({
+        theme: 'default',
+      })
+      false && mermaid.init()
+    })
+  }
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'd652112bf81876e00118',
+      clientSecret: 'a5abed418c7cc2736af5b4d0cbd7ff97d460a5b3',
+      repo: 'Coding-Zuo.github.io',
+      owner: 'Coding-Zuo',
+      admin: ['Coding-Zuo'],
+      id: '70dab77955925c8d9e6ceb9d88f0b859',
+      language: 'zh-CN',
+      perPage: 10,
+      distractionFreeMode: false,
+      pagerDirection: 'last',
+      createIssueManually: false,
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script src="/js/custom.js"></script><script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script src="//code.tidio.co/mak6nokafytw9mgrsuzglwzfxiy3fpdl.js" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
