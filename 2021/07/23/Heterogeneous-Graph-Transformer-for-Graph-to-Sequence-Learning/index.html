@@ -1,0 +1,328 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Heterogeneous Graph Transformer for Graph-to-Sequence Learning | Coding-Zuo</title><meta name="keywords" content="GNN&amp;nlp"><meta name="author" content="Coding-Zuo"><meta name="copyright" content="Coding-Zuo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="Heterogeneous Graph Transformer for Graph-to-Sequence LearningGraph2Seq学习的目的是将图结构的表示转换为单词序列，以便生成文本。 AMR-to-text是从抽象意义表示(AMR)图中生成文本的任务，其中节点表示语义概念，边表示概念之间的关系。 传统GNN只考虑了直接相连节点之间的关系，而忽略了远距离节点之间的间接关系。 Grap">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Heterogeneous Graph Transformer for Graph-to-Sequence Learning">
+<meta property="og:url" content="http://example.com/2021/07/23/Heterogeneous-Graph-Transformer-for-Graph-to-Sequence-Learning/index.html">
+<meta property="og:site_name" content="Coding-Zuo">
+<meta property="og:description" content="Heterogeneous Graph Transformer for Graph-to-Sequence LearningGraph2Seq学习的目的是将图结构的表示转换为单词序列，以便生成文本。 AMR-to-text是从抽象意义表示(AMR)图中生成文本的任务，其中节点表示语义概念，边表示概念之间的关系。 传统GNN只考虑了直接相连节点之间的关系，而忽略了远距离节点之间的间接关系。 Grap">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2021/07/23/fda45whDJNAYu1j.png">
+<meta property="article:published_time" content="2021-07-23T10:44:21.000Z">
+<meta property="article:modified_time" content="2021-07-23T13:48:47.720Z">
+<meta property="article:author" content="Coding-Zuo">
+<meta property="article:tag" content="GNN&amp;nlp">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/07/23/fda45whDJNAYu1j.png"><link rel="shortcut icon" href="https://i.loli.net/2021/03/22/reFlcYOnP3dSuJX.png"><link rel="canonical" href="http://example.com/2021/07/23/Heterogeneous-Graph-Transformer-for-Graph-to-Sequence-Learning/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.json","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-07-23 21:48:47'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    })(window)</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sviptzk/HexoStaticFile@latest/Hexo/css/footer.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css"><meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="Coding-Zuo" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://i.loli.net/2021/03/22/YP2oqk7lOAfceTD.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">64</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://i.loli.net/2021/07/23/fda45whDJNAYu1j.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Coding-Zuo</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Heterogeneous Graph Transformer for Graph-to-Sequence Learning</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-07-23T10:44:21.000Z" title="发表于 2021-07-23 18:44:21">2021-07-23</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-07-23T13:48:47.720Z" title="更新于 2021-07-23 21:48:47">2021-07-23</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Heterogeneous Graph Transformer for Graph-to-Sequence Learning"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Heterogeneous-Graph-Transformer-for-Graph-to-Sequence-Learning"><a href="#Heterogeneous-Graph-Transformer-for-Graph-to-Sequence-Learning" class="headerlink" title="Heterogeneous Graph Transformer for Graph-to-Sequence Learning"></a>Heterogeneous Graph Transformer for Graph-to-Sequence Learning</h1><p>Graph2Seq学习的目的是将图结构的表示转换为单词序列，以便生成文本。</p>
+<p>AMR-to-text是从抽象意义表示(AMR)图中生成文本的任务，其中节点表示语义概念，边表示概念之间的关系。</p>
+<p>传统GNN只考虑了直接相连节点之间的关系，而忽略了远距离节点之间的间接关系。</p>
+<p>Graph2Seq的其他两个和Graph Transformer的论文</p>
+<ul>
+<li><p>Graph transformer for graph-to-sequence learning AAAI 2020</p>
+</li>
+<li><p>Modeling graph structure in transformer for better AMR-to-text gen- eration  EMNLP 2019</p>
+</li>
+</ul>
+<p>使用节点之间的最短关系路径来编码语义关系。但是，它们忽略了关系路径中节点的信息，对直接关系和间接关系没有区别地进行编码。当从直接邻居那里聚集信息时，可能会干扰信息的传播过程。</p>
+<p>作者使用Heterogeneous Graph Transformer来独立地建模原始图的各个子图中的不同关系，包括节点之间的直接关系、间接关系和多种可能的关系。</p>
+<h2 id="Input-Graph-Transformer"><a href="#Input-Graph-Transformer" class="headerlink" title="Input Graph Transformer"></a>Input Graph Transformer</h2><p>为了缓解语料库中的数据稀疏问题，作者将进一步将字节对编码(BPE)引入Levi图。</p>
+<p>将原始节点拆分成多个子词节点。除了添加缺省连接外，我们还在子词之间添加了反向边和自循环边。</p>
+<p>如下图：</p>
+<p><img src="https://i.loli.net/2021/07/23/fswuO1n4J7bptHG.png" alt=""></p>
+<p>例如，图中的单词Country被分割为co@@、un@@、try  它们之间有三种类型的边。</p>
+<p><img src="https://i.loli.net/2021/07/23/LUmRx6udzNeJyAr.png" style="zoom:67%;" /></p>
+<p>该任务一般先将抽象概念图(上图a)，转换成Levi图(上图b)。将AMR图转换为扩展的Levi图，该图可以看作是一个异构图，因为它具有不同类型的边。</p>
+<h2 id="Heterogeneous-Graph-Transformer"><a href="#Heterogeneous-Graph-Transformer" class="headerlink" title="Heterogeneous Graph Transformer"></a>Heterogeneous Graph Transformer</h2><p><img src="https://i.loli.net/2021/07/23/MvH7kQdb2KFwert.png" alt=""></p>
+<p>给定一个经过预处理的扩展Levi图，根据其异构性将扩展Levi图分成多个子图。</p>
+<p>在每个Graph Encoder中，基于其在当前子图中的相邻节点来更新不同子图中的节点表示。然后，将该节点在不同子图中的所有表示组合在一起，以获得其最终表示。</p>
+<h3 id="Graph-Encoder"><a href="#Graph-Encoder" class="headerlink" title="Graph Encoder"></a>Graph Encoder</h3><p>与其他Graph Transformer不同的是仅使用相对位置编码来隐藏结构信息。</p>
+<p>在更新每个节点的表示时，直接屏蔽了非相邻节点的注意力。mask attention $\alpha_{ij}\notin N_i$  ，此外这个作者还尝试用了加性注意力这就和GAT几乎很像了。</p>
+<p>因此，给定输入序列 $x=(x_1,…,x_n)$，每个关注头中表示为 $z_i$ 的节点i的输出表示如下计算：</p>
+<script type="math/tex; mode=display">
+z_i = \sum_{j\in N_i} \alpha_{ij}(x_j W^V)</script><h3 id="Heterogeneous-Mechanism"><a href="#Heterogeneous-Mechanism" class="headerlink" title="Heterogeneous Mechanism"></a>Heterogeneous Mechanism</h3><p>在多头机制成功的激励下，提出了异质机制。考虑到一个句子，多头注意允许模型隐含地注意到来自不同位置的不同表示子空间的信息。相应地，异构机制使得模型显式地关注不同子图中的信息，对应于图的不同表示子空间，从而增强了模型的编码能力。</p>
+<p>首先将所有的边类型组合成一个单一的边类型，从而得到一个同质连通子图。该连通子图实际上是一个包含原始图中完全连通信息的无向图。除了学习直连关系，还引入了一个完全连通子图来学习间接连接节点之间的隐含关系。</p>
+<p>每个编码层中的输出z计算如下：</p>
+<script type="math/tex; mode=display">
+\begin{equation}\begin{split} 
+ z &= FFN(concat(z^{G^{sub}_1},...,z^{G_M^{sub}})W^O)\\
+ z_i^{G_m^sub} &= \sum_{j\in N_i^{G^{sub}_m} }\alpha_{ij}(x_jW^V), m\in[1,M] 
+    \end{split}\end{equation}</script><p>$W^O\in R^{Md_z\times d_z}$参数矩阵 </p>
+<p>作者还采用了子层之间的残差连接、FFN以及层归一化。</p>
+<h3 id="Layer-Aggregation"><a href="#Layer-Aggregation" class="headerlink" title="Layer Aggregation"></a>Layer Aggregation</h3><p>编码层之间更好的信息传播可能带来更好的性能。</p>
+<p>因此，我们研究了三种不同的Layer Aggregation方法，如图3所示。</p>
+<p><img src="https://i.loli.net/2021/07/23/gfL3GKQDxzCamqX.png" alt=""></p>
+<p>当更新第 $l$ 层节点的表示时，最近的方法是先聚合邻居，然后将聚合结果与来自 $(l−1)$ 层的节点表示相结合。此策略可视为不同图层之间跳过连接的一种形式。</p>
+<script type="math/tex; mode=display">
+\begin{equation}\begin{split} 
+ z_{N_i}^{(l)} &= AGGREGATE(\{z_j^{(l-1)}, \forall j \in N_i\})\\
+ z_i^{(l)} &= COMBINE(z_{N_i}^{(l)}, z_i^{(l-1)})
+    \end{split}\end{equation}</script><p>残差连接是另一种著名的跳跃连接，它使用identity mapping作为组合函数来帮助信号传播，但这些跳跃连接不能独立自适应地调整最后一层表示的邻域大小。</p>
+<p>如果我们为$z_i^{(l)}$ skip一个层，则所有后续的单元例（如使用此表示的$z_i^{(l+j)}$) 都将隐式的使用此skip</p>
+<p>因此，为了有选择地聚合前几层的输出，我们在模型中引入了跳跃体系。</p>
+<p>在编码器的最后一层L，通过concat的方式组合前几个编码层的所有输出，以帮助模型有选择地聚合所有这些中间表示。</p>
+<script type="math/tex; mode=display">
+z_i^{final} = Concat(z_i^{(L)},...,z_i^{(1)},x_i) W_{jump}</script><p>$W_{jump}\in R^{(Ld_z+d_x)\times d_z}$</p>
+<p>此外，为了更好地改善信息传播，还可以引入稠密连通性。通过密集连接，l层中的节点不仅从第(l−1)层获取输入，而且还从所有前面的层提取信息： </p>
+<script type="math/tex; mode=display">
+z_i^{(l)} = Concat(z_i^{(l-1)},..,z_i^{(1)},x_i) W^{(l)}_{dense}</script><p>$W^{(l)}_{dense} \in R^{d^{(l)}\times d_z}, d^{(l)}=d_x+d_z\times(l-1)$</p>
+<p><img src="https://i.loli.net/2021/07/23/kqOvxdBz6YrnXj8.png" alt=""></p>
+</article><div class="post-reward"><div class="reward-button button--animated"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2021/07/23/Graph-Transformer-for-Graph-to-Sequence-Learning/"><img class="next-cover" src="https://i.loli.net/2021/07/23/fEt4wdMJTLlp8kA.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Graph Transformer for Graph-to-Sequence Learning</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/06/29/A-Generalization-of-Transformer-Networks-to-Graphs/" title="A Generalization of Transformer Networks to Graphs"><img class="cover" src="https://z3.ax1x.com/2021/06/30/R0NHXt.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-29</div><div class="title">A Generalization of Transformer Networks to Graphs</div></div></a></div><div><a href="/2021/03/27/Cognitive-Graph-for-Multi-Hop-Reading-Comprehension-at-Scale-ACL2019/" title="Cognitive Graph for Multi-Hop Reading Comprehension at Scale(ACL2019)"><img class="cover" src="https://i.loli.net/2021/03/27/548YCMeHJnoBtDZ.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-03-27</div><div class="title">Cognitive Graph for Multi-Hop Reading Comprehension at Scale(ACL2019)</div></div></a></div><div><a href="/2021/05/31/Do-Multi-Hop-Question-Answering-Systems-Know-How-to-Answer-the-Single-Hop-Sub-Questions/" title="Do Multi-Hop Question Answering Systems Know How to Answer the Single-Hop Sub-Questions?"><img class="cover" src="https://i.loli.net/2021/05/31/YrZo2O9UtBnGAPc.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-05-31</div><div class="title">Do Multi-Hop Question Answering Systems Know How to Answer the Single-Hop Sub-Questions?</div></div></a></div><div><a href="/2021/06/23/Do-Transformers-Really-Perform-Bad-for-Graph-Representation/" title="Do Transformers Really Perform Bad for Graph Representation?"><img class="cover" src="https://i.loli.net/2021/06/23/GToCgpqhurvwJXl.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-23</div><div class="title">Do Transformers Really Perform Bad for Graph Representation?</div></div></a></div><div><a href="/2021/05/22/Dynamically-Fused-Graph-Network-for-Multi-hop-Reasoning/" title="Dynamically Fused Graph Network for Multi-hop Reasoning"><img class="cover" src="https://i.loli.net/2021/05/22/Vq7zjt64kiUQfEv.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-05-22</div><div class="title">Dynamically Fused Graph Network for Multi-hop Reasoning</div></div></a></div><div><a href="/2021/06/04/GRAPH-BERT-Only-Attention-is-Needed-for-Learning-Graph-Representations/" title="GRAPH-BERT: Only Attention is Needed for Learning Graph Representations"><img class="cover" src="https://i.loli.net/2021/06/04/EfvPdgW46x9QYXy.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-04</div><div class="title">GRAPH-BERT: Only Attention is Needed for Learning Graph Representations</div></div></a></div></div></div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Coding-Zuo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2021/07/23/Heterogeneous-Graph-Transformer-for-Graph-to-Sequence-Learning/">http://example.com/2021/07/23/Heterogeneous-Graph-Transformer-for-Graph-to-Sequence-Learning/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">Coding-Zuo</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/GNN-nlp/">GNN&amp;nlp</a></div><div class="post_share"><div class="addthis_inline_share_toolbox"></div><script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=null" async="async"></script></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Heterogeneous-Graph-Transformer-for-Graph-to-Sequence-Learning"><span class="toc-number">1.</span> <span class="toc-text">Heterogeneous Graph Transformer for Graph-to-Sequence Learning</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Input-Graph-Transformer"><span class="toc-number">1.1.</span> <span class="toc-text">Input Graph Transformer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Heterogeneous-Graph-Transformer"><span class="toc-number">1.2.</span> <span class="toc-text">Heterogeneous Graph Transformer</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Graph-Encoder"><span class="toc-number">1.2.1.</span> <span class="toc-text">Graph Encoder</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Heterogeneous-Mechanism"><span class="toc-number">1.2.2.</span> <span class="toc-text">Heterogeneous Mechanism</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Layer-Aggregation"><span class="toc-number">1.2.3.</span> <span class="toc-text">Layer Aggregation</span></a></li></ol></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By Coding-Zuo</div><div class="footer_custom_text">Hi, welcome to my BLOG</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    loader: {
+      source: {
+        '[tex]/amsCd': '[tex]/amscd'
+      }
+    },
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        addClass: [200,() => {
+          document.querySelectorAll('mjx-container:not([display=\'true\']').forEach( node => {
+            const target = node.parentNode
+            if (!target.classList.contains('has-jax')) {
+              target.classList.add('mathjax-overflow')
+            }
+          })
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>if (document.getElementsByClassName('mermaid').length) {
+  if (window.mermaidJsLoad) mermaid.init()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(() => {
+      window.mermaidJsLoad = true
+      mermaid.initialize({
+        theme: 'default',
+      })
+      false && mermaid.init()
+    })
+  }
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'd652112bf81876e00118',
+      clientSecret: 'a5abed418c7cc2736af5b4d0cbd7ff97d460a5b3',
+      repo: 'Coding-Zuo.github.io',
+      owner: 'Coding-Zuo',
+      admin: ['Coding-Zuo'],
+      id: 'eeff6290313e58bb99a350275f481a62',
+      language: 'zh-CN',
+      perPage: 10,
+      distractionFreeMode: false,
+      pagerDirection: 'last',
+      createIssueManually: false,
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script src="/js/custom.js"></script><script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script src="//code.tidio.co/mak6nokafytw9mgrsuzglwzfxiy3fpdl.js" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

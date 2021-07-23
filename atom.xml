@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2021-07-23T05:41:14.752Z</updated>
+  <updated>2021-07-23T13:48:47.720Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Heterogeneous Graph Transformer for Graph-to-Sequence Learning</title>
+    <link href="http://example.com/2021/07/23/Heterogeneous-Graph-Transformer-for-Graph-to-Sequence-Learning/"/>
+    <id>http://example.com/2021/07/23/Heterogeneous-Graph-Transformer-for-Graph-to-Sequence-Learning/</id>
+    <published>2021-07-23T10:44:21.000Z</published>
+    <updated>2021-07-23T13:48:47.720Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="Heterogeneous-Graph-Transformer-for-Graph-to-Sequence-Learning"><a href="#Heterogeneous-Graph-Transformer-for-Graph-to-Sequence-Learning" class="headerlink" title="Heterogeneous Graph Transformer for Graph-to-Sequence Learning"></a>Heterogeneous Graph Transformer for Graph-to-Sequence Learning</h1><p>Graph2Seq学习的目的是将图结构的表示转换为单词序列，以便生成文本。</p><p>AMR-to-text是从抽象意义表示(AMR)图中生成文本的任务，其中节点表示语义概念，边表示概念之间的关系。</p><p>传统GNN只考虑了直接相连节点之间的关系，而忽略了远距离节点之间的间接关系。</p><p>Graph2Seq的其他两个和Graph Transformer的论文</p><ul><li><p>Graph transformer for graph-to-sequence learning AAAI 2020</p></li><li><p>Modeling graph structure in transformer for better AMR-to-text gen- eration  EMNLP 2019</p></li></ul><p>使用节点之间的最短关系路径来编码语义关系。但是，它们忽略了关系路径中节点的信息，对直接关系和间接关系没有区别地进行编码。当从直接邻居那里聚集信息时，可能会干扰信息的传播过程。</p><p>作者使用Heterogeneous Graph Transformer来独立地建模原始图的各个子图中的不同关系，包括节点之间的直接关系、间接关系和多种可能的关系。</p><h2 id="Input-Graph-Transformer"><a href="#Input-Graph-Transformer" class="headerlink" title="Input Graph Transformer"></a>Input Graph Transformer</h2><p>为了缓解语料库中的数据稀疏问题，作者将进一步将字节对编码(BPE)引入Levi图。</p><p>将原始节点拆分成多个子词节点。除了添加缺省连接外，我们还在子词之间添加了反向边和自循环边。</p><p>如下图：</p><p><img src="https://i.loli.net/2021/07/23/fswuO1n4J7bptHG.png" alt=""></p><p>例如，图中的单词Country被分割为co@@、un@@、try  它们之间有三种类型的边。</p><p><img src="https://i.loli.net/2021/07/23/LUmRx6udzNeJyAr.png" style="zoom:67%;" /></p><p>该任务一般先将抽象概念图(上图a)，转换成Levi图(上图b)。将AMR图转换为扩展的Levi图，该图可以看作是一个异构图，因为它具有不同类型的边。</p><h2 id="Heterogeneous-Graph-Transformer"><a href="#Heterogeneous-Graph-Transformer" class="headerlink" title="Heterogeneous Graph Transformer"></a>Heterogeneous Graph Transformer</h2><p><img src="https://i.loli.net/2021/07/23/MvH7kQdb2KFwert.png" alt=""></p><p>给定一个经过预处理的扩展Levi图，根据其异构性将扩展Levi图分成多个子图。</p><p>在每个Graph Encoder中，基于其在当前子图中的相邻节点来更新不同子图中的节点表示。然后，将该节点在不同子图中的所有表示组合在一起，以获得其最终表示。</p><h3 id="Graph-Encoder"><a href="#Graph-Encoder" class="headerlink" title="Graph Encoder"></a>Graph Encoder</h3><p>与其他Graph Transformer不同的是仅使用相对位置编码来隐藏结构信息。</p><p>在更新每个节点的表示时，直接屏蔽了非相邻节点的注意力。mask attention $\alpha_{ij}\notin N_i$  ，此外这个作者还尝试用了加性注意力这就和GAT几乎很像了。</p><p>因此，给定输入序列 $x=(x_1,…,x_n)$，每个关注头中表示为 $z_i$ 的节点i的输出表示如下计算：</p><script type="math/tex; mode=display">z_i = \sum_{j\in N_i} \alpha_{ij}(x_j W^V)</script><h3 id="Heterogeneous-Mechanism"><a href="#Heterogeneous-Mechanism" class="headerlink" title="Heterogeneous Mechanism"></a>Heterogeneous Mechanism</h3><p>在多头机制成功的激励下，提出了异质机制。考虑到一个句子，多头注意允许模型隐含地注意到来自不同位置的不同表示子空间的信息。相应地，异构机制使得模型显式地关注不同子图中的信息，对应于图的不同表示子空间，从而增强了模型的编码能力。</p><p>首先将所有的边类型组合成一个单一的边类型，从而得到一个同质连通子图。该连通子图实际上是一个包含原始图中完全连通信息的无向图。除了学习直连关系，还引入了一个完全连通子图来学习间接连接节点之间的隐含关系。</p><p>每个编码层中的输出z计算如下：</p><script type="math/tex; mode=display">\begin{equation}\begin{split}  z &= FFN(concat(z^{G^{sub}_1},...,z^{G_M^{sub}})W^O)\\ z_i^{G_m^sub} &= \sum_{j\in N_i^{G^{sub}_m} }\alpha_{ij}(x_jW^V), m\in[1,M]     \end{split}\end{equation}</script><p>$W^O\in R^{Md_z\times d_z}$参数矩阵 </p><p>作者还采用了子层之间的残差连接、FFN以及层归一化。</p><h3 id="Layer-Aggregation"><a href="#Layer-Aggregation" class="headerlink" title="Layer Aggregation"></a>Layer Aggregation</h3><p>编码层之间更好的信息传播可能带来更好的性能。</p><p>因此，我们研究了三种不同的Layer Aggregation方法，如图3所示。</p><p><img src="https://i.loli.net/2021/07/23/gfL3GKQDxzCamqX.png" alt=""></p><p>当更新第 $l$ 层节点的表示时，最近的方法是先聚合邻居，然后将聚合结果与来自 $(l−1)$ 层的节点表示相结合。此策略可视为不同图层之间跳过连接的一种形式。</p><script type="math/tex; mode=display">\begin{equation}\begin{split}  z_{N_i}^{(l)} &= AGGREGATE(\{z_j^{(l-1)}, \forall j \in N_i\})\\ z_i^{(l)} &= COMBINE(z_{N_i}^{(l)}, z_i^{(l-1)})    \end{split}\end{equation}</script><p>残差连接是另一种著名的跳跃连接，它使用identity mapping作为组合函数来帮助信号传播，但这些跳跃连接不能独立自适应地调整最后一层表示的邻域大小。</p><p>如果我们为$z_i^{(l)}$ skip一个层，则所有后续的单元例（如使用此表示的$z_i^{(l+j)}$) 都将隐式的使用此skip</p><p>因此，为了有选择地聚合前几层的输出，我们在模型中引入了跳跃体系。</p><p>在编码器的最后一层L，通过concat的方式组合前几个编码层的所有输出，以帮助模型有选择地聚合所有这些中间表示。</p><script type="math/tex; mode=display">z_i^{final} = Concat(z_i^{(L)},...,z_i^{(1)},x_i) W_{jump}</script><p>$W_{jump}\in R^{(Ld_z+d_x)\times d_z}$</p><p>此外，为了更好地改善信息传播，还可以引入稠密连通性。通过密集连接，l层中的节点不仅从第(l−1)层获取输入，而且还从所有前面的层提取信息： </p><script type="math/tex; mode=display">z_i^{(l)} = Concat(z_i^{(l-1)},..,z_i^{(1)},x_i) W^{(l)}_{dense}</script><p>$W^{(l)}_{dense} \in R^{d^{(l)}\times d_z}, d^{(l)}=d_x+d_z\times(l-1)$</p><p><img src="https://i.loli.net/2021/07/23/kqOvxdBz6YrnXj8.png" alt=""></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;Heterogeneous-Graph-Transformer-for-Graph-to-Sequence-Learning&quot;&gt;&lt;a href=&quot;#Heterogeneous-Graph-Transformer-for-Graph-to-Sequence-Lear</summary>
+      
+    
+    
+    
+    
+    <category term="GNN&amp;nlp" scheme="http://example.com/tags/GNN-nlp/"/>
+    
+  </entry>
   
   <entry>
     <title>Graph Transformer for Graph-to-Sequence Learning</title>
@@ -425,28 +447,6 @@
       
       
     <summary type="html">&lt;h1 id=&quot;Unsupervised-Multi-hop-Question-Answering-by-Question-Generation&quot;&gt;&lt;a href=&quot;#Unsupervised-Multi-hop-Question-Answering-by-Question-Ge</summary>
-      
-    
-    
-    
-    
-    <category term="GNN&amp;nlp" scheme="http://example.com/tags/GNN-nlp/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Is Graph Structure Necessary for Multi-hop Question Answering?</title>
-    <link href="http://example.com/2021/05/19/Is-Graph-Structure-Necessary-for-Multi-hop-Question-Answering/"/>
-    <id>http://example.com/2021/05/19/Is-Graph-Structure-Necessary-for-Multi-hop-Question-Answering/</id>
-    <published>2021-05-19T05:04:14.000Z</published>
-    <updated>2021-05-19T07:02:21.658Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="Is-Graph-Structure-Necessary-for-Multi-hop-Question-Answering"><a href="#Is-Graph-Structure-Necessary-for-Multi-hop-Question-Answering" class="headerlink" title="Is Graph Structure Necessary for Multi-hop Question Answering?"></a>Is Graph Structure Necessary for Multi-hop Question Answering?</h1><p>图结构对多跳问答有多大贡献？</p><p>这是一篇只有6页的类似实验报告的论文。是在作者在做实验时发现，图结构和邻接矩阵都是与任务相关的先验知识，graph-attention可以看作是self-attention的特例。实验和可视化分析表明，self-attention和transformer可以代替graph-attention或整个图形结构，并且效果无明显变化，从而对图网络在自然语言处理任务上的应用能力提出了质疑。并希望未来引入图结构纳入自然语言处理任务的工作，应说明其必要性和优越性。</p><p>作者使用 <strong>Dynamically Fused Graph Network </strong> 那篇文章作为baseline开展了研究。</p><h2 id="Baseline"><a href="#Baseline" class="headerlink" title="Baseline"></a>Baseline</h2><p>首先描述baseline模型，证明了只有当预先训练的模型以feature-based的方式使用时，图结构才能发挥重要作用。虽然在fine-tuning方法中使用预先训练的模型，但图结构可能没有帮助。</p><p>作者复现了DFGN，并修改了预训练模型的使用。该模型首先利用检索器从候选集合中选择相关段落，并将其提供给基于图形的阅读器。实体图中的所有实体都由独立的NER模型抽取而来。</p><ul><li><p>检索器：在HotpotQA任务中使用Roberta Large模型来计算查询与每个候选段落之间的相关得分。我们对得分小于0.1%的段落进行过滤，最大入选段落数为3，入选段落拼接为Context C</p></li><li><p>编码层：我们将查询Q和上下文C连接起来，并将序列提供给另一个Roberta，结果被进一步送到Bi-attention layer 以从编码层获得表示。</p></li><li><p>图形融合块：给定第 t-1 跳的上下文表达 $C<em>{t-1}$ , 将token送入到mean-max pooling得到实体图$H</em>{t-1}\in R^{2d\times N}$, 其中N是实体的数量。之后采用的是图注意力层更新节点表达:</p><script type="math/tex; mode=display">\begin{equation}\begin{split}  \beta_{i,j}^{(t)} &= LeakyReLU(W_t^T[h_i^{(t-1)},h_j^{(t-1)}])\\ \alpha_{i,j}^{(t)} &= \frac {exp(\beta^{(t)}_{i,j})}{\sum_{k\in N_i}\alpha^{(t)}_{i,k}h_k^{(t-1)}}\\ h_i^{(t)} &= ReLU(\sum_{k\in N_i} \alpha^{(t)}_{i,k}h_k^{(t-1)})    \end{split}\end{equation}</script><p>还有查询实体关注、查询更新机制、弱监督等模块。</p></li><li><p>构建实体图：上下文中具有相同提及文本的实体被连接、同一句中出现的实体是相连的。</p></li><li><p>最终预测层</p></li></ul><p>作者将将预训练语言模型的输出直接送到预测层，由于基线模型与DFGN的主要区别在于我们在fine-tuning方法中使用了large的预训练模型，而不是基于feature-based的方法，因此在两种不同的设置下进行了实验。在HotpotQA上提交的结果，并进行了消融实验对比如下：</p><p><img src="https://i.loli.net/2021/05/19/Kmq726TuL9aU1wF.png" alt=""></p><p>结果表明在fine-tuning下有没有图结构效果不明显，在feature-based下图结构是有明显作用的。</p><h2 id="graph-attention是self-attention的一种特例"><a href="#graph-attention是self-attention的一种特例" class="headerlink" title="graph-attention是self-attention的一种特例"></a>graph-attention是self-attention的一种特例</h2><p>基于人工定义的规则和图结构的邻接矩阵可以看作是先验知识边，可以通过self-attention或Transformers来学习</p><p>基于以上的实验结果表明，自我注意或变形金刚在多跳问题回答中可能具有优势。</p><blockquote><p>解决多跳问题的关键是通过查询在原文中找到对应的实体。然后，构建从这些起始实体到其他相同或共现实体的一条或多条推理路径。如图1所示，以前的工作通常从多个段落中提取实体，并将这些实体建模为实体图。邻接矩阵是由人工定义的规则构建的，这些规则通常是实体之间的共现关系。从这个角度看，图的结构和邻接矩阵都可以看作是与任务相关的先验知识。实体图结构限制了模型只能基于实体进行推理，邻接矩阵辅助模型忽略一跳中的非相邻节点。然而，可能是在没有任何先验知识的情况下，模型仍然可以学习实体到实体的注意模式。</p><p>此外从上文图注意力的公式来看，不难发现图注意力与自我注意具有相似的形式。在前向传播中，实体图中的每个节点都会计算与其他连接节点的关注度得分。如图1所示，当图中的节点完全连接时，图注意力将退化为普通的自我关注层。因此，图形注意可以看作是自我注意的一种特例。</p></blockquote><p>基于以上的想法，作者将图结构做成全连接的实体和self-attention做了一次实验比较，为了验证整个图结构能否被transformer取代。</p><p><img src="https://i.loli.net/2021/05/19/TAMlO8FU5KeLpma.png" alt=""></p><p>实验结果如图，与自我注意相比，图形注意并没有显示出明显的优势。</p><p><img src="https://i.loli.net/2021/05/19/RGcaHXL1o9QOUzI.png" alt=""></p><p>对于图形注意和自我注意在不同密度区间的结果。尽管邻接矩阵的密度不同，但图形注意与自我注意的结果是一致的。这意味着自我关注可以学会忽略不相关的实体。</p><p>此外，transformer显示出强大的推理能力。只有叠加两层变压器才能获得与DFGN相当的效果。</p><p>并且作者分布从Entity2Entity、Attribute2Entity、Coreference2Entity、Entity2Sentence角度可实话了注意力权重在预训练语言模型中效果：</p><p><img src="https://i.loli.net/2021/05/19/sDHM6uNOE4tIX5S.png" alt=""></p><p>认为基于实体的图网络忽略了后三种链接的信息，我认为可能异质图更多的解决这个问题。</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h1 id=&quot;Is-Graph-Structure-Necessary-for-Multi-hop-Question-Answering&quot;&gt;&lt;a href=&quot;#Is-Graph-Structure-Necessary-for-Multi-hop-Question-Answeri</summary>
       
     
     
