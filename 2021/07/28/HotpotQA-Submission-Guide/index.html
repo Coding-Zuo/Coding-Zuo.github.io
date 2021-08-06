@@ -1,0 +1,367 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>HotpotQA Submission Guide | Coding-Zuo</title><meta name="keywords" content="nlp"><meta name="author" content="Coding-Zuo"><meta name="copyright" content="Coding-Zuo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="HotpotQA Submission Guide记录如何提交模型在HotpotQA test codalab安装与注册先去注册 https:&#x2F;&#x2F;worksheets.codalab.org&#x2F; 首先安装codalab 1pip install codalab -U  如果ERROR: Cannot uninstall ‘PyYAML’. It is a distutils installed pr">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HotpotQA Submission Guide">
+<meta property="og:url" content="http://example.com/2021/07/28/HotpotQA-Submission-Guide/index.html">
+<meta property="og:site_name" content="Coding-Zuo">
+<meta property="og:description" content="HotpotQA Submission Guide记录如何提交模型在HotpotQA test codalab安装与注册先去注册 https:&#x2F;&#x2F;worksheets.codalab.org&#x2F; 首先安装codalab 1pip install codalab -U  如果ERROR: Cannot uninstall ‘PyYAML’. It is a distutils installed pr">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2021/07/28/wmHvCVYxMTicsjE.png">
+<meta property="article:published_time" content="2021-07-28T09:12:56.000Z">
+<meta property="article:modified_time" content="2021-08-06T07:43:46.495Z">
+<meta property="article:author" content="Coding-Zuo">
+<meta property="article:tag" content="nlp">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/07/28/wmHvCVYxMTicsjE.png"><link rel="shortcut icon" href="https://i.loli.net/2021/03/22/reFlcYOnP3dSuJX.png"><link rel="canonical" href="http://example.com/2021/07/28/HotpotQA-Submission-Guide/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.json","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-08-06 15:43:46'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    })(window)</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sviptzk/HexoStaticFile@latest/Hexo/css/footer.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css"><meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="Coding-Zuo" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://i.loli.net/2021/03/22/YP2oqk7lOAfceTD.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">68</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">11</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://i.loli.net/2021/07/28/wmHvCVYxMTicsjE.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Coding-Zuo</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">HotpotQA Submission Guide</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-07-28T09:12:56.000Z" title="发表于 2021-07-28 17:12:56">2021-07-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-08-06T07:43:46.495Z" title="更新于 2021-08-06 15:43:46">2021-08-06</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="HotpotQA Submission Guide"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="HotpotQA-Submission-Guide"><a href="#HotpotQA-Submission-Guide" class="headerlink" title="HotpotQA Submission Guide"></a>HotpotQA Submission Guide</h1><p>记录如何提交模型在HotpotQA test</p>
+<h2 id="codalab安装与注册"><a href="#codalab安装与注册" class="headerlink" title="codalab安装与注册"></a>codalab安装与注册</h2><p>先去注册 <a target="_blank" rel="noopener" href="https://worksheets.codalab.org/">https://worksheets.codalab.org/</a></p>
+<p>首先安装codalab</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install codalab -U </span><br></pre></td></tr></table></figure>
+<p>如果ERROR: Cannot uninstall ‘PyYAML’. It is a distutils installed project and thus we cannot accurately determine which files belong to it which would lead to only a partial uninstall.</p>
+<p>使用 pip install codalab -U —ignore-installed PyYAML</p>
+<p>Codalab wiki ： <a target="_blank" rel="noopener" href="https://github.com/codalab/codalab-worksheets/wiki">https://github.com/codalab/codalab-worksheets/wiki</a></p>
+<p>注册安装完成后可以再命令行登录：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ cl work</span><br><span class="line">Requesting access at https://worksheets.codalab.org</span><br><span class="line">Username: guest1</span><br><span class="line">Password:</span><br><span class="line">Currently on worksheet https://worksheets.codalab.org::home-guest1(0x39729afdca6140869a11e055e4cc0649).</span><br></pre></td></tr></table></figure>
+<p><code>cl work</code>命令的意思就是切换工作表（worksheet），默认的工作表指向主页工作表 （<code>home-&lt;username&gt;</code>）。</p>
+<h2 id="先一个例子提交Hotpot-QA的baseline"><a href="#先一个例子提交Hotpot-QA的baseline" class="headerlink" title="先一个例子提交Hotpot QA的baseline"></a>先一个例子提交Hotpot QA的baseline</h2><p>distractor setting 是需要提交代码的，full wiki不需要。先主要攻克 distractor setting吧</p>
+<p>尝试完baseline再上传我自己的模型。</p>
+<blockquote>
+<p>你的分数想要在排行榜上出现，需要预留最多一个月的时间。</p>
+</blockquote>
+<p>在干扰项设置中，要求您将代码提交给Codalab，并根据隐藏的测试集对其进行评估。您应该首先确保您的代码能够正确生成dev的输出和评估结果，以便可以更容易地将您的设置转移到测试集。下面，提供一个提交baseline模型的示例。</p>
+<h3 id="Step-1-Preparing-code-and-data"><a href="#Step-1-Preparing-code-and-data" class="headerlink" title="Step 1: Preparing code and data"></a>Step 1: Preparing code and data</h3><p>首先将基线模型的GitHub存储库克隆到Codalab包中（在codalab上代码是公开的，想要不公开。。）</p>
+<p>在命令行中运行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cl run --request-network <span class="string">&#x27;git clone https://github.com/hotpotqa/hotpot.git&#x27;</span> -n repo</span><br></pre></td></tr></table></figure>
+<p>—request-network：需要网络环境， -n是添加别名为repo，以后可以更容易地引用它(而不是每次都使用长UUID)。</p>
+<p>注意这里git克隆的要是https的ssh的路径会失败。</p>
+<p>成功后刷新网页控制台：</p>
+<p><img src="https://i.loli.net/2021/07/28/mo35I4yMLEDawFH.png" alt=""></p>
+<p>然后，我们上传对训练集进行预处理后生成的词汇映射文件。</p>
+<p>创建包含所有必要预处理文件的mappings.zip文件，即idx2char.json、idx2word.json、char2idx.json、word2idx.json、char_emb.json和word_emb.json。这个是baseline运行所需要的。</p>
+<p>作者提供了下载mappings.zip的下载地址：<a target="_blank" rel="noopener" href="http://curtis.ml.cmu.edu/datasets/hotpot/mappings.zip">http://curtis.ml.cmu.edu/datasets/hotpot/mappings.zip</a></p>
+<p>要上传数据到Codalab CLI，只需运行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cl upload mappings.zip -n mappings</span><br></pre></td></tr></table></figure>
+<p>完全上传后，Codalab会为您解压zip文件。</p>
+<p>当然，还需要上传预先训练好的模型文件。我们已经准备好了预先训练好的文件model.pt。</p>
+<p>下载地址：<a target="_blank" rel="noopener" href="http://curtis.ml.cmu.edu/datasets/hotpot/model.pt">http://curtis.ml.cmu.edu/datasets/hotpot/model.pt</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cl upload model.pt -n model</span><br></pre></td></tr></table></figure>
+<p>如果超时就重新执行</p>
+<p><img src="https://i.loli.net/2021/07/28/eDSWJn71hkAIlGr.png" alt=""></p>
+<h3 id="Step-2-Preparing-the-environment"><a href="#Step-2-Preparing-the-environment" class="headerlink" title="Step 2: Preparing the environment"></a>Step 2: Preparing the environment</h3><p>现在基本已经准备好对新的输入进行预测。我们只需要设置代码需要在其中运行的适当环境。</p>
+<blockquote>
+<p>要做到这一点，最简单的方法是使用Docker镜像，我们在<a target="_blank" rel="noopener" href="https://hub.docker.com/r/qipeng/hotpotqa-base">qipeng/hotpotqa-base</a>上提供了一个镜像，其中预装了nvidia GPU相关库和Anaconda 3。我们还安装了运行此docker映像中的基线模型所需的所有软件包，这样我们就不必在Codalab包中安装所有东西。</p>
+</blockquote>
+<p>如果确实忘记了环境中的某些内容，也可以在Codalab中轻松设置：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cl run -n download_spacy_model --request-docker-image qipeng/hotpotqa-base:gpu --request-network :repo <span class="string">&#x27;cp -r repo/hotpot .; python -m spacy download en&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>注意：由于评估期间禁止使用网络，此捆绑包仅用于演示目的。对于需要下载的软件依赖项，强烈建议下载到您准备的Docker镜像中。</p>
+<p><img src="https://i.loli.net/2021/07/28/JzasC3nmrFNPI1U.png" alt=""></p>
+<h3 id="Step-3-Running-evaluation"><a href="#Step-3-Running-evaluation" class="headerlink" title="Step 3: Running evaluation"></a>Step 3: Running evaluation</h3><p>现在，继续根据刚刚上传的模型进行预测，并评估输出。</p>
+<p>要在dev集上运行上传的基线模型的预测，我们运行以下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cl run -n predict --request-docker-image qipeng/hotpotqa-base:gpu --request-gpus 1 --request-cpus 4 --request-memory 32g repo:download_spacy_model :mappings input.json:0xbdd8f3 :model <span class="string">&#x27;cp -r repo/hotpot .; cp mappings/* hotpot; mkdir hotpot/model; cp model hotpot/model/model.pt; cp input.json hotpot; cd hotpot; python main.py --mode prepro --data_file input.json --para_limit 2250 --data_split dev; python main.py --mode test --data_split dev --para_limit 2250 --batch_size 24 --init_lr 0.1 --keep_prob 1.0 --sp_lambda 1.0 --save model --prediction_file pred.json; cp pred.json ../;&#x27;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>让我们看看上面的命令中发生了什么。在第一部分中，我们使用-n predic命名包，并使用指定所需的资源</p>
+<p>—request-docker-image qipeng/hotpotqa-base:gpu</p>
+<p>—request-gpus 1</p>
+<p>—request-cpus 4</p>
+<p>—request-memory 32g</p>
+<p>请注意，您不能在此捆绑包中使用—request-network</p>
+<p>然后指定对其他包的依赖关系。repo:download_spacy_model表示将包download_spacy_model别名为repo</p>
+<p>:mappings指定对捆绑包mapping的依赖关系，而不使用别名。</p>
+<p>input.json:hotpotqa-data//dev_distractor_input_v1.0将输入json文件重命名为input.json，其中包id指向dev json文件。0xbdd8f3</p>
+<p>请不要上传您自己版本的开发集文件并使用它，因为我们依赖官方的开发文件UUID来确定在评估期间用测试集替换什么(如果您使用自己的开发集文件，评估将失败)。</p>
+</blockquote>
+<p>然后，使用一系列cp命令从不同的包复制文件，并以我们的预测脚本可以处理的方式组织它们。</p>
+<p>请注意，可以将每个引用的捆绑包视为当前捆绑包中的一个目录。例如，通过cp -r repo/hotpot。我们将repo捆绑包中的hotot子目录复制到当前捆绑包的“根”目录(开始运行捆绑包中的代码时所在的目录，而不是/root！)。</p>
+<p>然后，我们调用main.py两次，第一次使用—mode prepro预处理dev集，第二次使用—mode test进行预测。如果您使用代码，则可以相应地更改此设置。</p>
+<p>请注意，如果您的代码涉及预训练的特征提取(例如，Elmo或BERT)，则应该将其合并为此处命令的一部分，而不是作为包上传，因为您事先没有访问测试集的权限。（也就是说要预处理测试集的话要在一个捆绑包里进行多次运行python文件吧）</p>
+<p>还要注意，您的模型不应该依赖于键类型和级别来进行预测，因为这些键没有出现在测试集中。</p>
+<p>之后，我们将文件pred.json复制到当前包的“根”目录。请注意，文件名必须命名为pred.json，并且该文件必须放在包的“根”目录下，评估命令才能正常工作。</p>
+<p><img src="https://i.loli.net/2021/07/28/cvhExjYFiz8bka9.png" alt=""></p>
+<p>使用以下命令（将predict替换为您自己的prediction bundle的名称），确保您能够在dev set上评估您的模型而不会遇到任何问题：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cl macro hotpotqa-utils//dev-eval-distractor-v1.0 predict -n evaluate</span><br></pre></td></tr></table></figure>
+<p><img src="https://i.loli.net/2021/07/28/EJ1SVlTsnHdZ9rq.png" alt=""></p>
+<p><img src="https://i.loli.net/2021/07/28/jkswd5B198ZbqDi.png" alt=""></p>
+<h3 id="Step-4-Describe-and-tag-your-submission-描述并标记您的提交"><a href="#Step-4-Describe-and-tag-your-submission-描述并标记您的提交" class="headerlink" title="Step 4: Describe and tag your submission 描述并标记您的提交"></a>Step 4: Describe and tag your submission 描述并标记您的提交</h3><p>准备好后，编辑预测捆绑包的说明，以反映在排行榜上显示所需的信息：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Model name (Affiliation) (single model &#x2F; ensemble) [paper name](paper link) (code link)</span><br></pre></td></tr></table></figure>
+<p>如果您在使用深渊翻滚时愿意，可以使用匿名Anonymous作为您的从属关系，之后可以通过编辑您的深渊翻滚捆绑包的描述来修改它。</p>
+<p>[paper名称] 和(代码链接)部分是可选的 </p>
+<p>请注意，虽然[paper名称]和(paper链接)之间没有空格，因为这会造成代码链接的歧义。以下是一些示例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Baseline Model (Carnegie Mellon University, Stanford University, &amp; Universite de Montreal) (single model) [(Yang, Qi, Zhang, et al. 2018)](https:&#x2F;&#x2F;arxiv.org&#x2F;pdf&#x2F;1809.09600.pdf) (https:&#x2F;&#x2F;github.com&#x2F;hotpotqa&#x2F;hotpot)</span><br><span class="line"></span><br><span class="line">My Awesome Model (Awesome Institute) (ensemble) [(Awesome et al., 2018)](https:&#x2F;&#x2F;arxiv.org&#x2F;pdf&#x2F;1812.12345.pdf)</span><br><span class="line"></span><br><span class="line">PotLuck (Culinary University) (single model) [](https:&#x2F;&#x2F;arxiv.org&#x2F;pdf&#x2F;1901.12345.pdf) (https:&#x2F;&#x2F;github.com&#x2F;potluck&#x2F;potluck)</span><br></pre></td></tr></table></figure>
+<p>第一个示例正是我们用来描述基线模型的。第二个没有代码链接，第三个没有指定论文名称。</p>
+<p>请注意，Codalab在捆绑描述中使用非ASCII字符有问题，因此请避免使用它们。</p>
+<p>要提交您的捆绑包，请使用hotpotqa-diditor-test-submit标记您的预测捆绑包(这可以在Web UI上通过选择捆绑包并修改右侧面板上的标签来完成)，然后向彭琪(pengqi@cs.stanford.edu)发送一封简短的电子邮件，其中包含您的捆绑包UUID(0x后跟32个字符)或指向您的捆绑包的链接(不是您的工作表或工作表UUID！)。</p>
+<p>请确保您的预测所依赖的所有捆绑包都是公开可读的(这是Codalab中的默认可见性)。</p>
+<blockquote>
+<p>重要信息：</p>
+<p>1.请仅在dev集合上执行改善模型性能所需的任何模型选择或消融。不能在测试集上支持同一模型的多个提交。</p>
+<p>2.请避免删除您的Submission捆绑包，即使在填写排行榜条目之后也是如此。这是您更新与您的Submission相关的信息的最佳方式，包括但不限于其名称、隶属关系、纸质链接、代码链接等。</p>
+<p>3.如果你提交了多份报告(单一模型和集成模型)，请确保你的预测捆绑包有不同的名称。例如，predict-single和<code>predict-ensemble</code>。这是唯一一种我们在30天内容纳的多次提交。</p>
+</blockquote>
+<h2 id="1总结"><a href="#1总结" class="headerlink" title="1总结"></a>1总结</h2><ul>
+<li>从github下载代码</li>
+<li>上传模型和需要的数据</li>
+<li>设置环境用docker</li>
+<li>run</li>
+</ul>
+<p><img src="https://i.loli.net/2021/08/01/S6ik5vh4ImFxqCt.png" alt=""></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/196343938">https://zhuanlan.zhihu.com/p/196343938</a></p>
+</article><div class="post-reward"><div class="reward-button button--animated"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/07/30/Docker%E5%AD%A6%E4%B9%A0-%E4%B8%80/"><img class="prev-cover" src="https://i.loli.net/2021/07/30/i95LrXy74nduoIZ.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Docker学习(一)</div></div></a></div><div class="next-post pull-right"><a href="/2021/07/23/Heterogeneous-Graph-Transformer-for-Graph-to-Sequence-Learning/"><img class="next-cover" src="https://i.loli.net/2021/07/23/fda45whDJNAYu1j.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Heterogeneous Graph Transformer for Graph-to-Sequence Learning</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/05/31/Attention/" title="Attention"><img class="cover" src="https://i.loli.net/2021/05/31/Yh21HlKxC6jeRuf.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-05-31</div><div class="title">Attention</div></div></a></div><div><a href="/2021/06/13/Avoiding-Reasoning-Shortcuts-Adversarial-Evaluation-Training-and-Model-Development-for-Multi-Hop-QA/" title="Avoiding Reasoning Shortcuts- Adversarial Evaluation, Training, and Model Development for Multi-Hop QA"><img class="cover" src="https://i.loli.net/2021/06/13/SDhqjElefMPuHy4.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-13</div><div class="title">Avoiding Reasoning Shortcuts- Adversarial Evaluation, Training, and Model Development for Multi-Hop QA</div></div></a></div><div><a href="/2021/04/14/DUMA-Reading-Comprehension-with-Transposition-Thinking/" title="DUMA: Reading Comprehension with Transposition Thinking"><img class="cover" src="https://i.loli.net/2021/04/14/Fg3t7IMNw8RaPkD.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-04-14</div><div class="title">DUMA: Reading Comprehension with Transposition Thinking</div></div></a></div><div><a href="/2021/04/09/FREELB-ENHANCED-ADVERSARIAL-TRAINING-FOR-NATURAL-LANGUAGE-UNDERSTANDING/" title="FREELB: ENHANCED ADVERSARIAL TRAINING FOR NATURAL LANGUAGE UNDERSTANDING"><img class="cover" src="https://i.loli.net/2021/04/09/MuvtFb2SqEgoYlw.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-04-09</div><div class="title">FREELB: ENHANCED ADVERSARIAL TRAINING FOR NATURAL LANGUAGE UNDERSTANDING</div></div></a></div><div><a href="/2021/03/23/HotpotQA数据集/" title="HotpotQA数据集"><img class="cover" src="https://z3.ax1x.com/2021/03/23/6HutoV.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-03-23</div><div class="title">HotpotQA数据集</div></div></a></div><div><a href="/2021/04/18/LongFormer-The-Long-Document-Transformer/" title="LongFormer:The Long-Document Transformer"><img class="cover" src="https://i.loli.net/2021/04/18/U8X3gDmrc1Rh2jE.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-04-18</div><div class="title">LongFormer:The Long-Document Transformer</div></div></a></div></div></div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Coding-Zuo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2021/07/28/HotpotQA-Submission-Guide/">http://example.com/2021/07/28/HotpotQA-Submission-Guide/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">Coding-Zuo</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/nlp/">nlp</a></div><div class="post_share"><div class="addthis_inline_share_toolbox"></div><script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=null" async="async"></script></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#HotpotQA-Submission-Guide"><span class="toc-number">1.</span> <span class="toc-text">HotpotQA Submission Guide</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#codalab%E5%AE%89%E8%A3%85%E4%B8%8E%E6%B3%A8%E5%86%8C"><span class="toc-number">1.1.</span> <span class="toc-text">codalab安装与注册</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%88%E4%B8%80%E4%B8%AA%E4%BE%8B%E5%AD%90%E6%8F%90%E4%BA%A4Hotpot-QA%E7%9A%84baseline"><span class="toc-number">1.2.</span> <span class="toc-text">先一个例子提交Hotpot QA的baseline</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Step-1-Preparing-code-and-data"><span class="toc-number">1.2.1.</span> <span class="toc-text">Step 1: Preparing code and data</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Step-2-Preparing-the-environment"><span class="toc-number">1.2.2.</span> <span class="toc-text">Step 2: Preparing the environment</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Step-3-Running-evaluation"><span class="toc-number">1.2.3.</span> <span class="toc-text">Step 3: Running evaluation</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Step-4-Describe-and-tag-your-submission-%E6%8F%8F%E8%BF%B0%E5%B9%B6%E6%A0%87%E8%AE%B0%E6%82%A8%E7%9A%84%E6%8F%90%E4%BA%A4"><span class="toc-number">1.2.4.</span> <span class="toc-text">Step 4: Describe and tag your submission 描述并标记您的提交</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1%E6%80%BB%E7%BB%93"><span class="toc-number">1.3.</span> <span class="toc-text">1总结</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By Coding-Zuo</div><div class="footer_custom_text">Hi, welcome to my BLOG</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    loader: {
+      source: {
+        '[tex]/amsCd': '[tex]/amscd'
+      }
+    },
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        addClass: [200,() => {
+          document.querySelectorAll('mjx-container:not([display=\'true\']').forEach( node => {
+            const target = node.parentNode
+            if (!target.classList.contains('has-jax')) {
+              target.classList.add('mathjax-overflow')
+            }
+          })
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>if (document.getElementsByClassName('mermaid').length) {
+  if (window.mermaidJsLoad) mermaid.init()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(() => {
+      window.mermaidJsLoad = true
+      mermaid.initialize({
+        theme: 'default',
+      })
+      false && mermaid.init()
+    })
+  }
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'd652112bf81876e00118',
+      clientSecret: 'a5abed418c7cc2736af5b4d0cbd7ff97d460a5b3',
+      repo: 'Coding-Zuo.github.io',
+      owner: 'Coding-Zuo',
+      admin: ['Coding-Zuo'],
+      id: '944cb98f71a4c86e5ca44f39f9672d4c',
+      language: 'zh-CN',
+      perPage: 10,
+      distractionFreeMode: false,
+      pagerDirection: 'last',
+      createIssueManually: false,
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script src="/js/custom.js"></script><script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script src="//code.tidio.co/mak6nokafytw9mgrsuzglwzfxiy3fpdl.js" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
