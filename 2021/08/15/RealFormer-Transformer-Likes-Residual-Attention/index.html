@@ -1,0 +1,315 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>RealFormer: Transformer Likes Residual Attention | Coding-Zuo</title><meta name="keywords" content="NLP"><meta name="author" content="Coding-Zuo"><meta name="copyright" content="Coding-Zuo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="RealFormer: Transformer Likes Residual Attention提出了一个简单的基于Transformer的体系结构，创建一条“直接”路径在整个网络中传播原始注意力分数 如下图(c), 每个RealFormer层都获取前一层中所有注意力头部的原始注意力分数，并在顶部添加“残差分数”(计算方式与常规Transformers中的注意力分数相同)。 换句话说，RealFo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RealFormer: Transformer Likes Residual Attention">
+<meta property="og:url" content="http://example.com/2021/08/15/RealFormer-Transformer-Likes-Residual-Attention/index.html">
+<meta property="og:site_name" content="Coding-Zuo">
+<meta property="og:description" content="RealFormer: Transformer Likes Residual Attention提出了一个简单的基于Transformer的体系结构，创建一条“直接”路径在整个网络中传播原始注意力分数 如下图(c), 每个RealFormer层都获取前一层中所有注意力头部的原始注意力分数，并在顶部添加“残差分数”(计算方式与常规Transformers中的注意力分数相同)。 换句话说，RealFo">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2021/08/15/jkhBb5UgmaiPtZ8.png">
+<meta property="article:published_time" content="2021-08-15T03:16:37.000Z">
+<meta property="article:modified_time" content="2021-08-15T15:43:15.910Z">
+<meta property="article:author" content="Coding-Zuo">
+<meta property="article:tag" content="NLP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/08/15/jkhBb5UgmaiPtZ8.png"><link rel="shortcut icon" href="https://i.loli.net/2021/03/22/reFlcYOnP3dSuJX.png"><link rel="canonical" href="http://example.com/2021/08/15/RealFormer-Transformer-Likes-Residual-Attention/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.json","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-08-15 23:43:15'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    })(window)</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sviptzk/HexoStaticFile@latest/Hexo/css/footer.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css"><meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="Coding-Zuo" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://i.loli.net/2021/03/22/YP2oqk7lOAfceTD.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">74</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">13</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://i.loli.net/2021/08/15/jkhBb5UgmaiPtZ8.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Coding-Zuo</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">RealFormer: Transformer Likes Residual Attention</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-08-15T03:16:37.000Z" title="发表于 2021-08-15 11:16:37">2021-08-15</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-08-15T15:43:15.910Z" title="更新于 2021-08-15 23:43:15">2021-08-15</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="RealFormer: Transformer Likes Residual Attention"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="RealFormer-Transformer-Likes-Residual-Attention"><a href="#RealFormer-Transformer-Likes-Residual-Attention" class="headerlink" title="RealFormer: Transformer Likes Residual Attention"></a>RealFormer: Transformer Likes Residual Attention</h1><p>提出了一个简单的基于Transformer的体系结构，创建一条“直接”路径在整个网络中传播原始注意力分数</p>
+<p>如下图(c), 每个RealFormer层都获取前一层中所有注意力头部的原始注意力分数，并在顶部添加“残差分数”(计算方式与常规Transformers中的注意力分数相同)。</p>
+<p>换句话说，RealFormer可以被视为向Post-LN Transformer添加一个简单的跳跃连接。不会向计算图中添加任何乘法运算，因此预期性能与之相当。</p>
+<p>RealFormer中的AT往往更稀疏，跨层相关性更强，我们认为这可能具有一些正则化效应，可以稳定训练，有利于微调。</p>
+<p><img src="https://i.loli.net/2021/08/15/jZrDYmkL5EzFqi6.png" alt="">t</p>
+<ul>
+<li>(a) 传统transformer的PostLN</li>
+<li>(b) PreLN 论文：ON LAYER NORMALIZATION IN THE TRANSFORMER ARCHITECTURE，这种设计为每个子层增加了LN作为“预处理”步骤。</li>
+</ul>
+<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><p>标准Transformer Encoder</p>
+<script type="math/tex; mode=display">
+\text{MultiHead}(Q,K,V) = Concat(head_1,...,head_h)W^O</script><script type="math/tex; mode=display">
+head_i = Attention(QW_i^Q, KW^K_i,VW^V_i)</script><script type="math/tex; mode=display">
+Attention(Q',K',V') = Softmax(\frac{Q'K'^T}{\sqrt{d_k}})V'</script><script type="math/tex; mode=display">
+FFN(x) = \sigma(xW_1+b_1)W_2+b_2</script><p>Post-LN是Vaswani等人提出的原创体系结构。对每个子层末尾的输出进行标准化。</p>
+<p>相反，Pre-LN规格化子层输入，并创建直接路径(没有LN)来传播序列中的令牌嵌入。</p>
+<h3 id="Residual-Attention-Layer-Transformer"><a href="#Residual-Attention-Layer-Transformer" class="headerlink" title="Residual Attention Layer Transformer"></a>Residual Attention Layer Transformer</h3><p>RealFormer紧跟Post-LN设计，简单地增加了一个skip edge来连接相邻层中的多头注意力，如上图c所示。</p>
+<p>形式上添加一个$Prev$，是上一个softmax的注意力分数也就是pre-softmax，形状为$(heads,\text{from_seq_len},\text{to_seq_len})^2$</p>
+<script type="math/tex; mode=display">
+\text{ResidualMultiHead}(Q,K,V,Prev) = Concat(head1,...,head_h)W^O</script><script type="math/tex; mode=display">
+head_i = \text{ResidualAttention}(QW_i^Q,KW_i^K,VW_i^V,Prev_i)</script><p>$Prev_i$ 的形状为$(\text{from_seq_len,to_seq_len})$ 对应于每个$head_i$</p>
+<script type="math/tex; mode=display">
+\text{ResidualAttention}(Q',K',V',Prev') = \text{Softmax}(\frac{Q'K'^T}{\sqrt{d_k}}+Prev')V'</script><p>新的注意力分数$\frac{Q’K’^T}{\sqrt{d_k}}+Prev’$</p>
+<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><p><img src="https://i.loli.net/2021/08/15/K86nvAXLs954SMf.png" alt=""></p>
+<p>值得特别指出的是第一张图和第四张图。从第一张图我们可以看到，对于RealFormer结构，加大模型规模（large到xlarge）可以带来性能的明显提升，而ALBERT论文曾经提到加大BERT的模型规模并不能带来明显受益，结合两者说明这可能是PostLN的毛病而不是BERT的固有毛病，换成RealFormer可以改善这一点。从第四张图我们可以看到，RealFormer结构训练50万步，效果就相当于PostLN训练100万步，这表明RealFormer有着很高的训练效率。</p>
+<p>除了上述实验外，论文还对比了不同学习率、不同Dropout比例的效果，表明RealFormer确实对这些参数是比较鲁棒的。原论文还分析了RealFormer的Attention值分布，表明RealFormer的Attention结果更加合理。</p>
+<h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><p>RealFormer对梯度下降更加友好，这不难理解，因为$A<em>n = \frac{Q_nK_n^T}{\sqrt{d_k}} + A</em>{n-1}$的设计确实提供了一条直通路，使得第一层的Attention能够直通最后一层，自然就没有什么梯度消失的风险了。相比之下，PostLN是 $LayerNorm(x+f(x))$ 的结构，看上去$x+f(x)$防止了梯度消失，但是LayerNorm这一步会重新增加了梯度消失的风险，造成的后果是初始阶段前面的层梯度很小，后面的层梯度很大，如果用大学习率，后面的层容易崩，如果用小学习率，前面的层学不好，因此PostLN更难训练，需要小的学习率加warmup慢慢训。</p>
+<p>还有一个就是叠加的问题PreLN每一步都是$x+f(x)$的形式，到了最后一层变成了$x+f_1(x)+f_2(x)+…++f_n(x)$的形式，一层层累加，可能导致数值和方差都很大，最后迫不得已强制加一层Layer Norm让输出稳定下来。这样，尽管PreLN改善了梯度状况，但它本身设计上就存在一些不稳定因素。</p>
+<p>Realformer的$A<em>n = \frac{Q_nK_n^T}{\sqrt{d_k}} + A</em>{n-1}$存在叠加问题吗？如果只看A，那么确实有这样的问题，但A后面还要做个softmax归一化后才参与运行，也就是说，模型对矩阵A是自带归一化功能的，所以它不会有数值发散的风险。而且刚刚相反，随着层数的增加，A的叠加会使得A的元素绝对值可能越来越大，Attention趋近于onehot形式，造成后面的层梯度消失，但是别忘了，我们刚才说PostLN前面的层梯度小后面的大，而现在也进一步缩小了后面层的梯度，反而使得两者更同步，从而更好优化了；</p>
+<p>另一方面Attention的概率值可能会有趋同的趋势，也就是说Attention的模式可能越来越稳定了。带来类似ALBERT参数共享的正则化效应，这对模型效果来说可能是有利的。同时，直觉上来想，用RealFormer结构去做FastBert之类的自适应层数的改进，效果会更好，因为RealFormer的Attention本身会有趋同趋势，更加符合FastBert设计的出发点。</p>
+<p>此外，我们也可以将RealFormer理解为还是使用了常规的残差结构，但是残差结构只用在<strong>Q</strong>,<strong>K</strong>而没有用在<strong>V</strong>上。</p>
+<p>为啥<strong>V</strong>“不值得”一个残差呢？从近来的一些相对位置编码的改进中，笔者发现似乎有一个共同的趋势，那就是去掉了<strong>V</strong>的偏置，比如像NEZHA的相对位置编码，是同时在Attention矩阵（即<strong>Q</strong>,<strong>K</strong>）和<strong>V</strong>上施加的，而较新的XLNET和T5的相对位置编码则只施加在Attention矩阵上，所以，似乎去掉<strong>V</strong>的不必要的偏置是一个比较好的选择，而RealFormer再次体现了这一点。</p>
+<h3 id="RealFormer与Baseline-Transformers在本质上有什么不同？"><a href="#RealFormer与Baseline-Transformers在本质上有什么不同？" class="headerlink" title="RealFormer与Baseline Transformers在本质上有什么不同？"></a>RealFormer与Baseline Transformers在本质上有什么不同？</h3><p>dev set中随机抽样了8,192个示例，并可视化了这些示例中每个token(不包括padding)在表2中的三个预先训练的BERT-Base模型中的所有层和所有头部的注意概率分布。</p>
+<p>特别地，对于每个(token、layer、head)三元组，我们计算关注权重(概率)的熵作为关注度的“稀疏度量”。直观地说，熵越低，注意力权重分布就越偏斜，因此注意力就越稀疏。</p>
+<p><img src="https://i.loli.net/2021/08/15/av6cdqPg5HxWShY.png" alt=""></p>
+<p>用RealFormer训练好的BERT-BASE对8192个突出例子的标记注意概率的熵分布</p>
+<p>为了更好地辨认，每一层中的注意力都是按照熵的中位数排序的。根据熵的中位数对分布重新进行颜色编码：红色(中位数&gt;4.5)、黄色(1.5≤中位数≤4.5)、蓝色(中位数&lt;1.5)。也就是说，颜色越冷意味着注意力越稀疏。有一个明显的趋势是，较高的层往往具有较稀疏的注意力。</p>
+<p>下面的是post-LN和pre-LN的熵分布</p>
+<p><img src="https://i.loli.net/2021/08/15/MIfAtTSK6QV1a4h.png" alt=""></p>
+<p><img src="https://i.loli.net/2021/08/15/yIdzx7tDBTnNuUM.png" alt=""></p>
+</article><div class="post-reward"><div class="reward-button button--animated"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2021/08/12/Centos-6%E6%97%A0%E6%B3%95%E4%BD%BF%E7%94%A8yum%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/"><img class="next-cover" src="https://i.loli.net/2021/05/19/zonXcK6m7hBptNd.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Centos 6无法使用yum解决办法</div></div></a></div></nav><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Coding-Zuo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2021/08/15/RealFormer-Transformer-Likes-Residual-Attention/">http://example.com/2021/08/15/RealFormer-Transformer-Likes-Residual-Attention/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">Coding-Zuo</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/NLP/">NLP</a></div><div class="post_share"><div class="addthis_inline_share_toolbox"></div><script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=null" async="async"></script></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#RealFormer-Transformer-Likes-Residual-Attention"><span class="toc-number">1.</span> <span class="toc-text">RealFormer: Transformer Likes Residual Attention</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95"><span class="toc-number">1.1.</span> <span class="toc-text">方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Residual-Attention-Layer-Transformer"><span class="toc-number">1.1.1.</span> <span class="toc-text">Residual Attention Layer Transformer</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C"><span class="toc-number">1.2.</span> <span class="toc-text">实验</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E6%9E%90"><span class="toc-number">1.2.1.</span> <span class="toc-text">分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RealFormer%E4%B8%8EBaseline-Transformers%E5%9C%A8%E6%9C%AC%E8%B4%A8%E4%B8%8A%E6%9C%89%E4%BB%80%E4%B9%88%E4%B8%8D%E5%90%8C%EF%BC%9F"><span class="toc-number">1.2.2.</span> <span class="toc-text">RealFormer与Baseline Transformers在本质上有什么不同？</span></a></li></ol></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By Coding-Zuo</div><div class="footer_custom_text">Hi, welcome to my BLOG</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    loader: {
+      source: {
+        '[tex]/amsCd': '[tex]/amscd'
+      }
+    },
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        addClass: [200,() => {
+          document.querySelectorAll('mjx-container:not([display=\'true\']').forEach( node => {
+            const target = node.parentNode
+            if (!target.classList.contains('has-jax')) {
+              target.classList.add('mathjax-overflow')
+            }
+          })
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>if (document.getElementsByClassName('mermaid').length) {
+  if (window.mermaidJsLoad) mermaid.init()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(() => {
+      window.mermaidJsLoad = true
+      mermaid.initialize({
+        theme: 'default',
+      })
+      false && mermaid.init()
+    })
+  }
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'd652112bf81876e00118',
+      clientSecret: 'a5abed418c7cc2736af5b4d0cbd7ff97d460a5b3',
+      repo: 'Coding-Zuo.github.io',
+      owner: 'Coding-Zuo',
+      admin: ['Coding-Zuo'],
+      id: 'e6b0d4b9ada5d1308e6ed6a29236a17d',
+      language: 'zh-CN',
+      perPage: 10,
+      distractionFreeMode: false,
+      pagerDirection: 'last',
+      createIssueManually: false,
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script src="/js/custom.js"></script><script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script src="//code.tidio.co/mak6nokafytw9mgrsuzglwzfxiy3fpdl.js" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
