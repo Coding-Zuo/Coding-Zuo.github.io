@@ -1,0 +1,315 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Dice Loss for Data-imbalanced NLP Tasks | Coding-Zuo</title><meta name="keywords" content="nlp"><meta name="author" content="Coding-Zuo"><meta name="copyright" content="Coding-Zuo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="Dice Loss for Data-imbalanced NLP Tasks许多自然语言处理任务，如序列标注和机器阅读理解(MRC)，都面临着严重的数据失衡问题：  负样本明显多于正样本，占据绝大多数的负例会支配模型的训练过程，导致模型倾向于负例，而测试时使用的F1指标需要每个类都能准确预测； 大量简单负例（easy-negative）使训练不堪重负。负例占绝大多数也意味着其中包含了很多简单样本">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Dice Loss for Data-imbalanced NLP Tasks">
+<meta property="og:url" content="http://example.com/2021/09/01/Dice-Loss-for-Data-imbalanced-NLP-Tasks/index.html">
+<meta property="og:site_name" content="Coding-Zuo">
+<meta property="og:description" content="Dice Loss for Data-imbalanced NLP Tasks许多自然语言处理任务，如序列标注和机器阅读理解(MRC)，都面临着严重的数据失衡问题：  负样本明显多于正样本，占据绝大多数的负例会支配模型的训练过程，导致模型倾向于负例，而测试时使用的F1指标需要每个类都能准确预测； 大量简单负例（easy-negative）使训练不堪重负。负例占绝大多数也意味着其中包含了很多简单样本">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2021/08/29/7pyGPBNQZRmv3Tr.png">
+<meta property="article:published_time" content="2021-09-01T07:37:09.000Z">
+<meta property="article:modified_time" content="2021-09-01T12:54:41.077Z">
+<meta property="article:author" content="Coding-Zuo">
+<meta property="article:tag" content="nlp">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/08/29/7pyGPBNQZRmv3Tr.png"><link rel="shortcut icon" href="https://i.loli.net/2021/03/22/reFlcYOnP3dSuJX.png"><link rel="canonical" href="http://example.com/2021/09/01/Dice-Loss-for-Data-imbalanced-NLP-Tasks/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.json","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-09-01 20:54:41'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    })(window)</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sviptzk/HexoStaticFile@latest/Hexo/css/footer.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css"><meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="Coding-Zuo" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://i.loli.net/2021/03/22/YP2oqk7lOAfceTD.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">77</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">13</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://i.loli.net/2021/08/29/7pyGPBNQZRmv3Tr.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Coding-Zuo</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Dice Loss for Data-imbalanced NLP Tasks</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-09-01T07:37:09.000Z" title="发表于 2021-09-01 15:37:09">2021-09-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-09-01T12:54:41.077Z" title="更新于 2021-09-01 20:54:41">2021-09-01</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Dice Loss for Data-imbalanced NLP Tasks"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Dice-Loss-for-Data-imbalanced-NLP-Tasks"><a href="#Dice-Loss-for-Data-imbalanced-NLP-Tasks" class="headerlink" title="Dice Loss for Data-imbalanced NLP Tasks"></a>Dice Loss for Data-imbalanced NLP Tasks</h1><p>许多自然语言处理任务，如序列标注和机器阅读理解(MRC)，都面临着严重的数据失衡问题：</p>
+<ul>
+<li>负样本明显多于正样本，占据绝大多数的负例会支配模型的训练过程，导致模型倾向于负例，而测试时使用的F1指标需要每个类都能准确预测；</li>
+<li>大量简单负例（easy-negative）使训练不堪重负。负例占绝大多数也意味着其中包含了很多简单样本，这些简单样本对于模型学习困难样本几乎没有帮助，反而会在交叉熵的作用下推动模型遗忘对困难样本的知识。</li>
+</ul>
+<p>loss中最常用的交叉熵实际上是以精度为导向的，这造成了训练和测试之间的差异。在训练时，每个训练样本对目标函数的贡献相等，而在测试时，F1 score更关注正例。</p>
+<p>本文认为这种问题是交叉熵本身的特点带来的：交叉熵“平等”地看待每一个样本，无论正负，都尽力把它们推向1（正例）或0（负例）。但实际上，对分类而言，将一个样本分类为负只需要它的概率＜0.5即可，完全没有必要将它推向0。</p>
+<p>基于这个观察，作者使用现有的Dice Loss，并提出一个基于Dice Loss的自适应损失——DSC，在训练时推动模型更加关注困难的样本，降低简单负例的学习度，从而在整体上提高基于F1值的效果。</p>
+<h2 id="从Cross-Entropy-到-Dice-Losses"><a href="#从Cross-Entropy-到-Dice-Losses" class="headerlink" title="从Cross Entropy 到 Dice Losses"></a>从Cross Entropy 到 Dice Losses</h2><h3 id="交叉熵损失-CE"><a href="#交叉熵损失-CE" class="headerlink" title="交叉熵损失(CE)"></a>交叉熵损失(CE)</h3><p>以二分类作为说明，记输入为 $x$, 输出为一个二值概率 $p = [p_0,p_1]$, 并且有一个二元真值 $y = [y_0,y_1]$</p>
+<p>首先交叉熵损失是：</p>
+<script type="math/tex; mode=display">
+CE =  -(y_0log\ p_0 + y_1log \ p_1)</script><p>显然，对每个样本，CE都对它们一视同仁，不管当前样本是简单还是复杂。当简单样本有很多时，模型训练就会被这些简单的样本占据，使得模型难以从复杂样本中学习。于是，一种简单的改进方法是，降低模型在简单样本上的学习速率，从而得到下述加权交叉损失：</p>
+<script type="math/tex; mode=display">
+Weighted \ CE = -\alpha(y_0log \ p_0+y_1log \ p_1)</script><p>对不同样本，我们可以设置不同的权重，从而控制模型在该样本上学习的程度。但是此时，权重的选择又变得比较困难。因为我们的目标是缓解数据集的不平衡问题，从而提高基于F1评测标准的效果，我们希望有一种损失函数能够直接作用于F1。</p>
+<h3 id="Sorensen–Dice系数（DSC）"><a href="#Sorensen–Dice系数（DSC）" class="headerlink" title="Sørensen–Dice系数（DSC）"></a>Sørensen–Dice系数（DSC）</h3><p>一种现有的方法——Sørensen–Dice系数（简称DSC）——去衡量F1。</p>
+<p>DSC是一种用于衡量两个集合之间相似度的指标：</p>
+<script type="math/tex; mode=display">
+DSC(A,B) = \frac{2|A\cap B|}{|A|+|B|}</script><script type="math/tex; mode=display">
+F1 = \frac{2(precision*recall)}{precision+recall}</script><script type="math/tex; mode=display">
+A = precision = \frac{TP}{TP+FP} ,  B = recall =\frac{TP}{TP+FN}</script><p>如果我们令A是所有模型预测为正的样本的集合，令B是所有实际上为正的样本集合，那么DSC就可以重写为：</p>
+<script type="math/tex; mode=display">
+DSC(D,f) = \frac{2TP}{2TP+FN+FP}=F1</script><p>其中D数据集，f是一个分类模型。于是在这个意义上DSC与F1是等价的。</p>
+<p>既然如此，就直接优化DSC，然而上述表达式是离散的，为此，需要把上述DSC表达式转化为连续的版本，从而可以视作一种soft F1。</p>
+<p>对于单个样本x，直接定义它的DSC：</p>
+<script type="math/tex; mode=display">
+DSC(x,f) = \frac{2p_1y_1}{p_1+y_1}</script><p>可以看到如果x是父类，那么它的DSC就为0，从而不会对训练有贡献。为了让父类也能有所贡献，所以增加一个平滑项：</p>
+<script type="math/tex; mode=display">
+DSC_s(x,f) = \frac{2p_1y_1 + \epsilon}{p_1+y_1+\epsilon}</script><p>但这样一来，又需要我们根据不同的数据集手动地调整平滑项。而且当easy-negative样本很多的时候，即便使用上述平滑项，整个模型训练过程仍然会被它们主导。基于此，我们使用一种“自调节”的DSC（这里就和focal loss很像）：</p>
+<script type="math/tex; mode=display">
+DSC(x,f) = \frac{2(1-p_1)p_1\cdot y_1 + \epsilon}{(1-p_1)p_1 + y_1 + \epsilon}</script><p>比较上面两个DSC，可以发现，$1-p_1$ 实际上充当了缩放系数，对于简单样本($p_1$ 趋向于1或0)，$(1-p_1)p_1$ 使得模型更少地去关注他们。</p>
+<p>从导数上看，一旦模型正确分类当前样本（刚刚经过0.5），DSC就会使模型更少关注它，而不是像交叉熵那样，鼓励模型迫近0或1这两个点。这就能有效避免因简单样本过多导致模型训练受到简单样本的支配。</p>
+<p>事实上，这比较类似Focal Loss(FL)，降低已分好类的样本的学习权重：</p>
+<script type="math/tex; mode=display">
+FL = -(y_0(1-p_0)^\gamma log p_0 + y_1(1-p_1)^\gamma log p_1)</script><p>不过，FL即使能对简单样本降低学习权重，但它本质上仍然是在鼓励简单样本趋向于0或1，这就和DSC有了本质上的区别。因此，说DSC通过“平衡”简单样本和困难样本的学习过程，从而提高了最终的F1值（因为F1要求各类都有比较好的结果）</p>
+<h3 id="Dice-Loss-DL-与Tversky-Loss-TL"><a href="#Dice-Loss-DL-与Tversky-Loss-TL" class="headerlink" title="Dice Loss(DL)与Tversky Loss(TL)"></a>Dice Loss(DL)与Tversky Loss(TL)</h3><p>除了上述DSC外，还比较了两种$DSC_s(x,f)$的变体，分别是Dice Loss（DL）和Tversky Loss（TL）：</p>
+<script type="math/tex; mode=display">
+DL = 1 - \frac{2p_1y_1+\epsilon}{p_1^2+y_1^2+\epsilon}</script><script type="math/tex; mode=display">
+TL = 1-\frac{p_1y_1 + \epsilon}{p_1y_1+\alpha p_1y_0+\beta p_0y_1 + \epsilon}</script><p>在$\alpha=\beta=0.5$时，TL就退化为DSC。           </p>
+<h3 id="损失总结"><a href="#损失总结" class="headerlink" title="损失总结"></a>损失总结</h3><p><img src="https://i.loli.net/2021/09/01/YkHOMIlVSPjG5aw.png" alt=""></p>
+<p>后三个统称为Dice loss</p>
+</article><div class="post-reward"><div class="reward-button button--animated"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2021/08/29/Edge-augmented-Graph-Transformers-Global-Self-attention-is-Enough-for-Graphs/"><img class="next-cover" src="https://i.loli.net/2021/08/29/7pyGPBNQZRmv3Tr.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Edge-augmented Graph Transformers: Global Self-attention is Enough for Graphs</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/05/31/Attention/" title="Attention"><img class="cover" src="https://i.loli.net/2021/05/31/Yh21HlKxC6jeRuf.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-05-31</div><div class="title">Attention</div></div></a></div><div><a href="/2021/06/13/Avoiding-Reasoning-Shortcuts-Adversarial-Evaluation-Training-and-Model-Development-for-Multi-Hop-QA/" title="Avoiding Reasoning Shortcuts- Adversarial Evaluation, Training, and Model Development for Multi-Hop QA"><img class="cover" src="https://i.loli.net/2021/06/13/SDhqjElefMPuHy4.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-13</div><div class="title">Avoiding Reasoning Shortcuts- Adversarial Evaluation, Training, and Model Development for Multi-Hop QA</div></div></a></div><div><a href="/2021/04/14/DUMA-Reading-Comprehension-with-Transposition-Thinking/" title="DUMA: Reading Comprehension with Transposition Thinking"><img class="cover" src="https://i.loli.net/2021/04/14/Fg3t7IMNw8RaPkD.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-04-14</div><div class="title">DUMA: Reading Comprehension with Transposition Thinking</div></div></a></div><div><a href="/2021/04/09/FREELB-ENHANCED-ADVERSARIAL-TRAINING-FOR-NATURAL-LANGUAGE-UNDERSTANDING/" title="FREELB: ENHANCED ADVERSARIAL TRAINING FOR NATURAL LANGUAGE UNDERSTANDING"><img class="cover" src="https://i.loli.net/2021/04/09/MuvtFb2SqEgoYlw.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-04-09</div><div class="title">FREELB: ENHANCED ADVERSARIAL TRAINING FOR NATURAL LANGUAGE UNDERSTANDING</div></div></a></div><div><a href="/2021/07/28/HotpotQA-Submission-Guide/" title="HotpotQA Submission Guide"><img class="cover" src="https://i.loli.net/2021/07/28/wmHvCVYxMTicsjE.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-07-28</div><div class="title">HotpotQA Submission Guide</div></div></a></div><div><a href="/2021/03/23/HotpotQA数据集/" title="HotpotQA数据集"><img class="cover" src="https://z3.ax1x.com/2021/03/23/6HutoV.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-03-23</div><div class="title">HotpotQA数据集</div></div></a></div></div></div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Coding-Zuo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2021/09/01/Dice-Loss-for-Data-imbalanced-NLP-Tasks/">http://example.com/2021/09/01/Dice-Loss-for-Data-imbalanced-NLP-Tasks/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">Coding-Zuo</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/nlp/">nlp</a></div><div class="post_share"><div class="addthis_inline_share_toolbox"></div><script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=null" async="async"></script></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Dice-Loss-for-Data-imbalanced-NLP-Tasks"><span class="toc-number">1.</span> <span class="toc-text">Dice Loss for Data-imbalanced NLP Tasks</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8ECross-Entropy-%E5%88%B0-Dice-Losses"><span class="toc-number">1.1.</span> <span class="toc-text">从Cross Entropy 到 Dice Losses</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%A4%E5%8F%89%E7%86%B5%E6%8D%9F%E5%A4%B1-CE"><span class="toc-number">1.1.1.</span> <span class="toc-text">交叉熵损失(CE)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Sorensen%E2%80%93Dice%E7%B3%BB%E6%95%B0%EF%BC%88DSC%EF%BC%89"><span class="toc-number">1.1.2.</span> <span class="toc-text">Sørensen–Dice系数（DSC）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Dice-Loss-DL-%E4%B8%8ETversky-Loss-TL"><span class="toc-number">1.1.3.</span> <span class="toc-text">Dice Loss(DL)与Tversky Loss(TL)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8D%9F%E5%A4%B1%E6%80%BB%E7%BB%93"><span class="toc-number">1.1.4.</span> <span class="toc-text">损失总结</span></a></li></ol></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By Coding-Zuo</div><div class="footer_custom_text">Hi, welcome to my BLOG</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    loader: {
+      source: {
+        '[tex]/amsCd': '[tex]/amscd'
+      }
+    },
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        addClass: [200,() => {
+          document.querySelectorAll('mjx-container:not([display=\'true\']').forEach( node => {
+            const target = node.parentNode
+            if (!target.classList.contains('has-jax')) {
+              target.classList.add('mathjax-overflow')
+            }
+          })
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>if (document.getElementsByClassName('mermaid').length) {
+  if (window.mermaidJsLoad) mermaid.init()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(() => {
+      window.mermaidJsLoad = true
+      mermaid.initialize({
+        theme: 'default',
+      })
+      false && mermaid.init()
+    })
+  }
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'd652112bf81876e00118',
+      clientSecret: 'a5abed418c7cc2736af5b4d0cbd7ff97d460a5b3',
+      repo: 'Coding-Zuo.github.io',
+      owner: 'Coding-Zuo',
+      admin: ['Coding-Zuo'],
+      id: '4ab56e10c1e109e4dd34cdfd019f8823',
+      language: 'zh-CN',
+      perPage: 10,
+      distractionFreeMode: false,
+      pagerDirection: 'last',
+      createIssueManually: false,
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script src="/js/custom.js"></script><script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script src="//code.tidio.co/mak6nokafytw9mgrsuzglwzfxiy3fpdl.js" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
