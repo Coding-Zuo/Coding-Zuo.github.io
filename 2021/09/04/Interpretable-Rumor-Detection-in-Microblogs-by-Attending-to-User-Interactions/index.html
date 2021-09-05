@@ -1,0 +1,367 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Interpretable Rumor Detection in Microblogs by Attending to User Interactions | Coding-Zuo</title><meta name="keywords" content="context detection"><meta name="author" content="Coding-Zuo"><meta name="copyright" content="Coding-Zuo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="Interpretable Rumor Detection in Microblogs by Attending to User Interactionshttps:&#x2F;&#x2F;github.com&#x2F;serenaklm&#x2F;rumor_detection 通过学习区分社区对微博中真假claim的响应来解决谣言检测问题。 现有最先进的模型是基于对会话树建模的树模型。然而，在社交媒体中，发布回复的用户可能是对整个">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Interpretable Rumor Detection in Microblogs by Attending to User Interactions">
+<meta property="og:url" content="http://example.com/2021/09/04/Interpretable-Rumor-Detection-in-Microblogs-by-Attending-to-User-Interactions/index.html">
+<meta property="og:site_name" content="Coding-Zuo">
+<meta property="og:description" content="Interpretable Rumor Detection in Microblogs by Attending to User Interactionshttps:&#x2F;&#x2F;github.com&#x2F;serenaklm&#x2F;rumor_detection 通过学习区分社区对微博中真假claim的响应来解决谣言检测问题。 现有最先进的模型是基于对会话树建模的树模型。然而，在社交媒体中，发布回复的用户可能是对整个">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2021/09/04/RHfsQkurywJnLT1.png">
+<meta property="article:published_time" content="2021-09-04T10:52:02.000Z">
+<meta property="article:modified_time" content="2021-09-05T03:10:18.157Z">
+<meta property="article:author" content="Coding-Zuo">
+<meta property="article:tag" content="context detection">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/09/04/RHfsQkurywJnLT1.png"><link rel="shortcut icon" href="https://i.loli.net/2021/03/22/reFlcYOnP3dSuJX.png"><link rel="canonical" href="http://example.com/2021/09/04/Interpretable-Rumor-Detection-in-Microblogs-by-Attending-to-User-Interactions/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.json","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-09-05 11:10:18'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    })(window)</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sviptzk/HexoStaticFile@latest/Hexo/css/footer.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css"><meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="Coding-Zuo" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://i.loli.net/2021/03/22/YP2oqk7lOAfceTD.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">79</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">14</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://i.loli.net/2021/09/04/RHfsQkurywJnLT1.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Coding-Zuo</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Interpretable Rumor Detection in Microblogs by Attending to User Interactions</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-09-04T10:52:02.000Z" title="发表于 2021-09-04 18:52:02">2021-09-04</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-09-05T03:10:18.157Z" title="更新于 2021-09-05 11:10:18">2021-09-05</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Interpretable Rumor Detection in Microblogs by Attending to User Interactions"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Interpretable-Rumor-Detection-in-Microblogs-by-Attending-to-User-Interactions"><a href="#Interpretable-Rumor-Detection-in-Microblogs-by-Attending-to-User-Interactions" class="headerlink" title="Interpretable Rumor Detection in Microblogs by Attending to User Interactions"></a>Interpretable Rumor Detection in Microblogs by Attending to User Interactions</h1><p><a target="_blank" rel="noopener" href="https://github.com/serenaklm/rumor_detection">https://github.com/serenaklm/rumor_detection</a></p>
+<p>通过学习区分社区对微博中真假claim的响应来解决谣言检测问题。</p>
+<p>现有最先进的模型是基于对会话树建模的树模型。然而，在社交媒体中，发布回复的用户可能是对整个thread的回复，而不是对特定用户的回复。</p>
+<p>提出Multi-head post-level attention模型(PLAN)来构建推文之间的远距离交互。并提出几个变体：</p>
+<ul>
+<li>结构感知自注意模型(StA-PLAN)，将树形结构信息合并到Transformer中</li>
+<li>分层token和post-leve attention(StA-HiTPLAN), 通过token-level 自注意力学习句子表征</li>
+</ul>
+<p>这篇工作重点是利用社区对虚假claim的响应来检测虚假索赔。这一研究领域通过将自然语言处理应用于针对claim的评论来利用社区的集体智慧。这些工作背后的关键原则是，社交媒体上的用户会分享对不准确信息的看法、猜测和证据。</p>
+<h2 id="样本"><a href="#样本" class="headerlink" title="样本"></a>样本</h2><p><img src="https://i.loli.net/2021/09/04/FwWU2TKkf1Ji5B3.png" alt=""></p>
+<p>源贴：“沃尔玛捐赠1万美元支持达伦·威尔逊和正在进行的种族主义警察谋杀案#弗格森#抵制沃尔玛URL”。</p>
+<p>推特R_1及其回复推文R_1_1对消息来源的真实性表示怀疑。</p>
+<p>推特R_2_1和R_3_1提供了确凿的证据，揭穿了消息来源的说法是假的。</p>
+<p>虽然R_2_1和R_3_1分别是R_2和R_3的子节点，但它们可以为树上的所有其他节点(如R_1_1和R_1)提供重要信息。</p>
+<p>因此，应该考虑所有tweet之间的互动，而不仅仅是父节点和他们的孩子节点之间的互动。</p>
+<h2 id="相关工作"><a href="#相关工作" class="headerlink" title="相关工作"></a>相关工作</h2><p>两篇使用树形结构进行建模的sota对社交媒体中谣言检测有限制。</p>
+<p>Rumor detection on twitter with tree-structured recursive neural networks(2018) ，将来源claim及其回复推文组织成树形结构，使用递归神经网络对传播树中的信息传播进行建模。来自不同节点的信号以自下而上或自上而下的方式进行粗略地重新聚合。在自下而上的模型中，信息从子节点传播到父节点，在自上而下的模型中，信息从父节点传播到子节点，反之亦然。</p>
+<p>Tree lstms with convolution units to predict stance and rumor veracity in social media conver- sations.(2019) ，组织了树状结构的对话线程，并探索了用于谣言检测的branch和tree LSTM的几种变体。</p>
+<p>这两篇论文都使用了树模型，目的是对会话线索中存在的结构信息进行建模。在树模型中，信息从父级传播到子级，反之亦然。然而，社交媒体对话中的线索结构有所不同，每个用户通常能够观察到对话的不同分支中的所有回复。揭穿假新闻的用户不能只针对他回复的人创建的内容也可能适用于该帖子中的其他推文。树模型不会对来自其他分支的节点之间的交互进行显式建模，这是对社交媒体会话建模时的一个关键限制。</p>
+<p>自动区分真假Claims的现有方法利用了各种特征：</p>
+<ul>
+<li>Claims的内容</li>
+<li>Claims来源的重点考虑和社交网络</li>
+<li>使用可信来源(例如，维基百科)进行事实核查</li>
+<li>社区对Claims的反应。</li>
+</ul>
+<p>这篇重点在社区响应，接下来展开介绍介绍。</p>
+<h3 id="Content-Information"><a href="#Content-Information" class="headerlink" title="Content Information"></a>Content Information</h3><p>早期关于欺骗性内容检测的工作研究了语言线索的使用，例如代词的百分比、词长、动词数量和词类。也有工作对关于虚假的评论，目击者的陈述，和讽刺。利用语言特征对假新闻的检测也进行了研究。这种对概念内容的分析依赖于可能是领域或主题所独有的语言特征。</p>
+<h3 id="Source-and-Social-Network"><a href="#Source-and-Social-Network" class="headerlink" title="Source and Social Network"></a>Source and Social Network</h3><p>研究假新闻的来源及其社交网络，在内容中加入来源信息提高了假新闻分类准确率。为传播假新闻而创建的账户往往具有不同的社交网络特征。</p>
+<h3 id="Fact-Checking"><a href="#Fact-Checking" class="headerlink" title="Fact Checking"></a>Fact Checking</h3><p>事实核查网站，如PolitiFact。com和snopes.com依靠人工验证来揭穿假新闻，但无法匹配假新闻的生成速度(Funke 2019)。自动事实核查旨在对照诸如维基百科(Ciampaglia et al.2015年)。</p>
+<p>最近，索恩等人(2018)提出了FEVER共享任务，针对包含500万维基百科文档的数据库验证输入Claim，并将每个Claim分为三类：支持、驳斥或信息不足。</p>
+<p>事实核查是一种更有原则的假新闻检测方法。然而，它也需要建立一个经过核实的事实语料库，而且可能不适用于证据很少的新Claim。</p>
+<h3 id="Community-Response"><a href="#Community-Response" class="headerlink" title="Community Response"></a>Community Response</h3><p>研究人员致力于通过构建分类器来自动预测claim的有效性，分类器利用对社交媒体帖子的评论和回复，以及传播模式。</p>
+<p>Ma(2018a)采用多任务学习方法构建了一个学习立场感知特征的分类器用于谣言检测。</p>
+<p>Li (2019)对他的模型采用了多任务学习方法，并在他的模型中包括了用户信息。</p>
+<p>Chen(2017)提出汇集截然不同的特征，以捕捉帖子随时间的上下文变化。</p>
+<p>除了语言特征，其他研究人员也关注了用户的人口统计或交互预测来确定用户的可信度。</p>
+<p>Yang(2012)收集了从事传播假新闻的用户特征，通过对传播路径进行分类，仅利用用户特征构建了假新闻检测器</p>
+<p>Li(2019)使用用户信息和内容特征相结合的方式训练具有多任务学习目标的LSTM。</p>
+<p>在本文中，仅从帖子和评论两个方面来检测谣言和假新闻。提出了一种用于谣言检测的Transformer，而不是递归树模型。</p>
+<h2 id="任务定义"><a href="#任务定义" class="headerlink" title="任务定义"></a>任务定义</h2><p>问题陈述，将每个线程thread定义为：</p>
+<script type="math/tex; mode=display">
+X = \{x_1,x_2,...,x_n\}</script><p>其中$x_1$是源tweet，$x_i$是按时间顺序排列的第 $i$ 条tweet，$n$是线程中的tweet数量。</p>
+<p>会话树中除了文本信息外，还有可以利用的结构信息。在树形结构模型中，如果$x_i$对$x_j$进行应答，反之亦然，则只对Twitter $x_i$和$x_j$进行关联。</p>
+<p>本文模型允许任何帖子关注同一主题中的任何其他帖子。</p>
+<p>在提出的结构感知模型中，用关系标签来标记任何一对推文 $x_i$ 和 $x_j$之间的关系 $R(i,j)\in {\text{parent, child, before, after, self}}$ 。$R(i，j)$ 的值是通过依次应用以下规则集来获得的：</p>
+<ul>
+<li>parent：如果 $x_i$ 直接回复 $x_j$</li>
+<li>child：如果 $x_j$ 直接回复 $x_i$</li>
+<li>before：如果 $x_i$ 在 $x_j$之前到来</li>
+<li>after：如果 $x_i$ 在 $x_j$之后</li>
+<li>self：如果i=j</li>
+</ul>
+<p>谣言检测任务简化为学习预测每个$(X，R)$到其谣言类别 $y$。</p>
+<p>在两个谣言检测数据集上进行了实验，即Twitter15和Twitter16数据，以及PHEME 5数据。</p>
+<p>对于我们正在处理的数据集，分类标签是不同的：</p>
+<ul>
+<li>Twitter15 and Twitter16：$y\in {\text{non-rumor, false-rumor, true-rumor, unverified}}$</li>
+<li>PHEME: $y\in {\text{false-rumor, true-rumor, unverified}}$</li>
+</ul>
+<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><p>然而，正如我们将在下表中的数据统计中看到的那样，数据集中的树非常浅，大部分评论直接回复源tweet，而不是回复其他tweet。</p>
+<p><img src="https://i.loli.net/2021/09/05/2RAGI9fpbJ5D387.png" alt=""></p>
+<p>我们发现，在社交媒体中，由于整个帖子通常都是可见的，回复根帖子的用户可能会继续与更活跃的用户进行对话，而不是专门为根帖子撰写回复。因此，在对社交媒体对话进行建模时，没有对推文之间的每一种可能的成对交互进行显式建模的树模型是次优的，所以用Transformer-based模型。</p>
+<h3 id="Post-Level-Attention-Network-PLAN"><a href="#Post-Level-Attention-Network-PLAN" class="headerlink" title="Post-Level Attention Network (PLAN)"></a>Post-Level Attention Network (PLAN)</h3><p><img src="https://i.loli.net/2021/09/05/aq5MoQL1iACXujd.png" alt=""></p>
+<p>首先将对话树的结构展平，并将推文按时间顺序排列成直线结构，源推文作为第一条推文。对于我们的计划模型，我们在线性结构中对每个推文 $x_i$ 应用最大池化来获得它的句子表示 $x_i$。</p>
+<p>然后传递一个句子嵌入序列 $X’ = (x_1’,x_2’,…,x_n’)$  通过s个数的多头注意力(MHA)层来模拟推文之间的交互。</p>
+<p>我们将这些MHA层称为post-level attention层。因此，这将改变 $X’ =(x_1’,x_2’,…,x_n’)$ 为 $U=(u_1,u_2,…,u_n)$</p>
+<p>最后，使用注意力机制对推文进行插值，然后通过一个全连接层进行预测。</p>
+<h3 id="Structure-Aware-Post-Level-Attention-Network-StA-PLAN"><a href="#Structure-Aware-Post-Level-Attention-Network-StA-PLAN" class="headerlink" title="Structure Aware Post-Level Attention Network (StA-PLAN)"></a>Structure Aware Post-Level Attention Network (StA-PLAN)</h3><p>模型的一个可能的局限性是，我们通过以线性结构组织推文来丢失结构信息。转换树中固有存在的结构化信息对于假新闻检测可能仍然有用。</p>
+<p>树模型在这方面更优越，因为结构信息是显式建模的。为了将树模型的优点和自我注意机制结合起来，对计划模型进行了扩展，使其显式地包含了结构信息。</p>
+<script type="math/tex; mode=display">
+\alpha_{ij} = softmax(\frac{q_ik_j^T+a_{ij}^K}{\sqrt{d_k}})</script><script type="math/tex; mode=display">
+z_i = \sum_{j=1}^n\alpha_{ij}(v_j+a_{ij}^V)</script><p>$a^V<em>{ij}$ 和 $a^K</em>{ij}$ 都是代表tweet对之间五种可能的结构关系(即parent, child, before, after, self)之一的向量</p>
+<h3 id="Structure-Aware-Hierarchical-Token-and-Post-Level-Attention-Network-StA-HiTPLAN"><a href="#Structure-Aware-Hierarchical-Token-and-Post-Level-Attention-Network-StA-HiTPLAN" class="headerlink" title="Structure Aware Hierarchical Token and Post-Level Attention Network (StA-HiTPLAN)"></a>Structure Aware Hierarchical Token and Post-Level Attention Network (StA-HiTPLAN)</h3><p><img src="https://i.loli.net/2021/09/05/Cx2RNBdOwAUcMI1.png" alt=""></p>
+<p>PLAN模型执行最大池化，以获得每条推文的句子表示。</p>
+<p>然而，让模型学习单词向量的重要性可能会更理想。因此，提出了一种分层的注意模型—token-level的注意和post-level的注意力。分层模型的概述如图所示。</p>
+<p>在使用注意机制插入输出之前，我们执行token-level自注意力，而不是使用最大池化来获得句子表示。</p>
+<p>每条推文可以表示为一系列单词记号$x<em>i=(x</em>{i,1}，x<em>{i,2}，…，x</em>{i,|xi|})$。我们在一条推文中通过MHA层传递了单词token的序列。这允许tweet中的token之间进行交互，将这些层称为token-level关注层。</p>
+<h3 id="Time-Delay-Embedding"><a href="#Time-Delay-Embedding" class="headerlink" title="Time Delay Embedding"></a>Time Delay Embedding</h3><p>在不同的时间间隔创建的推文可以有不同的解释。首次创建源claim时表示不相信的推文可能很常见，因为claim可能尚未经过验证。然而，在传播的后期阶段，可疑的推文可能表明消息来源的说法是假的倾向很高。</p>
+<p>因此，提出的三个模型PLAN、STA-PLAN和STA-HiTPLAN研究了带有时延信息的Tweet编码的实用性。</p>
+<p>为了包括每个tweet的时间延迟信息，根据从源tweet创建时起的延迟将tweet绑定。</p>
+<p>将时间箱的总数设置为100，每个箱代表10分钟的间隔。延迟超过1000分钟的推文将落入最后一个时间段。</p>
+<script type="math/tex; mode=display">
+TDE_{pos,2i} = sin\frac{pos}{10000^{2i/d_model}}</script><script type="math/tex; mode=display">
+TDE_{pos,2i+1} = cos\frac{pos}{10000^{2i/d_model}}</script><p>其中pos表达为时间bin，$pos\in[0,100)$</p>
+<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><h3 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h3><p><img src="https://i.loli.net/2021/09/05/2RAGI9fpbJ5D387.png" alt=""></p>
+<p><img src="https://i.loli.net/2021/09/05/MUWvDm5j36NYksw.png" alt=""></p>
+<ul>
+<li>Twitter15 and Twitter16 ：对于Twitter15和Twitter16的数据集，每个声明中都有很大比例的转发：Twit-15和Twitter16分别为89%和90%。因为作者假设转发不会给模型带来新信息，所以删除了Twitter15和Twitter16的所有转发。在删除转发后，观察到少数索赔将只剩下来源Claim。既然作者的方法背后的原则是，我们可以利用人群的信号来侦测谣言，那么没有任何回复的说法就应该是“未经核实的(unverified)”。因此，在训练数据中修改了这类说法的标签为“未经证实”</li>
+</ul>
+<p><img src="https://i.loli.net/2021/09/05/vaNkVL2UIAhD4n1.png" alt=""></p>
+<p><img src="https://i.loli.net/2021/09/05/7riuNwZBWUvxjE6.png" alt=""></p>
+</article><div class="post-reward"><div class="reward-button button--animated"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/09/04/Rumor-Detection-on-Social-Media-with-Bi-Directional-Graph-Convolutional-Networks/"><img class="prev-cover" src="https://i.loli.net/2021/09/04/WQTFxfnGMcidE1K.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Rumor Detection on Social Media with Bi-Directional Graph Convolutional Networks</div></div></a></div><div class="next-post pull-right"><a href="/2021/09/01/Dice-Loss-for-Data-imbalanced-NLP-Tasks/"><img class="next-cover" src="https://i.loli.net/2021/08/29/7pyGPBNQZRmv3Tr.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Dice Loss for Data-imbalanced NLP Tasks</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/09/04/Rumor-Detection-on-Social-Media-with-Bi-Directional-Graph-Convolutional-Networks/" title="Rumor Detection on Social Media with Bi-Directional Graph Convolutional Networks"><img class="cover" src="https://i.loli.net/2021/09/04/WQTFxfnGMcidE1K.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-09-04</div><div class="title">Rumor Detection on Social Media with Bi-Directional Graph Convolutional Networks</div></div></a></div></div></div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Coding-Zuo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2021/09/04/Interpretable-Rumor-Detection-in-Microblogs-by-Attending-to-User-Interactions/">http://example.com/2021/09/04/Interpretable-Rumor-Detection-in-Microblogs-by-Attending-to-User-Interactions/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">Coding-Zuo</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/context-detection/">context detection</a></div><div class="post_share"><div class="addthis_inline_share_toolbox"></div><script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=null" async="async"></script></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Interpretable-Rumor-Detection-in-Microblogs-by-Attending-to-User-Interactions"><span class="toc-number">1.</span> <span class="toc-text">Interpretable Rumor Detection in Microblogs by Attending to User Interactions</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B7%E6%9C%AC"><span class="toc-number">1.1.</span> <span class="toc-text">样本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C"><span class="toc-number">1.2.</span> <span class="toc-text">相关工作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Content-Information"><span class="toc-number">1.2.1.</span> <span class="toc-text">Content Information</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Source-and-Social-Network"><span class="toc-number">1.2.2.</span> <span class="toc-text">Source and Social Network</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Fact-Checking"><span class="toc-number">1.2.3.</span> <span class="toc-text">Fact Checking</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Community-Response"><span class="toc-number">1.2.4.</span> <span class="toc-text">Community Response</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%BB%E5%8A%A1%E5%AE%9A%E4%B9%89"><span class="toc-number">1.3.</span> <span class="toc-text">任务定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95"><span class="toc-number">1.4.</span> <span class="toc-text">方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Post-Level-Attention-Network-PLAN"><span class="toc-number">1.4.1.</span> <span class="toc-text">Post-Level Attention Network (PLAN)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Structure-Aware-Post-Level-Attention-Network-StA-PLAN"><span class="toc-number">1.4.2.</span> <span class="toc-text">Structure Aware Post-Level Attention Network (StA-PLAN)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Structure-Aware-Hierarchical-Token-and-Post-Level-Attention-Network-StA-HiTPLAN"><span class="toc-number">1.4.3.</span> <span class="toc-text">Structure Aware Hierarchical Token and Post-Level Attention Network (StA-HiTPLAN)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Time-Delay-Embedding"><span class="toc-number">1.4.4.</span> <span class="toc-text">Time Delay Embedding</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C"><span class="toc-number">1.5.</span> <span class="toc-text">实验</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-number">1.5.1.</span> <span class="toc-text">数据集</span></a></li></ol></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By Coding-Zuo</div><div class="footer_custom_text">Hi, welcome to my BLOG</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    loader: {
+      source: {
+        '[tex]/amsCd': '[tex]/amscd'
+      }
+    },
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        addClass: [200,() => {
+          document.querySelectorAll('mjx-container:not([display=\'true\']').forEach( node => {
+            const target = node.parentNode
+            if (!target.classList.contains('has-jax')) {
+              target.classList.add('mathjax-overflow')
+            }
+          })
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>if (document.getElementsByClassName('mermaid').length) {
+  if (window.mermaidJsLoad) mermaid.init()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(() => {
+      window.mermaidJsLoad = true
+      mermaid.initialize({
+        theme: 'default',
+      })
+      false && mermaid.init()
+    })
+  }
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'd652112bf81876e00118',
+      clientSecret: 'a5abed418c7cc2736af5b4d0cbd7ff97d460a5b3',
+      repo: 'Coding-Zuo.github.io',
+      owner: 'Coding-Zuo',
+      admin: ['Coding-Zuo'],
+      id: '1761c4e7d20326dca70801d4ecc180c8',
+      language: 'zh-CN',
+      perPage: 10,
+      distractionFreeMode: false,
+      pagerDirection: 'last',
+      createIssueManually: false,
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script src="/js/custom.js"></script><script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script src="//code.tidio.co/mak6nokafytw9mgrsuzglwzfxiy3fpdl.js" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
