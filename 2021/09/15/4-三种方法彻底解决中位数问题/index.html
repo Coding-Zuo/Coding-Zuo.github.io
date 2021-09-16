@@ -1,0 +1,322 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>4-三种方法彻底解决中位数问题 | Coding-Zuo</title><meta name="keywords" content="LeetCode"><meta name="author" content="Coding-Zuo"><meta name="copyright" content="Coding-Zuo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="4-三种方法彻底解决中位数问题4. 寻找两个正序数组的中位数两种思想 真合并：使用归并的方式，合并两个有序数组，得到一个大的有序数组，大的有序数组中的中间位置的元素即为中位数。$O(n+m),O(n+m)$ 假合并：不需要合并两个有序数组，只要找到中位数的位置即可。由于两个数组的长度已知，因此中位数对应的两个数组下标之和也是已知的。维护两个指针，初始时分别指向两个数组的下标为0的位置，每次将指向较">
+<meta property="og:type" content="article">
+<meta property="og:title" content="4-三种方法彻底解决中位数问题">
+<meta property="og:url" content="http://example.com/2021/09/15/4-%E4%B8%89%E7%A7%8D%E6%96%B9%E6%B3%95%E5%BD%BB%E5%BA%95%E8%A7%A3%E5%86%B3%E4%B8%AD%E4%BD%8D%E6%95%B0%E9%97%AE%E9%A2%98/index.html">
+<meta property="og:site_name" content="Coding-Zuo">
+<meta property="og:description" content="4-三种方法彻底解决中位数问题4. 寻找两个正序数组的中位数两种思想 真合并：使用归并的方式，合并两个有序数组，得到一个大的有序数组，大的有序数组中的中间位置的元素即为中位数。$O(n+m),O(n+m)$ 假合并：不需要合并两个有序数组，只要找到中位数的位置即可。由于两个数组的长度已知，因此中位数对应的两个数组下标之和也是已知的。维护两个指针，初始时分别指向两个数组的下标为0的位置，每次将指向较">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2021/09/15/Re8Jflba3kG2hgD.png">
+<meta property="article:published_time" content="2021-09-15T01:31:49.000Z">
+<meta property="article:modified_time" content="2021-09-16T03:23:36.548Z">
+<meta property="article:author" content="Coding-Zuo">
+<meta property="article:tag" content="LeetCode">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/09/15/Re8Jflba3kG2hgD.png"><link rel="shortcut icon" href="https://i.loli.net/2021/03/22/reFlcYOnP3dSuJX.png"><link rel="canonical" href="http://example.com/2021/09/15/4-%E4%B8%89%E7%A7%8D%E6%96%B9%E6%B3%95%E5%BD%BB%E5%BA%95%E8%A7%A3%E5%86%B3%E4%B8%AD%E4%BD%8D%E6%95%B0%E9%97%AE%E9%A2%98/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.json","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-09-16 11:23:36'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    })(window)</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sviptzk/HexoStaticFile@latest/Hexo/css/footer.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css"><meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="Coding-Zuo" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://i.loli.net/2021/03/22/YP2oqk7lOAfceTD.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">84</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">15</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://i.loli.net/2021/09/15/Re8Jflba3kG2hgD.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Coding-Zuo</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">4-三种方法彻底解决中位数问题</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-09-15T01:31:49.000Z" title="发表于 2021-09-15 09:31:49">2021-09-15</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-09-16T03:23:36.548Z" title="更新于 2021-09-16 11:23:36">2021-09-16</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="4-三种方法彻底解决中位数问题"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="4-三种方法彻底解决中位数问题"><a href="#4-三种方法彻底解决中位数问题" class="headerlink" title="4-三种方法彻底解决中位数问题"></a>4-三种方法彻底解决中位数问题</h1><h4 id="4-寻找两个正序数组的中位数"><a href="#4-寻找两个正序数组的中位数" class="headerlink" title="4. 寻找两个正序数组的中位数"></a>4. 寻找两个正序数组的中位数</h4><h2 id="两种思想"><a href="#两种思想" class="headerlink" title="两种思想"></a>两种思想</h2><ul>
+<li>真合并：使用归并的方式，合并两个有序数组，得到一个大的有序数组，大的有序数组中的中间位置的元素即为中位数。$O(n+m),O(n+m)$</li>
+<li>假合并：不需要合并两个有序数组，只要找到中位数的位置即可。由于两个数组的长度已知，因此中位数对应的两个数组下标之和也是已知的。维护两个指针，初始时分别指向两个数组的下标为0的位置，每次将指向较小的指针后移一位（如果一个指针已经到达数组末尾，则只需要移动另一个数组的指针），直到达到中位数的位置。$O(n+m),O(1)$</li>
+</ul>
+<h2 id="常见的思想改进：假合并、奇偶合并"><a href="#常见的思想改进：假合并、奇偶合并" class="headerlink" title="常见的思想改进：假合并、奇偶合并"></a>常见的思想改进：假合并、奇偶合并</h2><p>通过假合并的思想可以将空间复杂度优化到$O(1)$但对于时间复杂度并没有什么优化，此方法代码复杂，不仅要考虑奇偶问题，更需要高了一个数组遍历后的各种边界问题。</p>
+<p>假合并的一个优化点是 将奇偶两种情况合并到了一起：</p>
+<ul>
+<li>如果是奇数，我们需要知道第(len+1)/2 个数就可以了，如果遍历的话需要遍历int(len/2)+1次</li>
+<li>如果是偶数，需要知道第(len/2) 和 len/2 + 1个数，也是需要遍历len/2 + 1次</li>
+<li>返回中位数，奇数需要最后一次遍历结果就可以，偶数需要最后一次和上一次的结果。所以用两个变量left和right。right保存当前循环的结果，在每次循环前将right赋值给left。这样在最后一次循环的时候，left将得到right的值，也就是上一次的循环结果，加下来right更新为最后一次的结果len/2+1次</li>
+</ul>
+<p>另一种合并的思想是: 我们可以在奇数的时候, 在<strong>末尾等处添加一个占位符</strong>#等, 这样也是可以将奇数合并成偶数的情况的.此方法的另一个优化点就是 通过在if条件中<strong>加入大量的限制条件</strong>, 从而实现了对于各种边界问题的处理, 这也是一种很重要的思想.</p>
+<p><img src="https://i.loli.net/2021/09/15/rwI2miAu4SPgOX7.jpg" alt=""></p>
+<p><img src="https://i.loli.net/2021/09/15/G1OiltFhg24JmY8.jpg" alt=""></p>
+<p>此方法的时间复杂度相对于下面两种思想还是太高了, 大家不用特意掌握此方法, 但是这两个优化的思想还是很重要的, 要好好的理解一下.</p>
+<p>接下来我们就来详细讲解两个时间复杂度超低的算法代码思想.</p>
+<h2 id="寻找第k小数-记住这个"><a href="#寻找第k小数-记住这个" class="headerlink" title="寻找第k小数(记住这个)"></a>寻找第k小数(记住这个)</h2><p> 主要就是根据两个数的三种比较结果, 不断地去除不满足的元素的过程.</p>
+<p><img src="https://i.loli.net/2021/09/15/hKBdPugr5fRxXeC.jpg" alt=""></p>
+<p>这个思想最难的点在于 <strong>三种特殊情况的处理</strong>, 我们能否想到这三种情况, 并将他们<strong>完美的融入到代码之中</strong>, 我感觉这才是真正的难点所在.</p>
+<p><img src="https://i.loli.net/2021/09/15/AdgYMm3xTtQSup8.jpg" alt=""></p>
+<p>最开始对于奇数和偶数的两种情况进行了判断, 其实是可以将两种情况合并的, 只需要在奇数时求两次同样的k就可以了.</p>
+<p><img src="https://i.loli.net/2021/09/15/rmU7B5WJRGELvjd.jpg" alt=""></p>
+<p>接下来处理了三种特殊情况中的两种特殊情况: 一个数组为空 和 k=1.</p>
+<p><img src="https://i.loli.net/2021/09/15/XGbolki98Dv6BCK.jpg" alt=""></p>
+<p>下面的<strong>几个定义</strong>就非常重要了, 一定要弄清这些定义的含义, 才能更轻松的理解代码.</p>
+<p><img src="https://i.loli.net/2021/09/15/vkMmQjqNbPZGIwn.jpg" alt=""></p>
+<p>index1, index2作为数组的起始点的下标, 初值都是0, 但是随着两个数组不断被删除元素, 这两个起始点也是在不断的进行变化, 具体变化方式就是 index1 = newIndex1 + 1, 因为在删除元素的时候 连同比较位置也一同删去了, 所以新的开始是 比较位置 的后一位.</p>
+<p>newindex1, newindex2作为比较点就是图中被框中的两个数的下标, 它的赋值过程就涉及到了 最后一个边界情况. 因为当一个数组较短时, 其中一个比较点可能已经到达了数组的最后, 所以它的值是 两种情况下较小的那个数.</p>
+<p><img src="https://i.loli.net/2021/09/15/mAW7YsNX5GBcKgH.jpg" alt=""></p>
+<p>接下来就是根据两个比较点的大小来进行不同的操作过程了, 这里最难理解的点就是 k -= (newIndex1 - index1 + 1), 也就是减去元素的个数问题了. 我们根据上面的图来举例, 图中index1的值为0, newindex1的值经过计算为1, 通过比较后, 可以看到 红色的数 就是被删除的数, 也就是两个, 所以我们需要在最后+1才是真实被删去的个数. 对于此类问题在确定最终个数的时候, 我们都可以通过这样的特例来决定代码的书写, 至此代码就全部讲解完成了.</p>
+<p><img src="https://i.loli.net/2021/09/15/1hmHAU4Ets7iFJ9.jpg" alt=""></p>
+<h2 id="理解中位数作用进行划分数组"><a href="#理解中位数作用进行划分数组" class="headerlink" title="理解中位数作用进行划分数组"></a>理解中位数作用进行划分数组</h2><p>最后这种思想时间复杂度比上面的还低，上面的思想每一轮循环可以将查找范围减少一半，因此时间复杂度是$O(log(m+n))$ ，但这种思想可以对确定的较短的数组进行二分查找，所以它的时间复杂度是$O(logmin(m,n))$</p>
+<p>划分数组正好和上面算法完全相反，它的思想特别复杂，但思想理解了，代码写起来倒是没太大难度。</p>
+<p>首先要明白中位数的作用：将一个集合划分为两个长度相等的子集，其中一个子集中的元素总是大于另一个子集中的元素。这种思想无论是在机构数组中都是适用的，这就衍生出了下面的思想。</p>
+<p>首先讨论奇偶两种不同情况的不同划分方式，</p>
+<p><img src="https://i.loli.net/2021/09/16/8n9sSjVk7C3GKZM.jpg" alt=""></p>
+<p>然后在写代码时，由于计算机的取整操作，我们是可以将这两种情况合并成一种代码书写方式，其中的$i$和$j$分别是两个数组的划分位置。</p>
+<p><img src="https://i.loli.net/2021/09/16/LzOv1Zxn8pBUVQo.jpg" alt=""></p>
+<p>同样我们也会遇到复杂的边界问题, 但下面这种处理方式是真的非常优秀.</p>
+<p><img src="https://i.loli.net/2021/09/16/bBhSzkpAOunIXNj.jpg" alt=""></p>
+<p>上面问题都考虑完了, 其实就可以写代码了, 但是我们需要进行两个条件的判断: B[j−1]≤A[i] 以及A[i−1]≤B[j], 为了优化代码, 经过分析后, 我们发现这两种情况是可以等价转换的. 也就是只需要进行一个条件的判断即可.</p>
+<p><img src="https://i.loli.net/2021/09/16/YZ2lJiL9IomnaKH.jpg" alt=""></p>
+<p>代码中有个注意点就是java中的<strong>三目运算符? :</strong> 在Python中是没有引入这个符号的, 但是Python利用了已有的关键字if…else实现了这个功能.</p>
+<p><img src="https://i.loli.net/2021/09/16/gRSNcoWaidyOnhz.jpg" alt=""></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//常规思想 假合并</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">findMedianSortedArrays</span><span class="params">(<span class="keyword">int</span>[] nums1, <span class="keyword">int</span>[] nums2)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> m = nums1.length;</span><br><span class="line">        <span class="keyword">int</span> n = nums2.length;</span><br><span class="line">        <span class="keyword">int</span> len = m+n;</span><br><span class="line">        <span class="keyword">int</span> left = -<span class="number">1</span>, right= -<span class="number">1</span>; <span class="comment">// 记录前后两个数</span></span><br><span class="line">        <span class="keyword">int</span> aStart=<span class="number">0</span>, bStart=<span class="number">0</span>;  <span class="comment">// 记录两个数组的移动</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;=len/<span class="number">2</span>;i++)&#123;</span><br><span class="line">            left = right; <span class="comment">// 每次循环前将right的值赋给left</span></span><br><span class="line">            <span class="comment">// A移动的条件：B遍历到最后 或当前 A&lt;B 满足一个即可</span></span><br><span class="line">            <span class="keyword">if</span>(aStart &lt; m &amp;&amp; (bStart&gt;=n || nums1[aStart] &lt; nums2[bStart]))&#123;</span><br><span class="line">                right = nums1[aStart++];</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                right= nums2[bStart++];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>((len &amp; <span class="number">1</span>) == <span class="number">0</span>) <span class="comment">// 与1交，判断奇偶数，更快速</span></span><br><span class="line">            <span class="keyword">return</span> (left+right)/<span class="number">2.0</span>;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="keyword">return</span> right;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">		<span class="comment">// 第k小数</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">findMedianSortedArrays</span><span class="params">(<span class="keyword">int</span>[] nums1, <span class="keyword">int</span>[] nums2)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> length1 = nums1.length;</span><br><span class="line">        <span class="keyword">int</span> length2 = nums2.length;</span><br><span class="line">        <span class="keyword">int</span> totallength = length1+ length2;</span><br><span class="line">        <span class="keyword">if</span>(totallength % <span class="number">2</span> == <span class="number">1</span>)&#123; <span class="comment">// 可以将两种情况合并，奇数会求两次同样的k</span></span><br><span class="line">            <span class="keyword">int</span> midIndex = totallength/<span class="number">2</span>;</span><br><span class="line">            <span class="keyword">double</span> median = getKthElement(nums1, nums2, midIndex+<span class="number">1</span>);</span><br><span class="line">            <span class="keyword">return</span> median;</span><br><span class="line">        &#125; <span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">int</span> midIndex1 = totallength/<span class="number">2</span> -<span class="number">1</span> , midIndex2 = totallength/<span class="number">2</span>;</span><br><span class="line">            <span class="keyword">double</span> median = (getKthElement(nums1, nums2, midIndex1 + <span class="number">1</span>) + getKthElement(nums1, nums2, midIndex2 + <span class="number">1</span>)) / <span class="number">2.0</span>;</span><br><span class="line">            <span class="keyword">return</span> median;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getKthElement</span><span class="params">(<span class="keyword">int</span>[] nums1, <span class="keyword">int</span>[] nums2, <span class="keyword">int</span> k)</span></span>&#123;</span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">        主要思路：要找到第k(k&gt;1)小的元素，那么就取pivot1 = nums1[k/2-1] 和 pivot2 = nums2[k/2-1] 进行比较</span></span><br><span class="line"><span class="comment">        这里的“/” 表示整除</span></span><br><span class="line"><span class="comment">        nums1 中小于等于pivot1的元素有 nums1[0..k/2-2] 共计k/2-1个</span></span><br><span class="line"><span class="comment">        nums2 中小于等于pivot2的元素有 nums2[0..k/2-2] 共计k/2-1个</span></span><br><span class="line"><span class="comment">        取 pivot = min(pivot1 , pivot2) 两个数组中小于等于 pivot的元素共计不会超过(k/2-1)+(k/2-1) &lt;=k-2个</span></span><br><span class="line"><span class="comment">        这样pivot本身最大也只能是第k-1小的元素</span></span><br><span class="line"><span class="comment">        * 如果 pivot = pivot1,那么 nums1[0 .. k/2-1] 都不可能是第 k 小的元素。把这些元素全部 &quot;删除&quot;,剩下的作为新的 nums1 数组</span></span><br><span class="line"><span class="comment">         * 如果 pivot = pivot2,那么 nums2[0 .. k/2-1] 都不可能是第 k 小的元素。把这些元素全部 &quot;删除&quot;,剩下的作为新的 nums2 数组</span></span><br><span class="line"><span class="comment">        由于我们 &quot;删除&quot; 了一些元素（这些元素都比第 k 小的元素要小）,因此需要修改 k 的值,减去删除的数的个数</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">int</span> length1 = nums1.length, length2=nums2.length;</span><br><span class="line">        <span class="keyword">int</span> index1 = <span class="number">0</span>, index2=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> kthElemnt=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span>(<span class="keyword">true</span>)&#123;</span><br><span class="line">            <span class="comment">//特殊情况</span></span><br><span class="line">            <span class="keyword">if</span>(index1==length1)&#123;<span class="comment">//第二种特殊情况，一个数组为空</span></span><br><span class="line">                <span class="keyword">return</span> nums2[index2+k-<span class="number">1</span>];</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(index2==length2)&#123;<span class="comment">//一个数组为空</span></span><br><span class="line">                <span class="keyword">return</span> nums1[index1+k-<span class="number">1</span>];</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(k==<span class="number">1</span>)&#123; <span class="comment">// 第三种情况，k=1</span></span><br><span class="line">                <span class="keyword">return</span> Math.min(nums1[index1], nums2[index2]);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 正常情况， index1，index2作为起始点，newindex1,newindex2作为比较点 在不停的更新</span></span><br><span class="line">            <span class="keyword">int</span> half = k/<span class="number">2</span>;</span><br><span class="line">            <span class="keyword">int</span> newIndex1 = Math.min(index1 + half, length1) -<span class="number">1</span>;<span class="comment">// 第一种情况，发生越界，需要记录比较的位置</span></span><br><span class="line">            <span class="keyword">int</span> newIndex2 = Math.min(index2 + half, length2) - <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">int</span> pivot1 = nums1[newIndex1], pivot2=nums2[newIndex2]; <span class="comment">//获取两个需要比较的数</span></span><br><span class="line">            <span class="keyword">if</span>(pivot1&lt;=pivot2)&#123;</span><br><span class="line">                <span class="comment">// 将两种情况合并</span></span><br><span class="line">                k -= (newIndex1 -index1 +<span class="number">1</span>); <span class="comment">//两者相减后+1，这才是真正减去的长度</span></span><br><span class="line">                index1 = newIndex1+<span class="number">1</span>; <span class="comment">//连同比较位置也一同删去了，所以新的开始是 比较位置的后一位</span></span><br><span class="line">            &#125; <span class="keyword">else</span>&#123;</span><br><span class="line">                k -= (newIndex2-index2+<span class="number">1</span>);</span><br><span class="line">                index2 = newIndex2+<span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  </span><br><span class="line">  	<span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">findMedianSortedArrays</span><span class="params">(<span class="keyword">int</span>[] nums1, <span class="keyword">int</span>[] nums2)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (nums1.length &gt; nums2.length) &#123;</span><br><span class="line">            <span class="keyword">return</span> findMedianSortedArrays(nums2, nums1);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> m = nums1.length;</span><br><span class="line">        <span class="keyword">int</span> n = nums2.length;</span><br><span class="line">        <span class="keyword">int</span> left = <span class="number">0</span>, right = m;</span><br><span class="line">        <span class="comment">// median1：前一部分的最大值</span></span><br><span class="line">        <span class="comment">// median2：后一部分的最小值</span></span><br><span class="line">        <span class="keyword">int</span> median1 = <span class="number">0</span>, median2 = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (left &lt;= right) &#123; <span class="comment">// 一直循环找到一个最大的i满足A[i-1]≤B[j]</span></span><br><span class="line">            <span class="comment">// 前一部分包含 nums1[0 .. i-1] 和 nums2[0 .. j-1]</span></span><br><span class="line">            <span class="comment">// 后一部分包含 nums1[i .. m-1] 和 nums2[j .. n-1]</span></span><br><span class="line">            <span class="keyword">int</span> i = (left + right) / <span class="number">2</span>; <span class="comment">//二分法,i从区间中间开始</span></span><br><span class="line">            <span class="keyword">int</span> j = (m + n + <span class="number">1</span>) / <span class="number">2</span> - i;<span class="comment">//+1的操作将总数为奇数和偶数合并为一种情况</span></span><br><span class="line"></span><br><span class="line">            <span class="comment">//nums_im1, nums_i, nums_jm1, nums_j 分别表示 nums1[i-1], nums1[i], nums2[j-1], nums2[j]</span></span><br><span class="line">            <span class="comment">//当一个数组不出现在前一部分时,对应的值为负无穷,就不会对前一部分的最大值产生影响</span></span><br><span class="line">            <span class="keyword">int</span> nums_im1 = (i == <span class="number">0</span> ? Integer.MIN_VALUE : nums1[i - <span class="number">1</span>]);</span><br><span class="line">            <span class="comment">//当一个数组不出现在后一部分时,对应的值为正无穷,就不会对后一部分的最小值产生影响</span></span><br><span class="line">            <span class="keyword">int</span> nums_i = (i == m ? Integer.MAX_VALUE : nums1[i]);</span><br><span class="line">            <span class="keyword">int</span> nums_jm1 = (j == <span class="number">0</span> ? Integer.MIN_VALUE : nums2[j - <span class="number">1</span>]);</span><br><span class="line">            <span class="keyword">int</span> nums_j = (j == n ? Integer.MAX_VALUE : nums2[j]);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (nums_im1 &lt;= nums_j) &#123;</span><br><span class="line">                median1 = Math.max(nums_im1, nums_jm1);</span><br><span class="line">                median2 = Math.min(nums_i, nums_j);</span><br><span class="line">                left = i + <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> &#123;</span><br><span class="line">                right = i - <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> (m + n) % <span class="number">2</span> == <span class="number">0</span> ? (median1 + median2) / <span class="number">2.0</span> : median1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>(<span class="params"><span class="built_in">object</span></span>):</span></span><br><span class="line">    <span class="comment"># 常规思想</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">findMedianSortedArrays1</span>(<span class="params">self, nums1, nums2</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        :type nums1: List[int]</span></span><br><span class="line"><span class="string">        :type nums2: List[int]</span></span><br><span class="line"><span class="string">        :rtype: float</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        m = <span class="built_in">len</span>(nums1)</span><br><span class="line">        n = <span class="built_in">len</span>(nums2)</span><br><span class="line">        lens = m+n</span><br><span class="line">        left, right = -<span class="number">1</span>, -<span class="number">1</span></span><br><span class="line">        aStart,bStart = <span class="number">0</span>,<span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(lens//<span class="number">2</span>+<span class="number">1</span>):</span><br><span class="line">            left = right  <span class="comment"># 每次循环将right的值赋值给left</span></span><br><span class="line">            <span class="comment"># A移动的条件，B遍历到最后 或A&lt;B满足一个</span></span><br><span class="line">            <span class="keyword">if</span> aStart&lt;m <span class="keyword">and</span> (bStart &gt;= n <span class="keyword">or</span> nums1[aStart] &lt; nums2[bStart]):</span><br><span class="line">                right = nums1[aStart]</span><br><span class="line">                aStart+=<span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                right = nums2[bStart]</span><br><span class="line">                bStart+=<span class="number">1</span></span><br><span class="line">        <span class="keyword">if</span> (lens &amp; <span class="number">1</span>)  == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> (left+right)/<span class="number">2.0</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> right</span><br><span class="line">          </span><br><span class="line">          </span><br><span class="line">    <span class="comment"># 第k小数</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">findMedianSortedArrays</span>(<span class="params">self, nums1, nums2</span>):</span></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">getKthElemnt</span>(<span class="params">k</span>):</span></span><br><span class="line">            index1, index2 = <span class="number">0</span>, <span class="number">0</span></span><br><span class="line">            <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">                <span class="comment"># 特殊情况</span></span><br><span class="line">                <span class="keyword">if</span> index1 == m:</span><br><span class="line">                    <span class="keyword">return</span> nums2[index2+k-<span class="number">1</span>]</span><br><span class="line">                <span class="keyword">if</span> index2 == n:</span><br><span class="line">                    <span class="keyword">return</span> nums1[index1+k-<span class="number">1</span>]</span><br><span class="line">                <span class="keyword">if</span> k==<span class="number">1</span>:</span><br><span class="line">                    <span class="keyword">return</span> <span class="built_in">min</span>(nums1[index1], nums2[index2])</span><br><span class="line"></span><br><span class="line">                newIndex1 = <span class="built_in">min</span>(index1 + k//<span class="number">2</span> -<span class="number">1</span>, m-<span class="number">1</span>)</span><br><span class="line">                newIndex2 = <span class="built_in">min</span>(index2 + k//<span class="number">2</span> -<span class="number">1</span>, n-<span class="number">1</span>)</span><br><span class="line">                privot1,privot2 =nums1[newIndex1], nums2[newIndex2]</span><br><span class="line">                <span class="keyword">if</span> privot1&lt;=privot2:</span><br><span class="line">                    k-=newIndex2-index1 +<span class="number">1</span></span><br><span class="line">                    index1 = newIndex2 + <span class="number">1</span></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    k -= newIndex2 - index2 +<span class="number">1</span></span><br><span class="line">                    index2 = newIndex2 +<span class="number">1</span></span><br><span class="line"></span><br><span class="line">        m,n = <span class="built_in">len</span>(nums1), <span class="built_in">len</span>(nums2)</span><br><span class="line">        totalLength = m+n</span><br><span class="line">        <span class="keyword">if</span> totalLength % <span class="number">2</span>==<span class="number">1</span>:</span><br><span class="line">            <span class="keyword">return</span> getKthElemnt((totalLength+<span class="number">1</span>)//<span class="number">2</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> (getKthElemnt(totalLength//<span class="number">2</span>)+ getKthElemnt(totalLength//<span class="number">2</span>+<span class="number">1</span>)) /<span class="number">2</span> </span><br><span class="line">          </span><br><span class="line">    <span class="comment"># 划分数组</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">findMedianSortedArrays</span>(<span class="params">self, nums1: List[<span class="built_in">int</span>], nums2: List[<span class="built_in">int</span>]</span>) -&gt; float:</span></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(nums1) &gt; <span class="built_in">len</span>(nums2):</span><br><span class="line">            <span class="keyword">return</span> self.findMedianSortedArrays(nums2, nums1)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        infinty = <span class="number">2</span>**<span class="number">40</span>  <span class="comment"># 代表正无穷</span></span><br><span class="line">        m, n = <span class="built_in">len</span>(nums1), <span class="built_in">len</span>(nums2)</span><br><span class="line">        left, right = <span class="number">0</span>, m</span><br><span class="line">        <span class="comment"># median1：前一部分的最大值</span></span><br><span class="line">        <span class="comment"># median2：后一部分的最小值</span></span><br><span class="line">        median1, median2 = <span class="number">0</span>, <span class="number">0</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> left &lt;= right: <span class="comment"># 一直循环找到一个最大的i满足A[i−1]≤B[j]</span></span><br><span class="line">            <span class="comment"># 前一部分包含 nums1[0 .. i-1] 和 nums2[0 .. j-1]</span></span><br><span class="line">            <span class="comment"># // 后一部分包含 nums1[i .. m-1] 和 nums2[j .. n-1]</span></span><br><span class="line">            i = (left + right) // <span class="number">2</span></span><br><span class="line">            j = (m + n + <span class="number">1</span>) // <span class="number">2</span> - i</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            <span class="comment"># nums_im1, nums_i, nums_jm1, nums_j 分别表示 nums1[i-1], nums1[i], nums2[j-1], nums2[j]</span></span><br><span class="line">            <span class="comment"># 当一个数组不出现在前一部分时,对应的值为负无穷,就不会对前一部分的最大值产生影响</span></span><br><span class="line">            nums_im1 = (-infinty <span class="keyword">if</span> i == <span class="number">0</span> <span class="keyword">else</span> nums1[i - <span class="number">1</span>]) <span class="comment"># 注意写法与java不同</span></span><br><span class="line">            <span class="comment"># 当一个数组不出现在后一部分时,对应的值为正无穷,就不会对后一部分的最小值产生影响</span></span><br><span class="line">            nums_i = (infinty <span class="keyword">if</span> i == m <span class="keyword">else</span> nums1[i])</span><br><span class="line">            nums_jm1 = (-infinty <span class="keyword">if</span> j == <span class="number">0</span> <span class="keyword">else</span> nums2[j - <span class="number">1</span>])</span><br><span class="line">            nums_j = (infinty <span class="keyword">if</span> j == n <span class="keyword">else</span> nums2[j])</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> nums_im1 &lt;= nums_j:</span><br><span class="line">                median1, median2 = <span class="built_in">max</span>(nums_im1, nums_jm1), <span class="built_in">min</span>(nums_i, nums_j)</span><br><span class="line">                left = i + <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                right = i - <span class="number">1</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> (median1 + median2) / <span class="number">2</span> <span class="keyword">if</span> (m + n) % <span class="number">2</span> == <span class="number">0</span> <span class="keyword">else</span> median1</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h4 id=""><a href="#" class="headerlink" title=""></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/median-of-two-sorted-arrays/"></a></h4><p><img src="https://i.loli.net/2021/09/15/roqxyuNvdGnAlX7.jpg" alt=""></p>
+</article><div class="post-reward"><div class="reward-button button--animated"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2021/09/11/Multimodal-Emergent-Fake-News-Detection-via-Meta-Neural-Process-Networks/"><img class="next-cover" src="https://i.loli.net/2021/09/11/ydJlkuqx3VTw4Ya.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Multimodal Emergent Fake News Detection via Meta Neural Process Networks</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/09/11/1-两数之和到四数之和/" title="1-两数之和到四数之和"><img class="cover" src="https://i.loli.net/2021/09/11/Bv3macGSTA5epCi.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-09-11</div><div class="title">1-两数之和到四数之和</div></div></a></div></div></div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Coding-Zuo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2021/09/15/4-%E4%B8%89%E7%A7%8D%E6%96%B9%E6%B3%95%E5%BD%BB%E5%BA%95%E8%A7%A3%E5%86%B3%E4%B8%AD%E4%BD%8D%E6%95%B0%E9%97%AE%E9%A2%98/">http://example.com/2021/09/15/4-%E4%B8%89%E7%A7%8D%E6%96%B9%E6%B3%95%E5%BD%BB%E5%BA%95%E8%A7%A3%E5%86%B3%E4%B8%AD%E4%BD%8D%E6%95%B0%E9%97%AE%E9%A2%98/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">Coding-Zuo</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/LeetCode/">LeetCode</a></div><div class="post_share"><div class="addthis_inline_share_toolbox"></div><script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=null" async="async"></script></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#4-%E4%B8%89%E7%A7%8D%E6%96%B9%E6%B3%95%E5%BD%BB%E5%BA%95%E8%A7%A3%E5%86%B3%E4%B8%AD%E4%BD%8D%E6%95%B0%E9%97%AE%E9%A2%98"><span class="toc-number">1.</span> <span class="toc-text">4-三种方法彻底解决中位数问题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#4-%E5%AF%BB%E6%89%BE%E4%B8%A4%E4%B8%AA%E6%AD%A3%E5%BA%8F%E6%95%B0%E7%BB%84%E7%9A%84%E4%B8%AD%E4%BD%8D%E6%95%B0"><span class="toc-number">1.0.0.1.</span> <span class="toc-text">4. 寻找两个正序数组的中位数</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%A4%E7%A7%8D%E6%80%9D%E6%83%B3"><span class="toc-number">1.1.</span> <span class="toc-text">两种思想</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84%E6%80%9D%E6%83%B3%E6%94%B9%E8%BF%9B%EF%BC%9A%E5%81%87%E5%90%88%E5%B9%B6%E3%80%81%E5%A5%87%E5%81%B6%E5%90%88%E5%B9%B6"><span class="toc-number">1.2.</span> <span class="toc-text">常见的思想改进：假合并、奇偶合并</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%BB%E6%89%BE%E7%AC%ACk%E5%B0%8F%E6%95%B0-%E8%AE%B0%E4%BD%8F%E8%BF%99%E4%B8%AA"><span class="toc-number">1.3.</span> <span class="toc-text">寻找第k小数(记住这个)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%90%86%E8%A7%A3%E4%B8%AD%E4%BD%8D%E6%95%B0%E4%BD%9C%E7%94%A8%E8%BF%9B%E8%A1%8C%E5%88%92%E5%88%86%E6%95%B0%E7%BB%84"><span class="toc-number">1.4.</span> <span class="toc-text">理解中位数作用进行划分数组</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-number">1.4.0.1.</span> <span class="toc-text"></span></a></li></ol></li></ol></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By Coding-Zuo</div><div class="footer_custom_text">Hi, welcome to my BLOG</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    loader: {
+      source: {
+        '[tex]/amsCd': '[tex]/amscd'
+      }
+    },
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        addClass: [200,() => {
+          document.querySelectorAll('mjx-container:not([display=\'true\']').forEach( node => {
+            const target = node.parentNode
+            if (!target.classList.contains('has-jax')) {
+              target.classList.add('mathjax-overflow')
+            }
+          })
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>if (document.getElementsByClassName('mermaid').length) {
+  if (window.mermaidJsLoad) mermaid.init()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(() => {
+      window.mermaidJsLoad = true
+      mermaid.initialize({
+        theme: 'default',
+      })
+      false && mermaid.init()
+    })
+  }
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'd652112bf81876e00118',
+      clientSecret: 'a5abed418c7cc2736af5b4d0cbd7ff97d460a5b3',
+      repo: 'Coding-Zuo.github.io',
+      owner: 'Coding-Zuo',
+      admin: ['Coding-Zuo'],
+      id: 'da3446c26c6f883e74d7aca24c55ffc7',
+      language: 'zh-CN',
+      perPage: 10,
+      distractionFreeMode: false,
+      pagerDirection: 'last',
+      createIssueManually: false,
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script src="/js/custom.js"></script><script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script src="//code.tidio.co/mak6nokafytw9mgrsuzglwzfxiy3fpdl.js" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
