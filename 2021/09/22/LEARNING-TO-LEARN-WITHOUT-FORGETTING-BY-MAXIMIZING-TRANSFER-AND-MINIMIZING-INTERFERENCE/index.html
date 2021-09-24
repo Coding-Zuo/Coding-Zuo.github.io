@@ -1,0 +1,348 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>LEARNING TO LEARN WITHOUT FORGETTING BY MAXIMIZING TRANSFER AND MINIMIZING INTERFERENCE | Coding-Zuo</title><meta name="keywords" content="context detection"><meta name="author" content="Coding-Zuo"><meta name="copyright" content="Coding-Zuo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="LEARNING TO LEARN WITHOUT FORGETTING BY MAXIMIZING TRANSFER AND MINIMIZING INTERFERENCE在对非平稳数据分布进行持续学习方面，仍然是将神经网络扩展到人类现实环境的主要挑战。 在这项工作中，我们提出了一种关于连续学习的新概念，即迁移和干扰之间的对称权衡，可以通过实施跨样本的梯度对齐来优化该权重。 Meta-Exper">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LEARNING TO LEARN WITHOUT FORGETTING BY MAXIMIZING TRANSFER AND MINIMIZING INTERFERENCE">
+<meta property="og:url" content="http://example.com/2021/09/22/LEARNING-TO-LEARN-WITHOUT-FORGETTING-BY-MAXIMIZING-TRANSFER-AND-MINIMIZING-INTERFERENCE/index.html">
+<meta property="og:site_name" content="Coding-Zuo">
+<meta property="og:description" content="LEARNING TO LEARN WITHOUT FORGETTING BY MAXIMIZING TRANSFER AND MINIMIZING INTERFERENCE在对非平稳数据分布进行持续学习方面，仍然是将神经网络扩展到人类现实环境的主要挑战。 在这项工作中，我们提出了一种关于连续学习的新概念，即迁移和干扰之间的对称权衡，可以通过实施跨样本的梯度对齐来优化该权重。 Meta-Exper">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2021/09/22/egMpEbJ7yZtLSRm.png">
+<meta property="article:published_time" content="2021-09-22T10:58:55.394Z">
+<meta property="article:modified_time" content="2021-09-23T15:13:30.569Z">
+<meta property="article:author" content="Coding-Zuo">
+<meta property="article:tag" content="context detection">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/09/22/egMpEbJ7yZtLSRm.png"><link rel="shortcut icon" href="https://i.loli.net/2021/03/22/reFlcYOnP3dSuJX.png"><link rel="canonical" href="http://example.com/2021/09/22/LEARNING-TO-LEARN-WITHOUT-FORGETTING-BY-MAXIMIZING-TRANSFER-AND-MINIMIZING-INTERFERENCE/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.json","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-09-23 23:13:30'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    })(window)</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sviptzk/HexoStaticFile@latest/Hexo/css/footer.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css"><meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="Coding-Zuo" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://i.loli.net/2021/03/22/YP2oqk7lOAfceTD.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">91</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">15</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://i.loli.net/2021/09/22/egMpEbJ7yZtLSRm.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Coding-Zuo</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">LEARNING TO LEARN WITHOUT FORGETTING BY MAXIMIZING TRANSFER AND MINIMIZING INTERFERENCE</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-09-22T10:58:55.394Z" title="发表于 2021-09-22 18:58:55">2021-09-22</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-09-23T15:13:30.569Z" title="更新于 2021-09-23 23:13:30">2021-09-23</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="LEARNING TO LEARN WITHOUT FORGETTING BY MAXIMIZING TRANSFER AND MINIMIZING INTERFERENCE"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="LEARNING-TO-LEARN-WITHOUT-FORGETTING-BY-MAXIMIZING-TRANSFER-AND-MINIMIZING-INTERFERENCE"><a href="#LEARNING-TO-LEARN-WITHOUT-FORGETTING-BY-MAXIMIZING-TRANSFER-AND-MINIMIZING-INTERFERENCE" class="headerlink" title="LEARNING TO LEARN WITHOUT FORGETTING BY MAXIMIZING TRANSFER AND MINIMIZING INTERFERENCE"></a>LEARNING TO LEARN WITHOUT FORGETTING BY MAXIMIZING TRANSFER AND MINIMIZING INTERFERENCE</h1><p>在对非平稳数据分布进行持续学习方面，仍然是将神经网络扩展到人类现实环境的主要挑战。</p>
+<p>在这项工作中，我们提出了一种关于连续学习的新概念，即迁移和干扰之间的对称权衡，可以通过实施跨样本的梯度对齐来优化该权重。</p>
+<p>Meta-Experience Replay (MER) 通过将经验回放与基于优化的元学习相结合。</p>
+<p>该方法学习使基于未来梯度的干扰可能性较小，而基于未来梯度的迁移可能性更大的参数。</p>
+<p>作者在连续终身监督学习基准和非静态强化学习环境中进行了实验，实验表明，MER算法和基线算法之间的性能差距随着环境变得更加不平稳和存储的经验在总经验中所占的比例变小而增大。</p>
+<h2 id="CONTINUAL-LEARNING-PROBLEM"><a href="#CONTINUAL-LEARNING-PROBLEM" class="headerlink" title="CONTINUAL LEARNING PROBLEM"></a>CONTINUAL LEARNING PROBLEM</h2><p>人工智能的一个长期目标是建立能够长期自主操作的代理。这样的代理必须渐进地学习并适应不断变化的环境，同时保持对以前所学知识的记忆，这种设置称为终身学习。本文是持续学习的一个变体。</p>
+<p>在持续学习中，假设学习者接触到一系列任务，其中每个任务都是来自相同分布的一系列经验。</p>
+<p>作者希望在这种情况下开发一种解决方案，在无监督的情况下发现任务的概念，同时在每次体验后逐步学习。</p>
+<p>这很有挑战性，因为在标准的离线单任务和多任务学习中，隐含地假设数据是独立同分布的平稳分布。不幸的是，每当情况不是这样的时候，神经网络往往都会举步维艰。</p>
+<p>持续学习面临的最大问题是灾难性的遗忘(干扰)，其中最主要的担忧是神经网络缺乏稳定性，而主要的解决方案是通过专注于保留过去的知识来限制经验之间的权重共享程度。</p>
+<p>另一个问题是稳定性-可塑性两难问题，在这种观点下，首要关注的是：网络稳定性(保存过去的知识)和可塑性(快速学习当前经验)之间的平衡。</p>
+<p>以前的持续学习技术侧重于平衡有限的权重共享和某种机制以确保快速学。在本文中，作者扩展了这一观点，指出——对于在无限数量的分布上的连续学习，需要及时考虑前向和后向的权重共享和稳定性-塑性权衡，如下图：</p>
+<p><img src="https://i.loli.net/2021/09/22/iCN3JmMckXxLfHy.png" alt=""></p>
+<p>稳定性-可塑性困境考虑了当前学习的可塑性以及它如何降低旧学习。 迁移-干扰权衡考虑了稳定性-可塑性困境及其对前向和后向权重共享的依赖。这种对称的观点是至关重要的，因为单纯专注于降低权重共享程度的解决方案不太可能在未来产生迁移。</p>
+<p>本文提出的迁移-干扰权衡为持续学习问题的梯度对齐目标提供了一个新的视角。这是问题的核心，因为这些梯度是学习期间基于 SGD 的优化器的更新步骤，并且梯度的角度和管理权重共享的程度之间存在明显的联系。</p>
+<p>与过去对持续学习的概念观点的关键区别在于，我们不仅关注相对于过去例子的当前迁移和干扰，而且还关注随着我们学习而向前发展的迁移和干扰的动态。</p>
+<p>然而，在过去的工作中，基于当前的学习和过去的学习，对权重共享的动态进行了临时更改，而没有制定关于最佳权重共享动态的一致理论。就我们对未来的元学习进行推广而言，这应该使模型更容易在非平稳环境中执行持续学习。</p>
+<p>作者通过在过去关于经验回放的工作的基础上实现这一点，经验重播一直是用神经网络解决非平稳问题的中流砥柱。</p>
+<p>作者提出了一种新的meta-experience replay(MER)算法，它结合了经验回放和基于优化的元学习。MER在各种有监督的持续学习和持续强化学习环境中显示出巨大的潜力。</p>
+<h2 id="THE-TRANSFER-INTERFERENCE-TRADE-OFF-FOR-CONTINUAL-LEARNING"><a href="#THE-TRANSFER-INTERFERENCE-TRADE-OFF-FOR-CONTINUAL-LEARNING" class="headerlink" title="THE TRANSFER-INTERFERENCE TRADE-OFF FOR CONTINUAL LEARNING"></a>THE TRANSFER-INTERFERENCE TRADE-OFF FOR CONTINUAL LEARNING</h2><p>在参数 $\theta$ 和损失 $L$ 的瞬间，我们可以在使用 SGD 训练时定义两个任意不同样本 $(x_i,y_i)$ 和 $(x_j,y_j)$ 之间的迁移和干扰的操作度量。 迁移发生在：</p>
+<script type="math/tex; mode=display">
+\frac{\partial L(x_i,y_i)}{\partial \theta} \cdot \frac{\partial(x_j,y_j)}{\partial\theta} \gt 0</script><p>这意味着学习样本 $ i$ 将在不重复的情况下提高示例 $j$ 的表现，反之亦然。干扰发生在：</p>
+<script type="math/tex; mode=display">
+\frac{\partial L(x_i,y_i)}{\partial \theta} \cdot \frac{\partial(x_j,y_j)}{\partial\theta} \lt 0</script><p>当 $i$ 和 $j$ 使用一组重叠参数进行学习时，它们之间存在权重共享。因此，当权重共享最大化时，迁移潜力最大化，而当权重共享最小化时，干扰潜力最小化。</p>
+<p>持续学习中稳定性-可塑性困境的过去解决方案在简化的时间环境中运行，其中学习分为两个阶段：</p>
+<ul>
+<li>所有过去的经历都被归结为<strong>旧记忆</strong></li>
+<li>而目前正在学习的数据则是<strong>新学习</strong></li>
+</ul>
+<p>在此设置中，目标是简单地最小化时间上向后投影的干扰，这通常是通过显式或隐式地降低权重共享的程度来实现的。</p>
+<p>然而，这种观点的重要问题是，这个系统仍然需要学习，未来会带来什么在很大程度上是未知的。这使得我们有责任不采取任何措施来潜在地破坏网络在不确定的未来有效学习的能力。这种考虑使我们将稳定性-可塑性问题的时间范围向前扩展，更一般地说，将其转变为一个持续学习问题，我们将其标记为解决迁移-干扰权衡问题。如上图A。</p>
+<p>具体来说，重要的是不仅要减少来自我们当前时间点的反向干扰，而且我们必须以不限制我们未来学习能力的方式这样做。这种更普遍的观点承认问题中的一个微妙之处：梯度对齐的问题以及因此跨样本的权重共享在时间上向后和向前出现。</p>
+<p>在这里，作者提出了一个潜在的解决方案，我们学习以一种在每个时间点促进梯度对齐的方式进行学习。 跨样本的权重共享可以通过迁移来提高对未来的性能，但不破坏之前的性能。 因此，我们的工作对持续学习问题采用了元学习的观点。 希望学习以一种从整体分布中推广到其他样本的方式来学习每个样本。</p>
+<h2 id="A-SYSTEM-FOR-LEARNING-TO-LEARN-WITHOUT-FORGETTING"><a href="#A-SYSTEM-FOR-LEARNING-TO-LEARN-WITHOUT-FORGETTING" class="headerlink" title="A SYSTEM FOR LEARNING TO LEARN WITHOUT FORGETTING"></a>A SYSTEM FOR LEARNING TO LEARN WITHOUT FORGETTING</h2><p>在典型的离线监督学习中，我们可以在数据集 $D$ 内$x, y$ 的平稳分布上表达我们的优化目标：</p>
+<script type="math/tex; mode=display">
+\theta = \text{argmin}_{\theta} E_{(x,y)\sim D}[L(x,y)]</script><p>如果我们想要最大限度地迁移和最小化干扰，我们可以想象在目标上增加辅助损失以使学习过程偏向那个方向是有用的。</p>
+<p>考虑公式1和2，一个明显有益的选择将是还直接考虑相对于在随机选择的数据点评估的损失函数的梯度。</p>
+<p>如果我们可以最大化这些不同点的梯度之间的点积，它将直接鼓励网络在梯度方向对齐的地方共享参数，并在相反方向的梯度引起干扰的地方保持参数分开。</p>
+<p>因此，理想情况下，针对以下目标进行优化:</p>
+<script type="math/tex; mode=display">
+\theta  = argmin_{\theta} E_{[(x_i,y_i),(x_j,y_j)] \sim D} [L(x_i,y_i)+L(x_j,y_j)] - \alpha\frac{\partial L(x_i,y_i)}{\partial \theta}\cdot \frac{\partial L(x_j,y_j)}{\partial \theta}</script><p>其中 $(x_i，y_i)$和 $(x_j，y_j)$是随机抽样的唯一数据点。我们将尝试设计一个针对这一目标进行优化的持续学习系统。然而，要在实践中实施这种学习过程，还必须解决多方面的问题。</p>
+<p>第一个问题是，持续学习处理的是对非平稳数据流的学习。我们通过实现一个经验回放模块来解决这个问题，该模块增强了在线学习，这样我们就可以对到目前为止看到的所有样本的固定分布进行近似优化。</p>
+<p>另一个实际问题是，这种损失的梯度取决于损失函数的二阶导数，这一点计算效率不高。通过使用具有最小计算开销的元学习算法间接地将目标近似为一阶Tayor展开来解决这一问题。</p>
+<h3 id="EXPERIENCE-REPLAY"><a href="#EXPERIENCE-REPLAY" class="headerlink" title="EXPERIENCE REPLAY"></a>EXPERIENCE REPLAY</h3><p><strong>Learning objective:</strong> 持续的终身学习环境对神经网络的优化提出了挑战，非平稳流中的样本层出不穷。反而，我们希望我们的网络在目前为止看到的所有样本平稳分布上进行优化。经验回放 (1992) 是一种古老的技术，它仍然是尝试在非平稳环境中学习的深度学习系统的核心组成部分，我们将在这里采用最近工作中的约定 (A deeper look at experience replay2017) ; Scalable recollections for continual lifelong learning2017) 利用这种方法。</p>
+<p>经验回放的中心特征是保持对所见样本的记忆 $M$，该记忆与当前样本的训练交织在一起，目的是使训练更稳定。因此，经验回放在 $M$ 逼近 $D$ 的程度上逼近等式 3 中的目标：</p>
+<script type="math/tex; mode=display">
+\theta = argmin_{\theta} E_{(x,y)\sim M} [L(x,y)]</script><p>$M$ 具有当前大小 $M<em>{size}$和最大大小$M</em>{max}$。 使用reservoir sampling来更新缓冲区。这确保在每个时间步，看到的 N 个示例中的任何一个在缓冲区中的概率都等于 $M_{size}/N$。</p>
+<p>缓冲区的内容类似于所有样本的平稳分布，以至于存储的项目捕获了过去样本的变化。 遵循离线学习的标准做法，我们通过从 M 捕获的分布中随机抽样一批 B 来进行训练。</p>
+<p><strong>Prioritizing the current example:</strong> 我们探索的经验回放变体与离线学习的不同之处在于，当前样本具有特殊作用，可确保它始终与从回放缓冲区采样的样本交错。这是因为在我们继续下一个样本之前，我们希望确保我们的算法能够针对当前样本进行优化(特别是如果它没有添加到记忆中)。在看到的N个样本上，这仍然意味着我们已经将每个样本作为当前样本进行了训练，每步的概率为1/N。我们提供了进一步详细说明在这项工作中如何使用经验回放的算法在附录G中。</p>
+<p><img src="https://i.loli.net/2021/09/23/d5yaHjVocX6Qki1.png" alt=""></p>
+<p><img src="https://i.loli.net/2021/09/23/RnH3td1zVFSY4yW.png" alt=""></p>
+<p><img src="https://i.loli.net/2021/09/23/8UvcJVqlsBICPD3.png" alt=""></p>
+<p><strong>Concerns about storing examples: </strong>显然，将所有经验都存储在内存中是不可行的。因此，在这项工作中，我们重点展示当每种方法只提供很小的内存缓冲区时，我们可以获得比基线技术更高的性能。</p>
+<h3 id="COMBINING-EXPERIENCE-REPLAY-WITH-OPTIMIZATION-BASED-META-LEARNING"><a href="#COMBINING-EXPERIENCE-REPLAY-WITH-OPTIMIZATION-BASED-META-LEARNING" class="headerlink" title="COMBINING EXPERIENCE REPLAY WITH OPTIMIZATION BASED META-LEARNING"></a>COMBINING EXPERIENCE REPLAY WITH OPTIMIZATION BASED META-LEARNING</h3><p><strong>First order meta-learning:</strong> </p>
+<p>FOMAML  和 Reptile</p>
+<p>Reptile通过泰勒展开指出，这两个算法对于相同的损失函数是近似优化的。Reptile可以有效地针对大致相同的目标进行优化，同时不需要像 MAML 那样针对每个学习的任务将数据拆分为训练和测试拆分。Reptile 是通过使用基于 SGD 的优化器和学习率 $\alpha$ 顺序优化 s batch数据来实现的。在对这些批进行训练之后，我们在训练 $\theta_0$ 之前获取初始参数，并将它们更新为 $\theta_0 \leftarrow \theta_0 + \beta *(\theta_k-\theta_0)$，其中 $\beta$ 是元学习更新的学习率。</p>
+<p>该过程对每个系列的s批进行重复（算法2）。Reptile在一组s批次中大致优化了以下目标：</p>
+<script type="math/tex; mode=display">
+\theta = argmin_{\theta} E_{B_1,...,B_s \sim  D} [2\sum_{i=1}^s [L(B_i) - \sum_{j-1}^{i-1}\alpha\frac{\partial L(B_i)}{\partial\theta} \cdot \frac{\partial L(B_j)}{\partial\theta}]]</script><p><img src="https://i.loli.net/2021/09/23/EOur37U1qD8GiWw.png" alt=""></p>
+<p><strong>The MER learning objective:</strong> 在这项工作中，我们修改了Reptile算法，将其与经验回放模块适当地集成在一起，在最大化迁移和最小化干扰的同时，促进了持续学习。</p>
+<p>正如我们在附录I中的推导过程中更详细地描述的那样，在按顺序提供样本的在线设置中实现 Reptile 目标并非易事，并且只能部分实现，因为我们对缓冲区和批次的采样策略。根据上一节关于体验回放的评论，这允许我们使用MER算法在持续学习环境中针对以下目标进行优化：</p>
+<script type="math/tex; mode=display">
+\theta = argmin_{\theta} E_{[(x_{11},y_{11}),..., (x_{sk},y_{sk})] \sim M}[2\sum_{i=1}^s\sum_{j-1}^k[L(x_{ij},y_{ij}) - \sum_{q=1}^{i-1} \sum_{r=1}^{j-1} \alpha\frac{\partial L(x_{ij},y_{ij})}{\partial \theta} \cdot \frac{\partial  L(x_{qr},y_{qr})}{\partial\theta}] ]</script><p><strong>The MER algorithm:</strong> MER 使用储层采样维护经验回放式记忆 M，并在每个时间步从缓冲区中抽取 s 个批次，包括 k-1 个随机样本，以与当前示例一起训练。每个批次内的k个样本中的每一个都被视为其自己的大小为1的Reptile批次，在该批次被处理之后具有内循环爬行动物元更新。然后，我们在外部循环中跨s个批次再次应用Reptile元更新。我们在算法1中提供了关于MER的更多细节。当β=1时，该过程近似于上面的目标。采样函数生成 s 个更新批次。 通过首先添加当前示例然后从 M 中交错 k - 1 个随机样本来创建每个批次。</p>
+<p><img src="https://i.loli.net/2021/09/23/v6gkTQhElaUqI91.png" alt=""></p>
+<p><strong>Prioritizing current learning:</strong> 为了确保强正则化，我们希望在 Reptile 更新中处理的批次数量足够大 - 足以让经验重播开始过拟合 M。因此，我们还需要确保我们提供足够的优先级来学习当前样本，特别是因为我们可能不会将其存储在 M 中。为了在算法 1 中实现这一点，我们从 M 中采样 s 个单独的批次，这些批次按顺序处理并且每个批次都与当样本交错。</p>
+<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><p>How does MER perform on supervised continual learning benchmarks?</p>
+<p><img src="https://i.loli.net/2021/09/23/y5uKOL7wV9R6JFT.png" alt=""></p>
+<p>How do the performance gains from MER vary as a function of the buffer size?</p>
+<p><img src="https://i.loli.net/2021/09/23/oGej8vdghWEXN3i.png" alt=""></p>
+<p>How effective is MER at dealing with increasingly non-stationary settings?</p>
+<p><img src="https://i.loli.net/2021/09/23/XGjxz7R5edQa3vL.png" alt=""></p>
+<p>Does MER lead to a shift in the distribution of gradient dot products?</p>
+<p><img src="https://i.loli.net/2021/09/23/EuLksbjeQTSCYRh.png" alt=""></p>
+</article><div class="post-reward"><div class="reward-button button--animated"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/09/23/10-%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/"><img class="prev-cover" src="https://i.loli.net/2021/09/23/Nmyz8SoUeniKCbH.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">10-正则表达式</div></div></a></div><div class="next-post pull-right"><a href="/2021/09/19/5-%E6%9C%80%E9%95%BF%E5%9B%9E%E6%96%87%E5%AD%90%E4%B8%B2/"><img class="next-cover" src="https://i.loli.net/2021/09/19/4e2k5gSjilm6nvJ.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">5-最长回文子串</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/09/07/Dynamically-Addressing-Unseen-Rumor-via-Continual-Learning/" title="Dynamically Addressing Unseen Rumor via Continual Learning"><img class="cover" src="https://i.loli.net/2021/09/07/xiaZuQO84cmIV2A.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-09-07</div><div class="title">Dynamically Addressing Unseen Rumor via Continual Learning</div></div></a></div><div><a href="/2021/09/04/Interpretable-Rumor-Detection-in-Microblogs-by-Attending-to-User-Interactions/" title="Interpretable Rumor Detection in Microblogs by Attending to User Interactions"><img class="cover" src="https://i.loli.net/2021/09/04/RHfsQkurywJnLT1.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-09-04</div><div class="title">Interpretable Rumor Detection in Microblogs by Attending to User Interactions</div></div></a></div><div><a href="/2021/09/10/Model-Agnostic-Meta-Learning-for-Fast-Adaptation-of-Deep-Networks/" title="Model-Agnostic Meta-Learning for Fast Adaptation of Deep Networks"><img class="cover" src="https://i.loli.net/2021/09/10/vfDhujHCTA3pzR6.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-09-10</div><div class="title">Model-Agnostic Meta-Learning for Fast Adaptation of Deep Networks</div></div></a></div><div><a href="/2021/09/11/Multimodal-Emergent-Fake-News-Detection-via-Meta-Neural-Process-Networks/" title="Multimodal Emergent Fake News Detection via Meta Neural Process Networks"><img class="cover" src="https://i.loli.net/2021/09/11/ydJlkuqx3VTw4Ya.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-09-11</div><div class="title">Multimodal Emergent Fake News Detection via Meta Neural Process Networks</div></div></a></div><div><a href="/2021/09/04/Rumor-Detection-on-Social-Media-with-Bi-Directional-Graph-Convolutional-Networks/" title="Rumor Detection on Social Media with Bi-Directional Graph Convolutional Networks"><img class="cover" src="https://i.loli.net/2021/09/04/WQTFxfnGMcidE1K.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-09-04</div><div class="title">Rumor Detection on Social Media with Bi-Directional Graph Convolutional Networks</div></div></a></div><div><a href="/2021/09/17/La-MAML-Look-ahead-Meta-Learning-for-Continual-Learning/" title="La-MAML: Look-ahead Meta Learning for Continual Learning"><img class="cover" src="https://i.loli.net/2021/09/17/lSyLZWukw3jCBAG.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-09-17</div><div class="title">La-MAML: Look-ahead Meta Learning for Continual Learning</div></div></a></div></div></div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Coding-Zuo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2021/09/22/LEARNING-TO-LEARN-WITHOUT-FORGETTING-BY-MAXIMIZING-TRANSFER-AND-MINIMIZING-INTERFERENCE/">http://example.com/2021/09/22/LEARNING-TO-LEARN-WITHOUT-FORGETTING-BY-MAXIMIZING-TRANSFER-AND-MINIMIZING-INTERFERENCE/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">Coding-Zuo</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/context-detection/">context detection</a></div><div class="post_share"><div class="addthis_inline_share_toolbox"></div><script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=null" async="async"></script></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#LEARNING-TO-LEARN-WITHOUT-FORGETTING-BY-MAXIMIZING-TRANSFER-AND-MINIMIZING-INTERFERENCE"><span class="toc-number">1.</span> <span class="toc-text">LEARNING TO LEARN WITHOUT FORGETTING BY MAXIMIZING TRANSFER AND MINIMIZING INTERFERENCE</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#CONTINUAL-LEARNING-PROBLEM"><span class="toc-number">1.1.</span> <span class="toc-text">CONTINUAL LEARNING PROBLEM</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#THE-TRANSFER-INTERFERENCE-TRADE-OFF-FOR-CONTINUAL-LEARNING"><span class="toc-number">1.2.</span> <span class="toc-text">THE TRANSFER-INTERFERENCE TRADE-OFF FOR CONTINUAL LEARNING</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#A-SYSTEM-FOR-LEARNING-TO-LEARN-WITHOUT-FORGETTING"><span class="toc-number">1.3.</span> <span class="toc-text">A SYSTEM FOR LEARNING TO LEARN WITHOUT FORGETTING</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#EXPERIENCE-REPLAY"><span class="toc-number">1.3.1.</span> <span class="toc-text">EXPERIENCE REPLAY</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#COMBINING-EXPERIENCE-REPLAY-WITH-OPTIMIZATION-BASED-META-LEARNING"><span class="toc-number">1.3.2.</span> <span class="toc-text">COMBINING EXPERIENCE REPLAY WITH OPTIMIZATION BASED META-LEARNING</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C"><span class="toc-number">1.4.</span> <span class="toc-text">实验</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By Coding-Zuo</div><div class="footer_custom_text">Hi, welcome to my BLOG</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    loader: {
+      source: {
+        '[tex]/amsCd': '[tex]/amscd'
+      }
+    },
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        addClass: [200,() => {
+          document.querySelectorAll('mjx-container:not([display=\'true\']').forEach( node => {
+            const target = node.parentNode
+            if (!target.classList.contains('has-jax')) {
+              target.classList.add('mathjax-overflow')
+            }
+          })
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>if (document.getElementsByClassName('mermaid').length) {
+  if (window.mermaidJsLoad) mermaid.init()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(() => {
+      window.mermaidJsLoad = true
+      mermaid.initialize({
+        theme: 'default',
+      })
+      false && mermaid.init()
+    })
+  }
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'd652112bf81876e00118',
+      clientSecret: 'a5abed418c7cc2736af5b4d0cbd7ff97d460a5b3',
+      repo: 'Coding-Zuo.github.io',
+      owner: 'Coding-Zuo',
+      admin: ['Coding-Zuo'],
+      id: '669ac518a3604133ac5878af26804a6e',
+      language: 'zh-CN',
+      perPage: 10,
+      distractionFreeMode: false,
+      pagerDirection: 'last',
+      createIssueManually: false,
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script src="/js/custom.js"></script><script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script src="//code.tidio.co/mak6nokafytw9mgrsuzglwzfxiy3fpdl.js" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
