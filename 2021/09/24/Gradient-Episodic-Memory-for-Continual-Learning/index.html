@@ -1,0 +1,361 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Gradient Episodic Memory for Continual Learning | Coding-Zuo</title><meta name="keywords" content="context detection"><meta name="author" content="Coding-Zuo"><meta name="copyright" content="Coding-Zuo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="Gradient Episodic Memory for Continual Learning人工智能的一个主要障碍是模型在不忘记先前获得的知识的情况下，更快地解决新问题的能力很差。 首先，提出了一套度量标准来评估在数据连续体上学习的模型。这些度量不仅通过它们的测试准确性来表征模型，而且还根据它们在任务之间传输知识的能力来表征模型。 其次，提出了一个持续学习的模型，称为梯度情节记忆(GEM)，它可">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Gradient Episodic Memory for Continual Learning">
+<meta property="og:url" content="http://example.com/2021/09/24/Gradient-Episodic-Memory-for-Continual-Learning/index.html">
+<meta property="og:site_name" content="Coding-Zuo">
+<meta property="og:description" content="Gradient Episodic Memory for Continual Learning人工智能的一个主要障碍是模型在不忘记先前获得的知识的情况下，更快地解决新问题的能力很差。 首先，提出了一套度量标准来评估在数据连续体上学习的模型。这些度量不仅通过它们的测试准确性来表征模型，而且还根据它们在任务之间传输知识的能力来表征模型。 其次，提出了一个持续学习的模型，称为梯度情节记忆(GEM)，它可">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2021/09/24/s51bILXUHNDYt6j.png">
+<meta property="article:published_time" content="2021-09-24T06:59:03.000Z">
+<meta property="article:modified_time" content="2021-09-24T13:09:46.644Z">
+<meta property="article:author" content="Coding-Zuo">
+<meta property="article:tag" content="context detection">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/09/24/s51bILXUHNDYt6j.png"><link rel="shortcut icon" href="https://i.loli.net/2021/03/22/reFlcYOnP3dSuJX.png"><link rel="canonical" href="http://example.com/2021/09/24/Gradient-Episodic-Memory-for-Continual-Learning/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.json","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-09-24 21:09:46'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    })(window)</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sviptzk/HexoStaticFile@latest/Hexo/css/footer.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css"><meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="Coding-Zuo" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://i.loli.net/2021/03/22/YP2oqk7lOAfceTD.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">94</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">16</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://i.loli.net/2021/09/24/s51bILXUHNDYt6j.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Coding-Zuo</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Gradient Episodic Memory for Continual Learning</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-09-24T06:59:03.000Z" title="发表于 2021-09-24 14:59:03">2021-09-24</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-09-24T13:09:46.644Z" title="更新于 2021-09-24 21:09:46">2021-09-24</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Gradient Episodic Memory for Continual Learning"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Gradient-Episodic-Memory-for-Continual-Learning"><a href="#Gradient-Episodic-Memory-for-Continual-Learning" class="headerlink" title="Gradient Episodic Memory for Continual Learning"></a>Gradient Episodic Memory for Continual Learning</h1><p>人工智能的一个主要障碍是模型在不忘记先前获得的知识的情况下，更快地解决新问题的能力很差。</p>
+<p>首先，提出了一套度量标准来评估在数据连续体上学习的模型。这些度量不仅通过它们的测试准确性来表征模型，而且还根据它们在任务之间传输知识的能力来表征模型。</p>
+<p>其次，提出了一个持续学习的模型，称为梯度情节记忆(GEM)，它可以减轻遗忘，同时允许知识有益地转移到以前的任务中。</p>
+<h2 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a>Intro</h2><p>有监督学习的设置 $D<em>{tr} = {(x_i,y_i)}</em>{i=1}^n$ , 其中每个示例 $(x_i，y_i)$ 由特征向量 $x_i\in X$ 和目标向量 $y_i\in Y$组成。</p>
+<p>大多数监督学习方法假设每个示例 $(x_i，y_i)$ 是来自描述单个学习任务的固定概率分布 $P$ 的独立同分布(IID)样本。目标是构造一个模型 $f:X \rightarrow Y$ ，用于预测目标向量 $y$ 与未见的特征向量 $x$ ,其中$(x,y) \sim P$</p>
+<p>为了实现这一点，监督学习方法通常采用 经验风险最小化 (ERM) 原则 [Vapnik, 1998]，其中 f 是通过最小化这个式子：</p>
+<script type="math/tex; mode=display">
+\frac{1}{|D_u|} \sum_{x_i,y_i \in D_u} l(f(x_i), y_i)</script><p>在实践中，ERM通常需要多次遍历训练集。<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/103786559">经验风险最小化(Empirical Risk Minimization)</a></p>
+<p>将逐个样本地观察数据的连续体：</p>
+<script type="math/tex; mode=display">
+(x_1,t_1,y_1), ...,(x_i,t_i,y_i),...,(x_n,t_n,y_n)</script><p>$t<em>i \in T$ 该任务描述符标识与 $(x_i，y_i)\sim P</em>{t_i}$ 相关联的任务。</p>
+<p>重要的是，样本不是从三元组 $(x，t，y)$上的固定概率分布中提取的，因为在切换到下一任务之前可以观察到来自当前任务的整个示例序列。</p>
+<p>连续学习的目标是构造一个能够预测与测试对 $(x，t)$ 相关的目标 $y$ 的模型 $f: X\times T$，其中 $(x,y)\sim P_t$。</p>
+<p>在这种情况下，ERM面临着未知的挑战：</p>
+<ul>
+<li>Non-iid input data : 数据连续体相对于任何固定概率分布 $P(X,T,Y)$ 不是独立同分布的，因为一旦任务切换，就可以观察到来自新任务的整个样本序列。</li>
+<li>Catastrophic forgetting : 学习新任务可能会损害学习者在以前解决的任务中的表现。 </li>
+<li>Transfer learning :  当连续体中的任务相关时，就存在迁移学习的机会。这将转化为更快地学习新任务，以及提高旧任务的性能。</li>
+</ul>
+<h2 id="A-Framework-for-Continual-Learning"><a href="#A-Framework-for-Continual-Learning" class="headerlink" title="A Framework for Continual Learning"></a>A Framework for Continual Learning</h2><p>连续体的数据三元组 $(x<em>i,t_i,y_i)$ 由特征向量 $x_i\in X</em>{t<em>i}$ , 任务描述符 $t_i\in T$ , 目标向量 $y_i\in Y</em>{t_i}$</p>
+<p>为简单起见，我们假设连续体是局部 iid，即每个三元组 $(x<em>i，t_i，y_i)$ 都满足 $(x_i,y_i) \sim^{iid} P</em>{t_i}(X,Y)$</p>
+<p>目标是学习一个预测器 $f:X\times T \to Y$，它可以在任何时候被查询以预测与测试对 $(x，t)$ 相关联的目标向量 $y$，其中$(x,y)\sim P_t$。这样的测试对可以属于我们在过去观察到的任务，可以属于当前的任务，也可以属于我们将在未来体验的任务。</p>
+<h3 id="Task-descriptors"><a href="#Task-descriptors" class="headerlink" title="Task descriptors"></a>Task descriptors</h3><p>框架中的一个重要组成部分是任务描述符  $t_1, . . . , t_n \in T$ 。在最简单的情况下，任务描述符是整数 $t_i = i \in Z$，枚举出现在数据连续集中的不同任务。更一般地说，任务描述符 $t_i$ 可以是结构化对象，例如一段自然语言，解释如何解决第 $i$ 个任务。丰富的任务描述符为  zero-shot learning 提供了机会，因为可以单独使用新的任务描述符来推断任务之间的关系。此外，任务描述符消除了类似学习任务的歧义。特别是，相同的输入 $x_i$ 可能出现在两个不同的任务中，但需要不同的目标。任务描述符可以引用多个学习环境的存在，或提供有关每个示例的附加（可能是分层的）上下文信息。然而，在本文中，作者专注于减轻从连续数据中学习时的灾难性遗忘，并将 zero-shot learning  留给未来的研究。</p>
+<h3 id="Training-Protocol-and-Evaluation-Metrics"><a href="#Training-Protocol-and-Evaluation-Metrics" class="headerlink" title="Training Protocol and Evaluation Metrics"></a>Training Protocol and Evaluation Metrics</h3><p>大多数关于学习一系列任务的文献描述了一种设置</p>
+<ul>
+<li>i) 任务数量 很小</li>
+<li>ii) 每个任务的示例数量很大</li>
+<li>iii) 学习者对每个任务的样本执行多次传递</li>
+<li>iv) 报告的唯一指标是所有任务的平均性能。 </li>
+</ul>
+<p>相比之下，本文:</p>
+<ul>
+<li>i) 任务数量很大，</li>
+<li>ii) 每个任务的训练样本数量很少</li>
+<li>iii) 学习者只观察与每个任务相关的样本一次</li>
+<li>iv) 报告了衡量转移和遗忘的指标。</li>
+</ul>
+<p>除了监控其跨任务的表现外，评估模型传递知识的能力也很重要。更具体地说：</p>
+<ul>
+<li>Backward transfer (BWT) ：学习任务 t 对前一任务 k ≺ t 的性能的影响。当学习任务 t 时，提高了先前任务 k 的性能(存在正面的反向迁移)。当学习任务 t 会降低先前任务 k 的性能时(存在负面的反向迁移)。 越大意味着灾难性遗忘越严重。<script type="math/tex; mode=display">
+\frac{1}{T} \sum_{i=1}^T R_{T,i}\frac{1}{T-1} \sum_{i=1}^{T-1} R_{T,i} - R_{i,i}</script></li>
+</ul>
+<ul>
+<li>Forwardtransfer(FWT) ：学习任务t 对未来任务 k&gt;t 的性能的影响。 $\hat b$是每个任务在随机初始化时的测试精度向量。<script type="math/tex; mode=display">
+\frac{1}{T-1} \sum_{i=2}^{T-1} R_{i-1,i} - \hat b_i</script></li>
+</ul>
+<ul>
+<li>Retained Accuracy(RA) 是模型在训练结束时跨任务的平均准确率。<script type="math/tex; mode=display">
+ \frac{1}{T} \sum_{i=1}^T R_{T,i}</script></li>
+</ul>
+<p>讨论第一个任务的向后转移或最后一个任务的正向转移是没有意义的。</p>
+<p>考虑为每一个 $T$ 任务访问测试集。在模型学习完任务 $t<em>i$之后，我们评估了它在所有 $T$ 个任务上的测试性能。通过这样做，我们构造了矩阵 $R \in R^{T\times T}$，其中 $R</em>{i,j}$ 是在观察到来自任务 $t_i$ 的最后一个样本之后，模型对任务 $t_j$ 的测试分类精度。</p>
+<h3 id="Gradient-of-Episodic-Memory-GEM"><a href="#Gradient-of-Episodic-Memory-GEM" class="headerlink" title="Gradient of Episodic Memory (GEM)"></a>Gradient of Episodic Memory (GEM)</h3><p>梯度情景记忆（GEM），一种持续学习的模型。 GEM 的主要特征是情景记忆 $M_t$，它存储来自任务 t 的观察示例的子集。 为简单起见，我们假设整数任务描述符，并使用它们来索引情节记忆。 当使用整数任务描述符时，不能期望显着的正向转移（zero-shot learning）。 相反，我们专注于通过有效使用情景记忆来最小化负向后迁移（灾难性遗忘）。</p>
+<p>实际上，学习者总共有 $M$ 个存储单元的预算。如果总任务数 $T$ 已知，我们可以为每个任务分配 $m=M/T$个存储器。如果总任务数 $T$ 未知，我们可以在观察新任务时逐渐减小 $m$ 值</p>
+<p>为简单起见，假设内存中填充了来自每个任务的最后 $m$ 个示例，尽管可以采用更好的内存更新策略(例如为每个任务构建核心重置)。在下文中，我们考虑由 $\theta \in R^P$参数化的预测因子 $f_\theta$，并将第k个任务的记忆损失定义为:</p>
+<script type="math/tex; mode=display">
+l(f_{\theta} ,M_k) = \frac{1}{|M_k|} \sum_{(x_i,k,y_i)\in M_k} l(f_{\theta}(x_i,k),y_i)</script><p>显然，将当前示例中的损失与上式一起最小化会导致过度拟合存储在 $M_k$中的示例。作为另一种选择，我们可以通过蒸馏的方法来保持过去任务的预测不变 —— iCaRL: Incremental classifier and representation</p>
+<p>然而，这将认为正向后向转移是不可能的。 相反，我们将使用 上面的损失 作为不等式约束，避免它们的增加但允许它们的减少。 与最先进的 [Kirkpatrick et al., 2017, Rebuffi et al., 2017] 相比，我们的模型允许正向后向转移。</p>
+<p>更具体地说，在观察三元组 $(x,t,y)$时，我们解决了以下问题：</p>
+<script type="math/tex; mode=display">
+minimize_{\theta}  \ \ \ l(f_{\theta}(x,t) ,y)</script><script type="math/tex; mode=display">
+\text{subject to (受制于)}  \ \ \ l(f_{\theta}, M_k) \le l(f_{\theta}^{t-1},M_k) \ \  for \ all \ k\lt t</script><p>其中 $f_{\theta}^{t-1}$ 是任务 t−1学习结束时的预测器状态。</p>
+<p>首先，在每次参数更新g之后，只要我们保证以前任务的损失不增加，就没有必要存储旧的预测值 $f_{\theta}^{t-1}$。</p>
+<p>其次，假设函数是局部线性的（因为它发生在小优化步骤周围）并且memory代表过去任务的样本，我们可以通过计算它们的损失梯度向量之间的角度来 ，判断先前任务损失的增加 和建议的更新。在数学上，我们将上面式子的约束重新表述为：</p>
+<script type="math/tex; mode=display">
+<g, g_k> := <\frac{\partial l(f_{\theta}(x,t),y)}{\partial \theta} , \frac{\partial l(f_{\theta},M_k)}{ \partial\theta}> \ge 0 , \ for \ all \ k <t</script><p>如果满足上面的不等式，则参数更新 $g$ 不太可能增加先前任务的损失。</p>
+<p>另一方面，如果违反了一个或多个不等式约束，那么至少有一个先前的任务在参数更新后损失会增加。 如果违反不等式，我们建议将梯度 g 投影到满足所有上式约束 的最近梯度  $\hat g$（以平方 $l2$ 范数表示）。 因此：</p>
+<script type="math/tex; mode=display">
+minimize_{\hat g}  \ \ \ \frac{1}{2} ||g-\hat g||^2_2</script><script type="math/tex; mode=display">
+\text{subject to (受制于)}  \ \ \ <\hat g,g_k> \ge 0 \ for \ all \ k <t</script><p>为了有效地解决上式，回想一下具有不等式约束的二次规划Quadratic Program （QP）的原始值：</p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/36081404">凸优化笔记(3)Quadratic Programming简介</a></p>
+<script type="math/tex; mode=display">
+minimize_{z} \ \ \frac{1}{2} z^TCz + p^Tz</script><script type="math/tex; mode=display">
+\text{subject to (受制于)}  \ \ \ Az\ge b</script><p>其中$C\in R^{p\times p}, p\in R^p,A\in R^{(t-1)\times p} ,b\in R^{t-1}$ , 上式的对偶问题是：</p>
+<script type="math/tex; mode=display">
+minimize_{u,v} \ \ \frac{1}{2} u^TCu -b^Tv</script><script type="math/tex; mode=display">
+\text{subject to (受制于)}  \ \ \ A^Tv -Cu=p \ ,\ v\ge 0</script><p> 如果 $(u^⋆,v^⋆)$是上个式子的解，则存在解 $z^⋆$ 满足 $Cz^⋆=Cu^⋆$</p>
+<p>有了这些符号，我们将原始GEM QP 写成：</p>
+<script type="math/tex; mode=display">
+minimize_{z} \ \ \frac{1}{2} z^Tz -g^Tz + \frac{1}{2}g^Tg</script><script type="math/tex; mode=display">
+\text{subject to (受制于)}  \ \ \ Gz \ge 0</script><p>其中 $G = -(g<em>1,…,g</em>{t-1})$ 并且去掉常数项 $g^Tg$ 。这是 p 个变量（神经网络的参数数量）上的 QP，可以以数百万计。 但是，我们可以将 GEM QP 的对偶假设为：</p>
+<script type="math/tex; mode=display">
+minimize_{v} \ \ \frac{1}{2} v^TGG^Tv + g^TG^Tv</script><script type="math/tex; mode=display">
+\text{subject to (受制于)}  \ \ \ v \ge 0</script><p>由于 $u  = G^Tv + g$ 并且 $g^T g$ 是常数，这是在 $t − 1 ≪ p$ 个变量上的 QP，即目前观察到的任务数量。一旦我们解决了 $v^<em>$ 的对偶问题(上式) ，我们就可以将投影梯度更新恢复为 $\hat g = G^Tv^</em> + g$。 在实践中，我们发现添加一个小的常数 $\gamma \ge 0 $ 到 $v^⋆$ 会使梯度投影偏向于有利于有益向后转移的更新。</p>
+<p><img src="https://i.loli.net/2021/09/24/bDAQzaEYd6gPOIy.png" alt=""></p>
+<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><p><img src="https://i.loli.net/2021/09/24/gDpRaMANdbhT9kc.png" alt=""></p>
+</article><div class="post-reward"><div class="reward-button button--animated"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/09/24/%E5%87%B8%E4%BC%98%E5%8C%96%E4%B8%80/"><img class="prev-cover" src="https://i.loli.net/2021/05/18/3TebCEQGFIDcKoM.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">凸优化一</div></div></a></div><div class="next-post pull-right"><a href="/2021/09/24/12-13-%E6%95%B4%E6%95%B0%E4%BA%92%E6%8D%A2%E7%BD%97%E9%A9%AC%E6%95%B0%E5%AD%97/"><img class="next-cover" src="https://i.loli.net/2021/09/24/9FNKPEfBVlgcbki.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">12,13-整数互换罗马数字</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/09/07/Dynamically-Addressing-Unseen-Rumor-via-Continual-Learning/" title="Dynamically Addressing Unseen Rumor via Continual Learning"><img class="cover" src="https://i.loli.net/2021/09/07/xiaZuQO84cmIV2A.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-09-07</div><div class="title">Dynamically Addressing Unseen Rumor via Continual Learning</div></div></a></div><div><a href="/2021/09/04/Interpretable-Rumor-Detection-in-Microblogs-by-Attending-to-User-Interactions/" title="Interpretable Rumor Detection in Microblogs by Attending to User Interactions"><img class="cover" src="https://i.loli.net/2021/09/04/RHfsQkurywJnLT1.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-09-04</div><div class="title">Interpretable Rumor Detection in Microblogs by Attending to User Interactions</div></div></a></div><div><a href="/2021/09/22/LEARNING-TO-LEARN-WITHOUT-FORGETTING-BY-MAXIMIZING-TRANSFER-AND-MINIMIZING-INTERFERENCE/" title="LEARNING TO LEARN WITHOUT FORGETTING BY MAXIMIZING TRANSFER AND MINIMIZING INTERFERENCE"><img class="cover" src="https://i.loli.net/2021/09/22/egMpEbJ7yZtLSRm.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-09-22</div><div class="title">LEARNING TO LEARN WITHOUT FORGETTING BY MAXIMIZING TRANSFER AND MINIMIZING INTERFERENCE</div></div></a></div><div><a href="/2021/09/10/Model-Agnostic-Meta-Learning-for-Fast-Adaptation-of-Deep-Networks/" title="Model-Agnostic Meta-Learning for Fast Adaptation of Deep Networks"><img class="cover" src="https://i.loli.net/2021/09/10/vfDhujHCTA3pzR6.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-09-10</div><div class="title">Model-Agnostic Meta-Learning for Fast Adaptation of Deep Networks</div></div></a></div><div><a href="/2021/09/11/Multimodal-Emergent-Fake-News-Detection-via-Meta-Neural-Process-Networks/" title="Multimodal Emergent Fake News Detection via Meta Neural Process Networks"><img class="cover" src="https://i.loli.net/2021/09/11/ydJlkuqx3VTw4Ya.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-09-11</div><div class="title">Multimodal Emergent Fake News Detection via Meta Neural Process Networks</div></div></a></div><div><a href="/2021/09/04/Rumor-Detection-on-Social-Media-with-Bi-Directional-Graph-Convolutional-Networks/" title="Rumor Detection on Social Media with Bi-Directional Graph Convolutional Networks"><img class="cover" src="https://i.loli.net/2021/09/04/WQTFxfnGMcidE1K.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-09-04</div><div class="title">Rumor Detection on Social Media with Bi-Directional Graph Convolutional Networks</div></div></a></div></div></div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Coding-Zuo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2021/09/24/Gradient-Episodic-Memory-for-Continual-Learning/">http://example.com/2021/09/24/Gradient-Episodic-Memory-for-Continual-Learning/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">Coding-Zuo</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/context-detection/">context detection</a></div><div class="post_share"><div class="addthis_inline_share_toolbox"></div><script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=null" async="async"></script></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Gradient-Episodic-Memory-for-Continual-Learning"><span class="toc-number">1.</span> <span class="toc-text">Gradient Episodic Memory for Continual Learning</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Intro"><span class="toc-number">1.1.</span> <span class="toc-text">Intro</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#A-Framework-for-Continual-Learning"><span class="toc-number">1.2.</span> <span class="toc-text">A Framework for Continual Learning</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Task-descriptors"><span class="toc-number">1.2.1.</span> <span class="toc-text">Task descriptors</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Training-Protocol-and-Evaluation-Metrics"><span class="toc-number">1.2.2.</span> <span class="toc-text">Training Protocol and Evaluation Metrics</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Gradient-of-Episodic-Memory-GEM"><span class="toc-number">1.2.3.</span> <span class="toc-text">Gradient of Episodic Memory (GEM)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C"><span class="toc-number">1.3.</span> <span class="toc-text">实验</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By Coding-Zuo</div><div class="footer_custom_text">Hi, welcome to my BLOG</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    loader: {
+      source: {
+        '[tex]/amsCd': '[tex]/amscd'
+      }
+    },
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        addClass: [200,() => {
+          document.querySelectorAll('mjx-container:not([display=\'true\']').forEach( node => {
+            const target = node.parentNode
+            if (!target.classList.contains('has-jax')) {
+              target.classList.add('mathjax-overflow')
+            }
+          })
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>if (document.getElementsByClassName('mermaid').length) {
+  if (window.mermaidJsLoad) mermaid.init()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(() => {
+      window.mermaidJsLoad = true
+      mermaid.initialize({
+        theme: 'default',
+      })
+      false && mermaid.init()
+    })
+  }
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'd652112bf81876e00118',
+      clientSecret: 'a5abed418c7cc2736af5b4d0cbd7ff97d460a5b3',
+      repo: 'Coding-Zuo.github.io',
+      owner: 'Coding-Zuo',
+      admin: ['Coding-Zuo'],
+      id: '290098ca49d1240548c19ea0888cb37c',
+      language: 'zh-CN',
+      perPage: 10,
+      distractionFreeMode: false,
+      pagerDirection: 'last',
+      createIssueManually: false,
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script src="/js/custom.js"></script><script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script src="//code.tidio.co/mak6nokafytw9mgrsuzglwzfxiy3fpdl.js" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
