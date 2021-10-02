@@ -1,0 +1,304 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Large-scale Extensible User Intent Classification for Dialogue Systems with Meta Lifelong Learning | Coding-Zuo</title><meta name="keywords" content="context detection"><meta name="author" content="Coding-Zuo"><meta name="copyright" content="Coding-Zuo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="MeLL: Large-scale Extensible User Intent Classification for Dialogue Systems with Meta Lifelong Learning用户意图检测（UIC）对于理解他们在对话系统中的需求至关重要。(文本分类) 这是因为不同域中的用户输入可能具有不同的文本分布和目标意图集。随着底层应用程序的发展，新的UIC任务不断涌现。因此，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Large-scale Extensible User Intent Classification for Dialogue Systems with Meta Lifelong Learning">
+<meta property="og:url" content="http://example.com/2021/10/02/MeLL-Large-scale-Extensible-User-Intent-Classification-for-Dialogue-Systems-with-Meta-Lifelong-Learning/index.html">
+<meta property="og:site_name" content="Coding-Zuo">
+<meta property="og:description" content="MeLL: Large-scale Extensible User Intent Classification for Dialogue Systems with Meta Lifelong Learning用户意图检测（UIC）对于理解他们在对话系统中的需求至关重要。(文本分类) 这是因为不同域中的用户输入可能具有不同的文本分布和目标意图集。随着底层应用程序的发展，新的UIC任务不断涌现。因此，">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2021/10/02/JhPKZISwTXdqLs5.png">
+<meta property="article:published_time" content="2021-10-02T01:42:29.000Z">
+<meta property="article:modified_time" content="2021-10-02T03:21:44.276Z">
+<meta property="article:author" content="Coding-Zuo">
+<meta property="article:tag" content="context detection">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/10/02/JhPKZISwTXdqLs5.png"><link rel="shortcut icon" href="https://i.loli.net/2021/03/22/reFlcYOnP3dSuJX.png"><link rel="canonical" href="http://example.com/2021/10/02/MeLL-Large-scale-Extensible-User-Intent-Classification-for-Dialogue-Systems-with-Meta-Lifelong-Learning/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.json","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-10-02 11:21:44'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    })(window)</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sviptzk/HexoStaticFile@latest/Hexo/css/footer.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css"><meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="Coding-Zuo" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://i.loli.net/2021/03/22/YP2oqk7lOAfceTD.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">98</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">16</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://i.loli.net/2021/10/02/JhPKZISwTXdqLs5.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Coding-Zuo</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Large-scale Extensible User Intent Classification for Dialogue Systems with Meta Lifelong Learning</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-10-02T01:42:29.000Z" title="发表于 2021-10-02 09:42:29">2021-10-02</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-10-02T03:21:44.276Z" title="更新于 2021-10-02 11:21:44">2021-10-02</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Large-scale Extensible User Intent Classification for Dialogue Systems with Meta Lifelong Learning"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="MeLL-Large-scale-Extensible-User-Intent-Classification-for-Dialogue-Systems-with-Meta-Lifelong-Learning"><a href="#MeLL-Large-scale-Extensible-User-Intent-Classification-for-Dialogue-Systems-with-Meta-Lifelong-Learning" class="headerlink" title="MeLL: Large-scale Extensible User Intent Classification for Dialogue Systems with Meta Lifelong Learning"></a>MeLL: Large-scale Extensible User Intent Classification for Dialogue Systems with Meta Lifelong Learning</h1><p>用户意图检测（UIC）对于理解他们在对话系统中的需求至关重要。(文本分类)</p>
+<p>这是因为不同域中的用户输入可能具有不同的文本分布和目标意图集。随着底层应用程序的发展，新的UIC任务不断涌现。因此，为大规模可扩展UIC开发一个框架至关重要，该框架能够持续适应新任务，并以可接受的参数增长率避免灾难性遗忘。</p>
+<p>作者引入Meta Lifelong Learning (MeLL) framework  解决此问题。</p>
+<p>在MELL中，基于BERT的文本编码器被用来学习跨任务的健壮文本表示，其被缓慢更新以用于终身学习。</p>
+<p>全局和局部记忆网络用来捕获不同类的跨任务原型表示，将其视为元学习者快速适应不同的任务。</p>
+<p>此外，应用最近最少使用的替换策略来管理全局记忆，以使模型大小不会随时间爆炸。</p>
+<p>最后，每个UIC任务都有自己的特定于任务的输出层，并仔细总结了各种特性。</p>
+<h2 id="INTRODUCTION"><a href="#INTRODUCTION" class="headerlink" title="INTRODUCTION"></a>INTRODUCTION</h2><h3 id="task-wise-UIC-models-的缺陷"><a href="#task-wise-UIC-models-的缺陷" class="headerlink" title="task-wise UIC models 的缺陷"></a>task-wise UIC models 的缺陷</h3><p>一个天真的方法是训练task-wise UIC模型。这种方法不适合工业规模的应用，有三个原因:</p>
+<ul>
+<li>模型参数总数不断增加，与任务数成线性关系。考虑到当前预先训练的语言模型具有数十亿个参数，为UIC训练这样的模型很容易涉及数万亿个参数，从而导致参数爆炸问题。</li>
+<li>由于跨域的UIC任务有一些相似之处，单任务方法无法从其他任务中学习可转移的知识，这对提高UIC的性能至关重要。(前向后向迁移)</li>
+<li>当需要维护越来越多的模型时，这些方法不可避免地带来了工程负担。</li>
+</ul>
+<p>另一种流行的方法是跨任务的多任务训练，其中利用共享编码器来捕获共同知识，并且每个任务具有其自己的预测头。当一个新的UIC任务出现时，我们可能需要为以前的任务重新训练模型，这不仅计算量大，而且很难保持现有UIC任务的性能稳定。</p>
+<h3 id="Liflong-learning-amp-Meta-learning"><a href="#Liflong-learning-amp-Meta-learning" class="headerlink" title="Liflong learning &amp; Meta learning"></a>Liflong learning &amp; Meta learning</h3><p>近年来，终身学习受到了研究界的广泛关注。它是一种学习范式，它不断积累过去学到的知识，并用它来帮助未来的任务学习。当终身学习应用于大规模EUIC时，当新任务不断到达时，我们只需要维护相对较少的模型参数，从而缓解了参数爆炸效应。</p>
+<p>在终身学习中，解决灾难性的遗忘问题是具有挑战性的，即模型在学习新任务时“忘记”如何解决现有任务。这是特别不可取的，因为我们希望在学习新的UIC任务时保持现有任务的性能稳定。</p>
+<p>元学习，旨在获得跨任务的元学习者，这样它就可以用很少的数据样本快速适应新任务。通过获取元学习者，可以获取跨不同UIC任务的可迁移知识，并将其传递给新任务。主要的缺点是元学习者(在本文的情况下是BERT模型) 应该分别适应每项任务，无法避免参数爆炸。</p>
+<p>因此，一个自然的问题就产生了：是否有可能为大规模EUIC设计一个持续学习框架，使其既能在模型适用于新的UIC任务时保持现有UIC任务的性能，又能在新的UIC任务数量增加时具有可接受的参数增长率？</p>
+<h3 id="MeLL"><a href="#MeLL" class="headerlink" title="MeLL"></a>MeLL</h3><p><img src="https://z3.ax1x.com/2021/10/02/4Hyvin.png" alt=""></p>
+<p>它有一个共享的网络结构，用于学习不断增长的UIC任务，由三个部分组成：文本编码器、全局记忆网络和局部记忆网络。</p>
+<p>文本编码器是基于BERT构建的，以生成健壮的文本表示(无论是针对用户的查询还是响应)。对于终身表示学习，这些参数被缓慢更新，这确保由新任务调用的更新操作不会对现有任务产生显著的负面影响。</p>
+<p>受基于原型的元学习的启发，全局网络存储不同类别的跨任务原型表示</p>
+<p>记忆单元的更新速度很快，捕捉到了可跨任务转移的知识，使我们的模型可以很容易地适应新的任务。随着所有任务的不同类别的数量不断增加，使用LRU(最近最少使用)替换策略来管理全局内存，这样大小就不会随着时间的推移而爆炸。</p>
+<p>通过注意力机制将文本编码器产生的特征与全局记忆网络进行融合，并利用它们来学习最终的任务特定的UIC分类器。</p>
+<p>学习过程完成后，我们将与任务相关的原型表示复制到任务自己的本地内存网络中，并冻结参数。在推理过程中，我们使用文本编码器和任务自身的局部记忆网络进行特征生成。</p>
+<p>编码器被认为是不断消化可传递的表示学习知识并将其传递给特定任务的慢速学习者。</p>
+<p>全局记忆网络是快速学习器，能够快速编码给定任务的特定知识。</p>
+<p>LRU替换策略和从全局存储网络到局部存储网络的复制机制在不增加过多参数的情况下缓解了灾难性遗忘。</p>
+<h2 id="RELATED-WORK"><a href="#RELATED-WORK" class="headerlink" title="RELATED WORK"></a>RELATED WORK</h2><h3 id="User-Intent-Classification"><a href="#User-Intent-Classification" class="headerlink" title="User Intent Classification"></a>User Intent Classification</h3><p>UIC技术最初应用于搜索引擎中的信息查找，帮助搜索引擎理解用户发送的搜索查询。由于对话系统通常通过系统与用户之间的交互来提供更好的用户体验，因此对话系统的UIC越来越受欢迎。</p>
+<h3 id="Lifelong-Learning"><a href="#Lifelong-Learning" class="headerlink" title="Lifelong Learning"></a>Lifelong Learning</h3><h3 id="Meta-learning"><a href="#Meta-learning" class="headerlink" title="Meta-learning"></a>Meta-learning</h3><h3 id="Pre-trained-Language-Models"><a href="#Pre-trained-Language-Models" class="headerlink" title="Pre-trained Language Models."></a>Pre-trained Language Models.</h3><h2 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h2></article><div class="post-reward"><div class="reward-button button--animated"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2021/10/01/%E7%AC%AC%E4%BA%94%E5%B1%8A%E8%BE%BE%E8%A7%82%E6%9D%AF%E2%80%94%E2%80%94%E9%A3%8E%E9%99%A9%E4%BA%8B%E4%BB%B6%E6%A0%87%E7%AD%BE%E8%AF%86%E5%88%AB%E6%AF%94%E8%B5%9B%E5%A4%8D%E7%9B%98/"><img class="next-cover" src="https://z3.ax1x.com/2021/10/01/47nQm9.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">第五届达观杯——风险事件标签识别比赛复盘</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/09/07/Dynamically-Addressing-Unseen-Rumor-via-Continual-Learning/" title="Dynamically Addressing Unseen Rumor via Continual Learning"><img class="cover" src="https://i.loli.net/2021/09/07/xiaZuQO84cmIV2A.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-09-07</div><div class="title">Dynamically Addressing Unseen Rumor via Continual Learning</div></div></a></div><div><a href="/2021/09/28/EFFICIENT-LIFELONG-LEARNING-WITH-A-GEM/" title="Efficient lifelong learning with A-GEM"><img class="cover" src="https://i.loli.net/2021/09/28/t2CEqygu5zRaTfI.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-09-28</div><div class="title">Efficient lifelong learning with A-GEM</div></div></a></div><div><a href="/2021/09/24/Gradient-Episodic-Memory-for-Continual-Learning/" title="Gradient Episodic Memory for Continual Learning"><img class="cover" src="https://i.loli.net/2021/09/24/s51bILXUHNDYt6j.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-09-24</div><div class="title">Gradient Episodic Memory for Continual Learning</div></div></a></div><div><a href="/2021/09/04/Interpretable-Rumor-Detection-in-Microblogs-by-Attending-to-User-Interactions/" title="Interpretable Rumor Detection in Microblogs by Attending to User Interactions"><img class="cover" src="https://i.loli.net/2021/09/04/RHfsQkurywJnLT1.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-09-04</div><div class="title">Interpretable Rumor Detection in Microblogs by Attending to User Interactions</div></div></a></div><div><a href="/2021/09/22/LEARNING-TO-LEARN-WITHOUT-FORGETTING-BY-MAXIMIZING-TRANSFER-AND-MINIMIZING-INTERFERENCE/" title="Learning to learn without forgetting by maximizing transfer and minimizing interference"><img class="cover" src="https://i.loli.net/2021/09/22/egMpEbJ7yZtLSRm.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-09-22</div><div class="title">Learning to learn without forgetting by maximizing transfer and minimizing interference</div></div></a></div><div><a href="/2021/09/10/Model-Agnostic-Meta-Learning-for-Fast-Adaptation-of-Deep-Networks/" title="Model-Agnostic Meta-Learning for Fast Adaptation of Deep Networks"><img class="cover" src="https://i.loli.net/2021/09/10/vfDhujHCTA3pzR6.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-09-10</div><div class="title">Model-Agnostic Meta-Learning for Fast Adaptation of Deep Networks</div></div></a></div></div></div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Coding-Zuo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2021/10/02/MeLL-Large-scale-Extensible-User-Intent-Classification-for-Dialogue-Systems-with-Meta-Lifelong-Learning/">http://example.com/2021/10/02/MeLL-Large-scale-Extensible-User-Intent-Classification-for-Dialogue-Systems-with-Meta-Lifelong-Learning/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">Coding-Zuo</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/context-detection/">context detection</a></div><div class="post_share"><div class="addthis_inline_share_toolbox"></div><script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=null" async="async"></script></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#MeLL-Large-scale-Extensible-User-Intent-Classification-for-Dialogue-Systems-with-Meta-Lifelong-Learning"><span class="toc-number">1.</span> <span class="toc-text">MeLL: Large-scale Extensible User Intent Classification for Dialogue Systems with Meta Lifelong Learning</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#INTRODUCTION"><span class="toc-number">1.1.</span> <span class="toc-text">INTRODUCTION</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#task-wise-UIC-models-%E7%9A%84%E7%BC%BA%E9%99%B7"><span class="toc-number">1.1.1.</span> <span class="toc-text">task-wise UIC models 的缺陷</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Liflong-learning-amp-Meta-learning"><span class="toc-number">1.1.2.</span> <span class="toc-text">Liflong learning &amp; Meta learning</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MeLL"><span class="toc-number">1.1.3.</span> <span class="toc-text">MeLL</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RELATED-WORK"><span class="toc-number">1.2.</span> <span class="toc-text">RELATED WORK</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#User-Intent-Classification"><span class="toc-number">1.2.1.</span> <span class="toc-text">User Intent Classification</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Lifelong-Learning"><span class="toc-number">1.2.2.</span> <span class="toc-text">Lifelong Learning</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Meta-learning"><span class="toc-number">1.2.3.</span> <span class="toc-text">Meta-learning</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pre-trained-Language-Models"><span class="toc-number">1.2.4.</span> <span class="toc-text">Pre-trained Language Models.</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Method"><span class="toc-number">1.3.</span> <span class="toc-text">Method</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By Coding-Zuo</div><div class="footer_custom_text">Hi, welcome to my BLOG</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    loader: {
+      source: {
+        '[tex]/amsCd': '[tex]/amscd'
+      }
+    },
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        addClass: [200,() => {
+          document.querySelectorAll('mjx-container:not([display=\'true\']').forEach( node => {
+            const target = node.parentNode
+            if (!target.classList.contains('has-jax')) {
+              target.classList.add('mathjax-overflow')
+            }
+          })
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>if (document.getElementsByClassName('mermaid').length) {
+  if (window.mermaidJsLoad) mermaid.init()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(() => {
+      window.mermaidJsLoad = true
+      mermaid.initialize({
+        theme: 'default',
+      })
+      false && mermaid.init()
+    })
+  }
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'd652112bf81876e00118',
+      clientSecret: 'a5abed418c7cc2736af5b4d0cbd7ff97d460a5b3',
+      repo: 'Coding-Zuo.github.io',
+      owner: 'Coding-Zuo',
+      admin: ['Coding-Zuo'],
+      id: '05ca81cb881ad3a604effbc646317342',
+      language: 'zh-CN',
+      perPage: 10,
+      distractionFreeMode: false,
+      pagerDirection: 'last',
+      createIssueManually: false,
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script src="/js/custom.js"></script><script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script src="//code.tidio.co/mak6nokafytw9mgrsuzglwzfxiy3fpdl.js" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
