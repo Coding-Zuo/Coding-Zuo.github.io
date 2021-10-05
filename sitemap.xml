@@ -2,6 +2,34 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://example.com/2021/10/05/Optimizing-Reusable-Knowledge-for-Continual-Learning-via-Metalearning/</loc>
+    
+    <lastmod>2021-10-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/2021/09/28/EFFICIENT-LIFELONG-LEARNING-WITH-A-GEM/</loc>
+    
+    <lastmod>2021-10-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/2021/10/04/39-40-46-47-77-78-90-60-93%E6%8E%92%E5%88%97%E3%80%81%E7%BB%84%E5%90%88%E3%80%81%E5%AD%90%E9%9B%86%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/</loc>
+    
+    <lastmod>2021-10-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/2021/10/02/MeLL-Large-scale-Extensible-User-Intent-Classification-for-Dialogue-Systems-with-Meta-Lifelong-Learning/</loc>
+    
+    <lastmod>2021-10-04</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://example.com/2021/10/01/%E7%AC%AC%E4%BA%94%E5%B1%8A%E8%BE%BE%E8%A7%82%E6%9D%AF%E2%80%94%E2%80%94%E9%A3%8E%E9%99%A9%E4%BA%8B%E4%BB%B6%E6%A0%87%E7%AD%BE%E8%AF%86%E5%88%AB%E6%AF%94%E8%B5%9B%E5%A4%8D%E7%9B%98/</loc>
     
     <lastmod>2021-10-03</lastmod>
@@ -9,23 +37,9 @@
   </url>
   
   <url>
-    <loc>http://example.com/2021/10/02/MeLL-Large-scale-Extensible-User-Intent-Classification-for-Dialogue-Systems-with-Meta-Lifelong-Learning/</loc>
-    
-    <lastmod>2021-10-02</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://example.com/2021/09/30/22-%E6%8B%AC%E5%8F%B7%E7%94%9F%E6%88%90-%E5%9B%9E%E6%BA%AF-%E6%B7%B1%E6%90%9C/</loc>
     
     <lastmod>2021-10-02</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://example.com/2021/09/28/EFFICIENT-LIFELONG-LEARNING-WITH-A-GEM/</loc>
-    
-    <lastmod>2021-09-28</lastmod>
     
   </url>
   
@@ -711,7 +725,7 @@
 
   <url>
     <loc>http://example.com/</loc>
-    <lastmod>2021-10-03</lastmod>
+    <lastmod>2021-10-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -719,112 +733,112 @@
   
   <url>
     <loc>http://example.com/tags/LeetCode/</loc>
-    <lastmod>2021-10-03</lastmod>
+    <lastmod>2021-10-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://example.com/tags/DP/</loc>
-    <lastmod>2021-10-03</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://example.com/tags/GNN-cv/</loc>
-    <lastmod>2021-10-03</lastmod>
+    <lastmod>2021-10-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://example.com/tags/DataGame/</loc>
-    <lastmod>2021-10-03</lastmod>
+    <lastmod>2021-10-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/tags/GNN-cv/</loc>
+    <lastmod>2021-10-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://example.com/tags/GNN-nlp/</loc>
-    <lastmod>2021-10-03</lastmod>
+    <lastmod>2021-10-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://example.com/tags/ML-DL/</loc>
-    <lastmod>2021-10-03</lastmod>
+    <lastmod>2021-10-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://example.com/tags/nlp/</loc>
-    <lastmod>2021-10-03</lastmod>
+    <lastmod>2021-10-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://example.com/tags/%E9%85%8D%E7%BD%AE%E8%AE%B0%E5%BD%95/</loc>
-    <lastmod>2021-10-03</lastmod>
+    <lastmod>2021-10-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://example.com/tags/Docker/</loc>
-    <lastmod>2021-10-03</lastmod>
+    <lastmod>2021-10-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://example.com/tags/context-detection/</loc>
-    <lastmod>2021-10-03</lastmod>
+    <lastmod>2021-10-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://example.com/tags/GNN/</loc>
-    <lastmod>2021-10-03</lastmod>
+    <lastmod>2021-10-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://example.com/tags/%E5%88%B7%E9%A2%98/</loc>
-    <lastmod>2021-10-03</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://example.com/tags/NLP/</loc>
-    <lastmod>2021-10-03</lastmod>
+    <lastmod>2021-10-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://example.com/tags/pytorch/</loc>
-    <lastmod>2021-10-03</lastmod>
+    <lastmod>2021-10-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/tags/NLP/</loc>
+    <lastmod>2021-10-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://example.com/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</loc>
-    <lastmod>2021-10-03</lastmod>
+    <lastmod>2021-10-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://example.com/tags/Convex-optimization/</loc>
-    <lastmod>2021-10-03</lastmod>
+    <lastmod>2021-10-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
