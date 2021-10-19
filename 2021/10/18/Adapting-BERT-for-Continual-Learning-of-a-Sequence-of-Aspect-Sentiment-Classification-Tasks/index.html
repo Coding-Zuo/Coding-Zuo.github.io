@@ -1,0 +1,367 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Adapting BERT for Continual Learning of a Sequence of Aspect Sentiment Classification Tasks | Coding-Zuo</title><meta name="keywords" content="context detection"><meta name="author" content="Coding-Zuo"><meta name="copyright" content="Coding-Zuo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="Adapting BERT for Continual Learning of a Sequence of Aspect Sentiment Classification Tasks增量学习ASC任务序列的CL系统应解决以下两个问题：  将从以前的任务中学到的知识转移到新的任务中，帮助它学习更好的模型 维护以前任务的模型性能，以便不会忘记它们  针对这些问题，本文提出了一种新的基于胶囊网络的模型B">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Adapting BERT for Continual Learning of a Sequence of Aspect Sentiment Classification Tasks">
+<meta property="og:url" content="http://example.com/2021/10/18/Adapting-BERT-for-Continual-Learning-of-a-Sequence-of-Aspect-Sentiment-Classification-Tasks/index.html">
+<meta property="og:site_name" content="Coding-Zuo">
+<meta property="og:description" content="Adapting BERT for Continual Learning of a Sequence of Aspect Sentiment Classification Tasks增量学习ASC任务序列的CL系统应解决以下两个问题：  将从以前的任务中学到的知识转移到新的任务中，帮助它学习更好的模型 维护以前任务的模型性能，以便不会忘记它们  针对这些问题，本文提出了一种新的基于胶囊网络的模型B">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2021/10/18/Z5kr7snwvpqg1tG.png">
+<meta property="article:published_time" content="2021-10-18T04:12:49.000Z">
+<meta property="article:modified_time" content="2021-10-18T10:34:35.329Z">
+<meta property="article:author" content="Coding-Zuo">
+<meta property="article:tag" content="context detection">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/10/18/Z5kr7snwvpqg1tG.png"><link rel="shortcut icon" href="https://i.loli.net/2021/03/22/reFlcYOnP3dSuJX.png"><link rel="canonical" href="http://example.com/2021/10/18/Adapting-BERT-for-Continual-Learning-of-a-Sequence-of-Aspect-Sentiment-Classification-Tasks/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.json","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-10-18 18:34:35'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    })(window)</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sviptzk/HexoStaticFile@latest/Hexo/css/footer.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css"><meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="Coding-Zuo" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://i.loli.net/2021/03/22/YP2oqk7lOAfceTD.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">105</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">16</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://i.loli.net/2021/10/18/Z5kr7snwvpqg1tG.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Coding-Zuo</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Adapting BERT for Continual Learning of a Sequence of Aspect Sentiment Classification Tasks</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-10-18T04:12:49.000Z" title="发表于 2021-10-18 12:12:49">2021-10-18</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-10-18T10:34:35.329Z" title="更新于 2021-10-18 18:34:35">2021-10-18</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Adapting BERT for Continual Learning of a Sequence of Aspect Sentiment Classification Tasks"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Adapting-BERT-for-Continual-Learning-of-a-Sequence-of-Aspect-Sentiment-Classification-Tasks"><a href="#Adapting-BERT-for-Continual-Learning-of-a-Sequence-of-Aspect-Sentiment-Classification-Tasks" class="headerlink" title="Adapting BERT for Continual Learning of a Sequence of Aspect Sentiment Classification Tasks"></a>Adapting BERT for Continual Learning of a Sequence of Aspect Sentiment Classification Tasks</h1><p>增量学习ASC任务序列的CL系统应解决以下两个问题：</p>
+<ul>
+<li>将从以前的任务中学到的知识转移到新的任务中，帮助它学习更好的模型</li>
+<li>维护以前任务的模型性能，以便不会忘记它们</li>
+</ul>
+<p>针对这些问题，本文提出了一种新的基于胶囊网络的模型B-CL  (<em>BERT-based Continual Learning</em>) ，受《Parameter-efficient transfer learning for NLP》的Adapter Bert启发。</p>
+<p>B-CL通过前向和后向知识转移显著提高了ASC在新任务和旧任务上的效果。</p>
+<p>ASC任务定义如下：给定一个方面(例如，相机评论中的图像质量)和在特定领域(例如，相机)中包含该方面的意义，分类句子对该方面表示正面、负面还是中性(无意见)。</p>
+<p>利用胶囊和动态路由 来识别与新任务相似的先前任务，并利用它们的共享知识来帮助新任务学习，并使用任务掩码来保护任务特定的知识，以避免遗忘(CF)。</p>
+<h2 id="Adapter-BERT"><a href="#Adapter-BERT" class="headerlink" title="Adapter-BERT"></a>Adapter-BERT</h2><p>一个 adapter 是具有残差连接的2层全连接网络。只有adapter(黄框)和layer norm(绿色框)层是可训练的。其他模块(灰色框)被冻结。提出的的B-CL，用CLA代替适配器。CLA有两个子模块：知识共享模块(KSM)和任务特定模块(TSM)</p>
+<p><img src="https://i.loli.net/2021/10/18/7tVlqd2pLezUja4.png" alt=""></p>
+<p>在结束任务的训练期间，只训练适配器和规格化层，不改变任何其他BERT参数，这对CL是好的，因为微调BERT本身会导致严重的遗忘。</p>
+<h2 id="Capsule-Network"><a href="#Capsule-Network" class="headerlink" title="Capsule Network"></a>Capsule Network</h2><p>与CNN不同的是，CapsNet用矢量胶囊取代了标量特征检测器，可以保留图像中的位置和厚度等额外信息。典型的CapsNet有两层胶囊层。</p>
+<p>初级图层存储低级特征映射，类别层生成分类概率，每个胶囊对应一个类。它使用动态路由算法使每个较低级别的封装能够将其输出发送到类似的(或“agreed”，由点积计算的)较高级别封装。这是用来识别和分组相似任务及其共享功能或知识的关键属性。</p>
+<p>值得注意的是，所提出的B-CL不采用整个胶囊网络，因为只对胶囊层和动态路由感兴趣，而对最大边际损失和分类器不感兴趣。</p>
+<h2 id="Continual-Learning-Adapter-CLA"><a href="#Continual-Learning-Adapter-CLA" class="headerlink" title="Continual Learning Adapter (CLA)"></a>Continual Learning Adapter (CLA)</h2><p>B-CL的目标是：</p>
+<ul>
+<li><p>通过知识共享实现相关旧任务与新任务之间的知识转移；</p>
+</li>
+<li><p>通过防止新任务学习覆盖先前任务的特定任务知识来获得回避。</p>
+</li>
+</ul>
+<p>CLA的体系结构如图所示</p>
+<ul>
+<li>知识共享模块(KSM)，用于从相似的先前任务和新任务中识别和利用可共享的知识</li>
+<li>任务特定模块(TSM)，用于学习任务特定神经元并保护它们不被新任务更新。</li>
+</ul>
+<p><img src="https://z3.ax1x.com/2021/10/18/5UAeUS.png" alt=""></p>
+<p>CLA接受两个input：</p>
+<ul>
+<li>来自transformer层内部前馈层的隐藏状态 $h^{(t)}$</li>
+<li>task ID $t$</li>
+</ul>
+<p>output是隐藏状态，具有适合第t个任务的特征。</p>
+<p>KSM 利用胶囊层（见下文）和动态路由对相似的任务和可共享的知识进行分组，</p>
+<p>而 TSM 利用任务掩码 (TM) 来保护特定任务的神经元并让其他神经元自由。 这些自由的神经元稍后被TSM用于一项新的任务。由于TM是可微的，所以整个系统B-CL可以被端到端地训练。下面将详细介绍每个模块。</p>
+<h3 id="Knowledge-Sharing-Module-KSM"><a href="#Knowledge-Sharing-Module-KSM" class="headerlink" title="Knowledge Sharing Module (KSM)"></a>Knowledge Sharing Module (KSM)</h3><p>KSM 将相似的任务和共享的知识（特征）分组到它们之间，以实现相似任务之间的知识转移。 这是通过两个胶囊层（任务胶囊层和知识共享胶囊层）和胶囊网络的动态路由算法实现的。</p>
+<h4 id="Task-Capsule-Layer-TCL"><a href="#Task-Capsule-Layer-TCL" class="headerlink" title="Task Capsule Layer (TCL)"></a>Task Capsule Layer (TCL)</h4><p>TCL中的每个胶囊代表一个任务，TCL准备从每个任务派生低级特征。因此，对于每个新任务，TCL都会添加一个胶囊。</p>
+<p>这种增量生长是有效且容易的，因为这些胶囊是离散的并且不共享参数。而且，每个胶囊只是一个具有少量参数的2层完全连接的网络。</p>
+<p>$h^{(t)} \in R^{d_t\times d_e}$ 为CLA的输入，$d_t$ 是tokens数量，$d_e$是维度。</p>
+<p>令到目前为止学习的任务集为 $T<em>{prev}$（在学习新任务 t 之前）和 $|T</em>{prev}|= n$</p>
+<p>在 TCL 中，我们有 n+1 个不同的胶囊代表所有过去的 n 个学习任务以及新任务 t。</p>
+<p>第 $i(i≤n+1)$ 个任务的封装为:</p>
+<script type="math/tex; mode=display">
+p_i^{(t)} = f_i (h^{(t)})</script><p>其中 $f_i(\cdot) = MLP_i(\cdot)$ 代表为2层全连接层。</p>
+<h4 id="Knowledge-Sharing-Capsule-Layer-KCL"><a href="#Knowledge-Sharing-Capsule-Layer-KCL" class="headerlink" title="Knowledge Sharing Capsule Layer (KCL)"></a>Knowledge Sharing Capsule Layer (KCL)</h4><p>KCL 中的每个知识共享胶囊都捕获那些具有相似特征或共享知识的任务（即它们的任务胶囊 ${p_i^{(t)}}_1^{n+1}$ ）。</p>
+<p>这是通过动态路由算法自动实现的。 召回动态路由鼓励每个较低级别的胶囊（在案例中为任务胶囊）将其输出发送到类似（或“agreed”）的更高级别的胶囊（在我们的案例中为知识共享胶囊）。</p>
+<p>本质上，相似的任务胶囊（具有许多共享特征）通过较高的系数（决定任务胶囊可以进入下一层的程度）“聚集”在一起，而不同的任务（具有很少的共享特征）则通过低系数。</p>
+<p>这种聚类识别来自多个任务封装的共享特征或知识，并且有助于在相似任务之间向后转移。</p>
+<p>KCL首先将每个任务胶囊 $p<em>i^{(t)}$ 变成临时特征 $u</em>{j|i}^{(t)}$：</p>
+<script type="math/tex; mode=display">
+u_{j|i}^{(t)} = W_{ij} p_i^{(t)}</script><p>临时特征与权重 $c^{(t)}_{ij}$ 相加以获得知识共享胶囊 $s^{(t)}_j$ 中的初始值：</p>
+<script type="math/tex; mode=display">
+s_j^{(t)} = \sum_i c_{ij}^{(t)} u_{j|i}^{(t)}</script><p>其中 $c<em>{ij}^{(t)}$ 是耦合系数加和为1。请注意，方程 1 中每个任务的任务胶囊映射到方程 3 中的知识共享胶囊，$c</em>{ij}^{(t)}$ 表示第 i 个任务的表示对第 j 个知识共享胶囊的信息量。</p>
+<p>因此，知识共享胶囊可以表示不同的可共享知识。这确保仅使用与新任务显着或相似的任务胶囊，而忽略（并因此保护）其他任务胶囊以学习更一般的可共享知识。</p>
+<p>在反向传播时，用较小梯度更新具有低 $c^{(t)}<em>{ij }$ 的相异任务，然而相似的任务有较高的$c^{(t)}</em>{ij }$被更新较大的梯度。这鼓励在类似任务之间向后转移。</p>
+<p>Dynamic Routing</p>
+<p>$c_{ij}^{(t )}$ 是由“Routing Softmax”计算的：</p>
+<script type="math/tex; mode=display">
+c_{ij}^{(t)} = \frac{exp(b_{ij}^{(t)})}{ \sum_o exp(b_{io}^{(t)})}</script><p>其中每个 $b_{ij}$ 是对数先验概率，显示任务胶囊 $i$ 与知识共享胶囊 $j$ 的显著性或相似性。</p>
+<p>它被初始化为0，表示它们之间在开始时没有显著联系。应用动态路由算法来更新 $b_{ij}$：</p>
+<script type="math/tex; mode=display">
+b_{ij}^{(t)} \leftarrow b_{ij}^{(t)} + a_{ij}^{(t)}</script><p>其中 $a<em>{ij}$ 是协议系数，直观上，这一步倾向于聚合知识共享胶囊上的相似（或“agreed”）任务，具有更高的一致性系数 $a</em>{ij}^{(t)}$，因此具有更高的 logit $b^{(t)}<em>{ij}$ 或耦合系数 $c</em>{ij}^{(t )}$ 。协议系数的计算公式为 :</p>
+<script type="math/tex; mode=display">
+a_{ij}^{(t)} = u_{j|i} ^{(t)} \cdot v_{j}^{(t)}</script><p>其中 $v_{j}^{(t)}$ 是规范化的表示形式，通过非线性 squash</p>
+<script type="math/tex; mode=display">
+v_{j}^{(t)} = \frac{ ||s_j^{(t)}||^2 }{1+||s^{(t)}_j||} \frac{s_j^{(t)}}{||s_j^{(t)}||}</script><p>对于第一个任务 $s<em>j^{(t)} =  u</em>{j|i}^{(t)} $ , 其中 $v^{(t)}_{j}$ 归一化为[0，1]到表示知识共享胶囊 j 的激活概率。</p>
+<h3 id="Task-Specific-Module-TSM"><a href="#Task-Specific-Module-TSM" class="headerlink" title="Task Specific Module (TSM)"></a>Task Specific Module (TSM)</h3><p>虽然知识共享对ASC很重要，但为以前的任务保存特定于任务的知识以防止遗忘(CF)也同样重要。</p>
+<p>为此，使用任务掩码。具体地说，首先检测每个旧任务使用的神经元，然后在学习新任务时关闭或屏蔽所有使用过的神经元。</p>
+<p><img src="https://z3.ax1x.com/2021/10/18/5UY0HO.png" alt=""></p>
+<p>每项任务的两行对应于TSM中的 $k^{(t)}_0$ 和 $k^{(t)}_1$。在训练前的细胞中，0的细胞是需要保护(掩蔽)的神经元，那些没有编号的细胞是游离的神经元(未使用)。</p>
+<p>在学习第一个任务（任务 0）后，获得了用橙色标记的有用神经元，每个神经元中都标有 1，作为学习未来任务的掩码。 在学习任务 1 中，那些对任务 0 有用的神经元被屏蔽（左侧的橙色神经元或细胞中的 0 为 0）。 该过程还学习了任务 1 的有用神经元，用 1 标记为绿色。 当任务 2 到达时，任务 0 和 1 的所有重要神经元都被屏蔽，即其掩码条目设置为 0（训练前的橙色和绿色）。 在训练任务 2 之后，我们看到任务 2 和任务 1 有一个对它们都很重要的共享神经元。 共享神经元以红色和绿色标记。</p>
+<p>在训练后的细胞中，那些带有1的细胞显示了对当前任务重要的神经元，这些神经元被用作未来的mask。具有一种以上颜色的单元格表示它们由多个任务共享。这0个没有颜色的单元格不会被任何任务使用。</p>
+<h3 id="Task-Masks"><a href="#Task-Masks" class="headerlink" title="Task Masks"></a>Task Masks</h3><p>给定知识共享胶囊 $s^{(t)}_j$，TSM 通过全连接的网络将它们映射到输入 $k_l^{(t)} $，其中 $l$ 是 TSM 中的第 $l$ 层。</p>
+<p>在训练任务的分类器期间，为TSM中每个层 $l$ 的每个任务 $t$ 训练任务掩码（“软”二元掩码）$m_l^{(t)}$，指示该层中对任务重要的神经元。</p>
+<p>在这里借用了hard attention想法，并利用任务ID embedding来训练任务掩码。</p>
+<p>对于task ID t，其嵌入 $e^{(t)}_l$ 由网络的其他部分一起学习的可微确定性参数组成。</p>
+<script type="math/tex; mode=display">
+m_l^{(t)} = \sigma(se_l^{(t)})</script><p>给定 TSM 中每一层的输出 $k^{(t)}_l$，按元素相乘 $k^{(t)}_l ⊗ m_l^{(t)}$ 。最后一层 $k^{(t)}$ 的屏蔽输出通过跳跃连接馈送到下一层BERT。</p>
+<p>在学习任务 $t$ 之后，保存最终 $m^{(t)}_l$ 并将其添加到集合 ${m^{(t)}_l}$。</p>
+<h3 id="Training"><a href="#Training" class="headerlink" title="Training"></a>Training</h3><p>对于每个过去的任务 $i<em>{prev} \in T</em>{prev}$，其掩码 $m^{(i<em>{prev})}_l$ 指示该任务使用的需要保护的神经元。在学习任务 t 中，$m_l^{(i</em>{prev})}$ 用于将 TSM 中第 $l$ 层所有使用的神经元上的梯度 $g_l^{(t)}$ 设置为 0。</p>
+<p>在修改梯度之前，我们首先通过所有先前任务的掩码，累积所有使用的神经元。 由于 $m_l^{(iprev)}$ 是二进制的，我们使用最大池化来实现累计：</p>
+<script type="math/tex; mode=display">
+m_l^{(t_{ac})} = MaxPool(\{m_l^{i_{prev}}\})</script><p>$m<em>l^{(t</em>{ac})}$ 被应用于梯度：</p>
+<script type="math/tex; mode=display">
+g_l^{(t)} = g_l^{(t)} \otimes (1- m_l^{(t_{ac})})</script><p>对应于 $m^{(t<em>{ac})}_l$ 中的 1 个条目的那些梯度设置为 0，而其他保持不变。 通过这种方式，旧任务中的神经元受到保护。 请注意，我们扩展（复制）向量  $m^{(t</em>{ac})}_l$  以匹配 $g^{(t)}_l$ 的维度。</p>
+<p>虽然这个想法是直观的，但 $e^{(t)}<em>l $ 并不容易训练。为了使 $e^{(t)}_l $  的学习更容易和更稳定，应用了退火策略。也就是说，s 在训练期间退火，引入梯度流，并在测试期间设置 $s=s</em>{max}$。</p>
+<p>往上三个等式 将单位阶跃函数近似为掩码，当 s → ∞ 时，$m^{(t)}_l \to {0,1}$。一个训练 epoch 开始时，所有神经元都是同等活跃的，在这个 epoch 内逐渐极化。</p>
+<p>具体地说，s 按如下方式退火：</p>
+<script type="math/tex; mode=display">
+s = \frac{1}{s_{max}} + (s_{max} - \frac{1}{s_{max}}) \frac{b-1}{B-1}</script><p>其中 b 是批次索引，B 是epoch中的批次总数。</p>
+<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><h3 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h3><p><img src="https://z3.ax1x.com/2021/10/18/5UOc7R.png" alt=""></p>
+</article><div class="post-reward"><div class="reward-button button--animated"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2021/10/10/%E5%8F%AA%E7%94%A8%E4%B8%80%E8%A1%8C%E4%BB%A3%E7%A0%81%E5%8F%AF%E4%BB%A5%E6%8F%90%E9%AB%98%E6%A8%A1%E5%9E%8B%E8%A1%A8%E7%8E%B0%E5%90%97%EF%BC%9F/"><img class="next-cover" src="https://i.loli.net/2021/10/09/R2nB4zPNqEgHo5m.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">只用一行代码可以提高模型表现吗？</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/10/09/Meta-Learning-Representations-for-Continual-Learning/" title="Meta-Learning Representations for Continual Learning"><img class="cover" src="https://i.loli.net/2021/10/09/r3nAOuS9TZw2U1m.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-10-09</div><div class="title">Meta-Learning Representations for Continual Learning</div></div></a></div><div><a href="/2021/10/09/Continual-Lifelong-Learning-in-Natural-Language-Processing-A-Survey/" title="Continual Lifelong Learning in Natural Language Processing: A Survey"><img class="cover" src="https://i.loli.net/2021/10/09/Ip9vHTfS5d8N2Qr.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-10-09</div><div class="title">Continual Lifelong Learning in Natural Language Processing: A Survey</div></div></a></div><div><a href="/2021/10/05/Optimizing-Reusable-Knowledge-for-Continual-Learning-via-Metalearning/" title="Optimizing Reusable Knowledge for Continual Learning via Metalearning"><img class="cover" src="https://z3.ax1x.com/2021/10/05/4jMmZV.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-10-05</div><div class="title">Optimizing Reusable Knowledge for Continual Learning via Metalearning</div></div></a></div><div><a href="/2021/10/02/MeLL-Large-scale-Extensible-User-Intent-Classification-for-Dialogue-Systems-with-Meta-Lifelong-Learning/" title="Large-scale Extensible User Intent Classification for Dialogue Systems with Meta Lifelong Learning"><img class="cover" src="https://i.loli.net/2021/10/02/JhPKZISwTXdqLs5.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-10-02</div><div class="title">Large-scale Extensible User Intent Classification for Dialogue Systems with Meta Lifelong Learning</div></div></a></div><div><a href="/2021/09/28/EFFICIENT-LIFELONG-LEARNING-WITH-A-GEM/" title="Efficient lifelong learning with A-GEM"><img class="cover" src="https://i.loli.net/2021/09/28/t2CEqygu5zRaTfI.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-09-28</div><div class="title">Efficient lifelong learning with A-GEM</div></div></a></div><div><a href="/2021/09/24/Gradient-Episodic-Memory-for-Continual-Learning/" title="Gradient Episodic Memory for Continual Learning"><img class="cover" src="https://i.loli.net/2021/09/24/s51bILXUHNDYt6j.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-09-24</div><div class="title">Gradient Episodic Memory for Continual Learning</div></div></a></div></div></div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Coding-Zuo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2021/10/18/Adapting-BERT-for-Continual-Learning-of-a-Sequence-of-Aspect-Sentiment-Classification-Tasks/">http://example.com/2021/10/18/Adapting-BERT-for-Continual-Learning-of-a-Sequence-of-Aspect-Sentiment-Classification-Tasks/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">Coding-Zuo</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/context-detection/">context detection</a></div><div class="post_share"><div class="addthis_inline_share_toolbox"></div><script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=null" async="async"></script></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Adapting-BERT-for-Continual-Learning-of-a-Sequence-of-Aspect-Sentiment-Classification-Tasks"><span class="toc-number">1.</span> <span class="toc-text">Adapting BERT for Continual Learning of a Sequence of Aspect Sentiment Classification Tasks</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Adapter-BERT"><span class="toc-number">1.1.</span> <span class="toc-text">Adapter-BERT</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Capsule-Network"><span class="toc-number">1.2.</span> <span class="toc-text">Capsule Network</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Continual-Learning-Adapter-CLA"><span class="toc-number">1.3.</span> <span class="toc-text">Continual Learning Adapter (CLA)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Knowledge-Sharing-Module-KSM"><span class="toc-number">1.3.1.</span> <span class="toc-text">Knowledge Sharing Module (KSM)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Task-Capsule-Layer-TCL"><span class="toc-number">1.3.1.1.</span> <span class="toc-text">Task Capsule Layer (TCL)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Knowledge-Sharing-Capsule-Layer-KCL"><span class="toc-number">1.3.1.2.</span> <span class="toc-text">Knowledge Sharing Capsule Layer (KCL)</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Task-Specific-Module-TSM"><span class="toc-number">1.3.2.</span> <span class="toc-text">Task Specific Module (TSM)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Task-Masks"><span class="toc-number">1.3.3.</span> <span class="toc-text">Task Masks</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Training"><span class="toc-number">1.3.4.</span> <span class="toc-text">Training</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C"><span class="toc-number">1.4.</span> <span class="toc-text">实验</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-number">1.4.1.</span> <span class="toc-text">数据集</span></a></li></ol></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By Coding-Zuo</div><div class="footer_custom_text">Hi, welcome to my BLOG</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    loader: {
+      source: {
+        '[tex]/amsCd': '[tex]/amscd'
+      }
+    },
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        addClass: [200,() => {
+          document.querySelectorAll('mjx-container:not([display=\'true\']').forEach( node => {
+            const target = node.parentNode
+            if (!target.classList.contains('has-jax')) {
+              target.classList.add('mathjax-overflow')
+            }
+          })
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>if (document.getElementsByClassName('mermaid').length) {
+  if (window.mermaidJsLoad) mermaid.init()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(() => {
+      window.mermaidJsLoad = true
+      mermaid.initialize({
+        theme: 'default',
+      })
+      false && mermaid.init()
+    })
+  }
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'd652112bf81876e00118',
+      clientSecret: 'a5abed418c7cc2736af5b4d0cbd7ff97d460a5b3',
+      repo: 'Coding-Zuo.github.io',
+      owner: 'Coding-Zuo',
+      admin: ['Coding-Zuo'],
+      id: '64fd15d3ebbc619ab30bc5b1ba896752',
+      language: 'zh-CN',
+      perPage: 10,
+      distractionFreeMode: false,
+      pagerDirection: 'last',
+      createIssueManually: false,
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script src="/js/custom.js"></script><script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script src="//code.tidio.co/mak6nokafytw9mgrsuzglwzfxiy3fpdl.js" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
