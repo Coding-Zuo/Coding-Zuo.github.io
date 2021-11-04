@@ -1,0 +1,419 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>谣言、虚假信息综述 | Coding-Zuo</title><meta name="keywords" content="context detection"><meta name="author" content="Coding-Zuo"><meta name="copyright" content="Coding-Zuo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="谣言、虚假信息综述 A Survey on Natural Language Processing for Fake News DetectionAbstract虚假新闻检测是自然语言处理（NLP）中的一个关键但具有挑战性的问题。社交网络平台的迅速崛起不仅带来了信息可及性的大幅提高，而且也加速了假新闻的传播。因此，假新闻的影响越来越大，有时甚至延伸到线下世界，威胁到公共安全。鉴于海量的网络内容，自">
+<meta property="og:type" content="article">
+<meta property="og:title" content="谣言、虚假信息综述">
+<meta property="og:url" content="http://example.com/2021/11/03/A-Survey-on-Natural-Language-Processing-for-Fake-News-Detection/index.html">
+<meta property="og:site_name" content="Coding-Zuo">
+<meta property="og:description" content="谣言、虚假信息综述 A Survey on Natural Language Processing for Fake News DetectionAbstract虚假新闻检测是自然语言处理（NLP）中的一个关键但具有挑战性的问题。社交网络平台的迅速崛起不仅带来了信息可及性的大幅提高，而且也加速了假新闻的传播。因此，假新闻的影响越来越大，有时甚至延伸到线下世界，威胁到公共安全。鉴于海量的网络内容，自">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2021/11/03/TydEsXVebj85QWm.png">
+<meta property="article:published_time" content="2021-11-03T09:48:08.000Z">
+<meta property="article:modified_time" content="2021-11-03T16:39:56.043Z">
+<meta property="article:author" content="Coding-Zuo">
+<meta property="article:tag" content="context detection">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/11/03/TydEsXVebj85QWm.png"><link rel="shortcut icon" href="https://i.loli.net/2021/03/22/reFlcYOnP3dSuJX.png"><link rel="canonical" href="http://example.com/2021/11/03/A-Survey-on-Natural-Language-Processing-for-Fake-News-Detection/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.json","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-11-04 00:39:56'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    })(window)</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sviptzk/HexoStaticFile@latest/Hexo/css/footer.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css"><meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="Coding-Zuo" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://i.loli.net/2021/03/22/YP2oqk7lOAfceTD.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">110</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">16</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://i.loli.net/2021/11/03/TydEsXVebj85QWm.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Coding-Zuo</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">谣言、虚假信息综述</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-11-03T09:48:08.000Z" title="发表于 2021-11-03 17:48:08">2021-11-03</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-11-03T16:39:56.043Z" title="更新于 2021-11-04 00:39:56">2021-11-04</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="谣言、虚假信息综述"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="谣言、虚假信息综述"><a href="#谣言、虚假信息综述" class="headerlink" title="谣言、虚假信息综述"></a>谣言、虚假信息综述</h1><hr>
+<h1 id="A-Survey-on-Natural-Language-Processing-for-Fake-News-Detection"><a href="#A-Survey-on-Natural-Language-Processing-for-Fake-News-Detection" class="headerlink" title="A Survey on Natural Language Processing for Fake News Detection"></a>A Survey on Natural Language Processing for Fake News Detection</h1><h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><p>虚假新闻检测是自然语言处理（NLP）中的一个关键但具有挑战性的问题。<strong>社交网络平台的迅速崛起不仅带来了信息可及性的大幅提高，而且也加速了假新闻的传播。因此，假新闻的影响越来越大，有时甚至延伸到线下世界，威胁到公共安全。鉴于海量的网络内容，自动检测假新闻是一个实用的NLP问题，对所有在线内容提供商都有用，以减少人类检测和防止假新闻传播的时间和精力。</strong>在本文中，我们描述了假新闻检测所涉及的挑战，也描述了相关任务。我们系统地回顾和比较了为该任务开发的任务描述、数据集和NLP解决方案，还讨论了它们的潜力和局限性。基于我们的见解，我们概述了有希望的研究方向，包括更精细、详细、公平和实用的检测模型。我们还强调了假新闻检测和其他相关任务之间的区别，以及NLP解决方案对假新闻检测的重要性。</p>
+<h2 id="1-Introduction"><a href="#1-Introduction" class="headerlink" title="1 Introduction"></a>1 Introduction</h2><p>自动假新闻检测是评估新闻中 claims（声明，主张） 的真实性的任务。这是一个新的但关键的NLP问题，因为传统的新闻媒体和社交媒体对社会中的每个人都有巨大的社会政治影响。例如，对假新闻的曝光会导致对某些政治候选人的无效、疏远和嘲讽（Balmas，2014）。假新闻甚至与威胁公共安全的真实世界的暴力事件有关（例如，比萨门（Kang和Goldman，2016））。检测假新闻是NLP可以帮助的一个重要的应用，因为它也对技术如何在教育公众的同时促进验证 claims 的真实性产生了更广泛的影响。</p>
+<p><strong>这项任务的传统解决方案是请专业人员，如记者，根据以前说过的或写过的事实，对照证据来检查 claims。然而，这样做既费时又费力。</strong>例如，PolitiFact 需要三位编辑来判断一条新闻的真伪。随着互联网社区和信息传播速度的快速增长，互联网内容的自动假新闻检测已经引起了人工智能研究界的兴趣。<strong>自动假新闻检测的目标是减少人类检测假新闻的时间和精力，帮助我们停止传播假新闻。随着计算机科学子领域的发展，如机器学习（ML）、数据挖掘（DM）和NLP，假新闻检测的任务已从不同角度得到研究。</strong></p>
+<p>在本文中，我们从NLP的角度调查了自动假新闻检测。概括地说，我们介绍了假新闻检测的技术挑战，以及研究人员如何定义不同的任务并制定ML解决方案来解决这个问题。我们讨论了每项任务的优点和缺点，以及潜在的陷阱和弊端。更具体地说，我们对假新闻检测的研究工作进行了概述，并对其任务定义、数据集、模型构建和性能进行了系统的比较。我们还讨论了这个方向上的未来研究的指导方针。本文还包括一些其他方面，如社会参与分析。我们的贡献有三个方面。</p>
+<ul>
+<li>对用于自动检测假新闻的自然语言处理解决方案进行了首次全面调查。</li>
+<li>系统地分析了假新闻检测如何与现有的NLP任务保持一致，并讨论了问题的不同公式的假设和值得注意的问题。</li>
+<li>对现有的数据集、NLP方法和结果进行了分类和总结，为对这个问题感兴趣的新研究人员提供了第一手的经验和易懂的介绍。</li>
+</ul>
+<h2 id="2-Related-Problems"><a href="#2-Related-Problems" class="headerlink" title="2 Related Problems"></a>2 Related Problems</h2><h3 id="2-1-Fact-Checking"><a href="#2-1-Fact-Checking" class="headerlink" title="2.1. Fact-Checking"></a>2.1. Fact-Checking</h3><p>事实核查的任务是评估政治家、专家学者等公众人物提出的主张的真实性。许多研究者并不区分假新闻检测和事实核查，因为它们都是为了评估 claims主张 的真实性。一般来说，<strong>假新闻检测通常专注于新闻事件，而事实核查则更广泛。</strong> Thorne和Vlachos（2018）对这一主题进行了全面的回顾。</p>
+<h3 id="2-2-Rumor-Detection"><a href="#2-2-Rumor-Detection" class="headerlink" title="2.2. Rumor Detection"></a>2.2. Rumor Detection</h3><p><strong>谣言检测并没有一个一致的定义</strong>。最近的一项调查（Zubiaga等人，2018）将谣言检测定义为将个人主张分为谣言和非谣言，其中谣言被<strong>定义为在发布时由未经核实的信息片段组成的声明</strong>。<strong>换句话说，谣言必须包含可以验证的信息，而不是主观的意见或感觉。</strong></p>
+<h3 id="2-3-Stance-Detection"><a href="#2-3-Stance-Detection" class="headerlink" title="2.3. Stance Detection"></a>2.3. Stance Detection</h3><p>立场检测是指从文本中评估作者在辩论中站在哪一边的任务。它与假新闻检测不同，因为它不是针对真实性，而是针对一致性。<strong>立场检测可以是假新闻检测的一个子任务，因为它可以应用于搜索文本的证据</strong>（Ferreira和Vlachos，2016）。PHEME，假新闻数据集之一，有与新闻相关的推文，捕捉到用户信任或不信任的行为。</p>
+<h3 id="2-4-Sentiment-Analysis"><a href="#2-4-Sentiment-Analysis" class="headerlink" title="2.4. Sentiment Analysis"></a>2.4. Sentiment Analysis</h3><p>情感分析是一项提取情感的工作，例如顾客对一家餐厅的好感或负面印象。与谣言检测和假新闻检测不同的是，情感分析不是为了对主张进行客观验证，而是为了分析个人情感。</p>
+<h2 id="3-Task-Formulations"><a href="#3-Task-Formulations" class="headerlink" title="3. Task Formulations"></a>3. Task Formulations</h2><p>在第2节中，我们比较了与假新闻检测有关的问题，以确定本调查的范围。在本调查中，<strong>假新闻检测的一般目标是识别假新闻，定义为看似新闻的虚假故事，包括在谣言检测中被判断为可以验证的信息的谣言。</strong>特别是，我们专注于文本内容的假新闻检测。输入可以是文本，从简短的声明到整个文章。输入与使用的数据集有关（见第4节），而且还可以附加附加信息，如发言人的身份。<br>有不同类型的标签或评分策略用于假新闻检测。在大多数研究中，假新闻检测被表述为一个分类或回归问题，但分类的使用更为频繁。</p>
+<h3 id="3-1-Classification"><a href="#3-1-Classification" class="headerlink" title="3.1. Classification"></a>3.1. Classification</h3><p>最常见的方法是将假新闻的检测制定为一个二元分类问题。<strong>然而，将所有的新闻分为两类（假的或真的）是很困难的，因为存在着新闻部分是真的和部分是假的情况。</strong>为了解决这个问题，增加额外的类别是常见的做法。主要是为既不完全真实也不完全虚假的新闻设置一个类别，或者设置两个以上的真实度作为附加类别。当使用这些数据集时，预期的输出是多类标签，而这些标签是作为独立的标签学习的，具有i.i.d的假设（Rashkin等人，2017；Wang，2017）。<br>假新闻分类器取得良好性能的条件之一是有足够的标签数据。然而，要获得可靠的标签需要大量的时间和人力。因此，人们提出了半/弱监督和无监督的方法（Rubin和Vashchilko，2012；Bhattacharjee等人，2017）。</p>
+<h3 id="3-2-Regression"><a href="#3-2-Regression" class="headerlink" title="3.2. Regression"></a>3.2. Regression</h3><p>虚假新闻检测也可以被表述为一项回归任务，其输出是真实性的数字分数。Nakashole和Mitchell（2014）采用了这种方法。通常情况下，评估是通过计算预测分数和地面真实分数之间的差异或使用Pearson/Spearman Correlations来完成。然而，由于可用的数据集有离散的地面真实分数，这里的挑战是如何将离散的标签转换成数字分数。</p>
+<h2 id="4-Datasets"><a href="#4-Datasets" class="headerlink" title="4. Datasets"></a>4. Datasets</h2><p>数据集地址集合：</p>
+<p> <a target="_blank" rel="noopener" href="https://www.sohu.com/a/377489976_787107">https://www.sohu.com/a/377489976_787107</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/264356019/answer/1327236489">https://www.zhihu.com/question/264356019/answer/1327236489</a></p>
+<p><img src="https://i.loli.net/2021/11/03/bJIfvLDMoyYBFsc.png" alt=""></p>
+<p>自动假新闻检测的一个重要挑战是数据集的可用性和质量。我们将公共假新闻数据集分为三类：</p>
+<ul>
+<li>claims :  是一个或几个句子，包括值得验证的信息（表2中有一个样本）</li>
+<li>整篇文章 : 是由许多相互关联的句子组成，构成信息的整体。</li>
+<li>社交网络服务（SNS）数据，在长度上与 claims 相似，但以账户和帖子的结构化数据为特征，包括大量的非文本数据。</li>
+</ul>
+<h3 id="4-1-Claims"><a href="#4-1-Claims" class="headerlink" title="4.1. Claims"></a>4.1. Claims</h3><p>POLITIFACT、CHANNEL4.COM、 SNOPES 是三个来源的新闻中的人工标注的短文，这些短文是人工收集和标注的。编辑们从各种场合，如辩论、竞选、Facebook、Twitter、采访、广告等，精心挑选了这些说法。许多数据集是基于这些网站创建的。</p>
+<p>Vlachos和Riedel（2014）发布了第一个公开的假新闻检测数据集，收集了来自POLITIFACT和CHANNEL4.COM的数据。这个数据集有221条声明，其中有制作日期、说话人和URL，以及五分制的真实性标签。EMERGENT（Ferreira和Vlachos，2016）也是早期的声称-验证数据集的工作。它是在事实核查的背景下进行立场分类，包括带有一些支持或反对文本的主张。这个数据集可以改善事实核查，条件是提供一些与 Claims 有关的文章。</p>
+<p>Vlachos只包括221项索赔，Emergent只包括300项索赔，因此将其用于基于机器学习的评估是不切实际的。这些天来，有许多索赔的数据集被公布，它们可以作为前两者的改进版使用。</p>
+<p>最近一个用于假新闻检测的基准数据集是LIAR（Wang，2017）。这个数据集与Vlachos和Riedel（2014）一样从Politifact收集数据，但包括12,836个真实世界的短文，每个声明都被标记为六级真实性。该数据集中还包括关于主题、政党、背景和发言人的信息。对于来自Politifact文章的数据集，Rashkin等人（2017）也发表了大型数据集。他们也收集了来自PunditFact（Politifact的衍生网站）的文章。</p>
+<p>Fever 是一个为事实核查提供相关证据的数据集。在这一点上，它与EMERGENT相似。Fever包含185,445个由维基百科数据生成的说法。每个声明都被标记为支持、反驳或信息不足。他们还标注了他们使用维基百科中的哪些感性内容作为证据。Fever使我们有可能开发出一个能够与证据一起预测主张的真实性的系统，尽管来自维基百科的事实和证据的类型可能仍然表现出与现实世界的政治运动的一些主要风格差异。</p>
+<h3 id="4-2-Entire-Article-Datasets"><a href="#4-2-Entire-Article-Datasets" class="headerlink" title="4.2. Entire-Article Datasets"></a>4.2. Entire-Article Datasets</h3><p>有几个假新闻检测的数据集可以预测———整个文章是真的还是假的。例如，FAKENEWSNET（Shu等人，2017a；Shu等人，2017b；Shu等人，2018）是一个正在进行的假新闻研究的数据收集项目。它包括基于BuzzFeed和PolitiFact的假新闻文章的标题和正文。它还收集了来自Twitter的这些文章的社会参与信息。<br>BS DETECTOR4是从一个名为BS Detector的浏览器扩展中收集的，表明其标签是BS Detector的结果，而不是人类注释者。BS Detec- tor通过检查人工编制的不可靠域名列表，搜索有问题的网页上的所有链接，以寻找不可靠来源的参考。</p>
+<h3 id="4-3-Posts-On-Social-Networking-Services"><a href="#4-3-Posts-On-Social-Networking-Services" class="headerlink" title="4.3. Posts On Social Networking Services"></a>4.3. Posts On Social Networking Services</h3><p>BUZZFEEDNEWS收集了9家新闻机构在Facebook上的2282个帖子。每个帖子都由5名BuzzFeed记者进行事实核查。这个数据集的优势在于，文章是从左倾和右倾组织的两边收集的。BUZZFEEDNEWS有两个丰富的版本。Potthast等人（2017）通过添加链接文章等数据对其进行了丰富，而BUZZFACE（Santia和Williams，2018）则通过Facebook上与新闻文章相关的160万条评论来扩展BuzzFeed数据集。</p>
+<p>SOME-LIKE-IT-HOAX（Tacchini等人，2017）由32个Facebook页面的15500个帖子组成，也就是组织的公开资料（14个阴谋论和18个科学组织）。这个数据集是根据发布者的身份而不是帖子级别的注释来标注的。这种数据集的一个潜在隐患是，这种标签策略可能导致模型学习每个发布者的特征，而不是假新闻的特征。</p>
+<p>PHEME（Zubiaga等人，2016）和CREDBANK(Mitra and Gilbert, 2015)是两篇文章。PHEME包含9个有新闻价值的事件的330条twitter线程（一个人的一系列连接tweet），标记为真或假。CREDBANK包含覆盖96天的6000万条推文，被分组为1049个事件，有一个30维的真实性标签向量。每个事件都由30名人类注释者以5分的李克特量表对其真实性进行评分。他们将30个评分串联起来作为一个向量，因为他们发现很难将其简化为一个一维的分数。</p>
+<p>如上所述，这些数据集是为验证推文的真实性而创建的。因此，它们只限于少数主题，并且可能包括与新闻没有关系的推文。因此，这两个数据集对于假新闻的检测并不理想，它们更多地被用于谣言检测。</p>
+<h2 id="5-Methods"><a href="#5-Methods" class="headerlink" title="5. Methods"></a>5. Methods</h2><p>我们介绍假新闻的检测方法。像往常一样，我们首先将输入文本预处理成合适的形式（5.1.）。如果数据集有整个文章的长度，可以使用修辞学方法作为手工制作的特征提取之一（5.3.）。如果数据集有EMERGENT或FEVER这样的证据，我们可以使用5.4.中的方法来收集输出的证据。</p>
+<h3 id="5-1-Preprocessing"><a href="#5-1-Preprocessing" class="headerlink" title="5.1. Preprocessing"></a>5.1. Preprocessing</h3><p>预处理通常包括标记化、词干化和概括化或加权词。为了将标记化的文本转换为特征，经常使用术语频率-反向文档频率（TF-IDF）和语言学查询和单词计数（LIWC）。对于单词序列，通常使用预先学习的单词嵌入向量，如word2vec（Mikolov等人，2013）和GloVe（Pennington等人，2014）。</p>
+<p>当使用整个文章作为输入时，一个额外的预处理步骤是从原始文本中识别中心主张。Thorne等人（2018）使用TF- IDF和DrQA系统（Chen等人，2017）对句子进行排名。这些操作与子任务密切相关，如单词嵌入、命名实体识别、消歧义或核心参考解析。</p>
+<h3 id="5-2-Machine-Learning-Models"><a href="#5-2-Machine-Learning-Models" class="headerlink" title="5.2. Machine Learning Models"></a>5.2. Machine Learning Models</h3><p>如第3节所述，现有的研究大多使用监督方法，而半监督或无监督的方法则较少使用。在本节中，我们主要通过几个实际的例子来描述分类模型。</p>
+<h4 id="5-2-1-Non-Neural-Network-Models"><a href="#5-2-1-Non-Neural-Network-Models" class="headerlink" title="5.2.1. Non-Neural Network Models"></a>5.2.1. Non-Neural Network Models</h4><p>Support Vector Machine (SVM) 和 Naive Bayes Clas- sifier (NBC) 是经常使用的分类模型（Conroy等人，2015；Khurana和Intelligentie，2017；Shu等人，2018）。这两种模型在结构上有很大不同，它们通常都被用作基线模型。Logistic回归（LR）（Khurana和Intelligentie，2017；Bhattacharjee等人，2017）和决策树，如Ran- dom Forest Classifier（RFC）（Hassan等人，2017）也被偶尔使用。</p>
+<h4 id="5-2-2-Neural-Network-Models"><a href="#5-2-2-Neural-Network-Models" class="headerlink" title="5.2.2. Neural Network Models"></a>5.2.2. Neural Network Models</h4><p>循环神经网络（RNN）在自然语言处理中非常流行，特别是长短时记忆（LSTM），它解决了梯度消失的问题，因此它可以捕获较长期的依赖关系。在第6节中，许多基于LSTM的模型在LIAR和FEVER上都有很高的准确性。此外，Rashkin等人（2017）建立了两个LSTM模型，将文本作为简单的词嵌入输入到一边，并作为LIWC特征向量输入到另一边。在这两种情况下，它们都比NBC和MaxEntropy(MaxEnt)模型更准确，尽管只是轻微的。</p>
+<p>卷积神经网络（CNN）也被广泛使用，因为它们在许多文本分类任务中都很成功。Wang（2017）使用了一个基于Kim的CNN（Kim，2014）的模型，将最大池的文本代表与双向LSTM的元数据代表连接起来。CNN也被用于提取具有各种元数据的特征。例如，Deligiannis等人（2018）将新闻和出版商之间的关系图样数据作为CNN的输入，并用它们评估新闻。</p>
+<p>Karimi等人（2018）提出了多源多类假新闻检测框架（MMFD），其中CNN分析索赔中每个文本的局部模式，LSTM分析整个文本的时间依赖性，然后通过全连接网络传递所有最后的隐藏输出的连接。 这个模型利用了两种模型的特点，因为LSTM对长句子的效果更好。</p>
+<p>注意力机制经常被纳入神经网络以获得更好的性能。Long等人（2017）使用了一个注意力模型，该模型结合了说话人的名字和语句的主题，首先关注特征，然后将加权向量送入LSTM。这样做使准确率提高了约3%（表3）。Kirilin和Strube（2018）使用了一个非常类似的注意机制。Pham（2018）使用了记忆网络，它是一种基于注意力的神经网络，也分享了注意力机制的想法。</p>
+<h3 id="5-3-Rhetorical-Approach"><a href="#5-3-Rhetorical-Approach" class="headerlink" title="5.3. Rhetorical Approach"></a>5.3. Rhetorical Approach</h3><p>修辞结构理论（RST），有时与矢量空间模型（VSM）相结合，也被用于假新闻检测（Rubin等人，2015b；Della Vedova等人，2018；Shu等人，2017b）。RST是一个故事连贯性的分析框架。通过定义文本单元的语义作用（例如，一个句子代表环境、证据和目的），这个框架可以系统地识别基本思想，并分析输入文本的特点。然后根据其连贯性和结构来识别假新闻。为了用RST解释结果，VSM被用来将新闻文本转换成向量，在高维RST空间中与真新闻和假新闻的中心进行比较。向量空间的每个维度表示新闻文本中修辞关系的数量。</p>
+<h3 id="5-4-Collecting-Evidence"><a href="#5-4-Collecting-Evidence" class="headerlink" title="5.4. Collecting Evidence"></a>5.4. Collecting Evidence</h3><p>基于RTE（识别文本蕴涵）（Dagan等人，2010）的方法经常被用来收集和利用证据。RTE是识别句子之间关系的任务。通过使用RTE方法从数据源（如新闻文章）收集支持或反对输入的句子，我们可以预测输入是否正确。基于RTE的模型需要文本证据进行事实核查，因此这种方法只有在数据集包括证据时才能使用，如FEVER和Emergent。</p>
+<hr>
+<h1 id="The-Future-of-False-Information-Detection-on-Social-Media-New-Perspectives-and-Trends"><a href="#The-Future-of-False-Information-Detection-on-Social-Media-New-Perspectives-and-Trends" class="headerlink" title="The Future of False Information Detection on Social Media: New Perspectives and Trends"></a>The Future of False Information Detection on Social Media: New Perspectives and Trends</h1><p>社交媒体上虚假信息的大量传播已经成为一种全球性的风险，隐性地影响着公众舆论，威胁着社会/政治发展。因此，虚假信息检测（FID）已成为近年来风起云涌的研究课题。作为一个前景广阔、发展迅速的研究领域，我们发现很多人已经为FID的新研究问题和方法付出了努力。因此，有必要对FID的新研究趋势做一个全面的回顾。我们首先简要回顾了FID的文献历史，在此基础上，我们提出了几个新的研究挑战和技术，包括<strong>早期检测、多模态数据融合检测和解释式检测</strong>。我们进一步研究了FID中各种人群智能的提取和使用，这为解决FID的挑战铺平了道路。最后，我们对FID的开放性问题和未来的研究方向提出了自己的看法，如<strong>模型对新事件的适应性/通用性、对新型机器学习模型的接纳、人群智慧的聚合、检测模型中的对抗性攻击和防御等等</strong>。                         </p>
+<h2 id="INTRODUCTION"><a href="#INTRODUCTION" class="headerlink" title="INTRODUCTION"></a>INTRODUCTION</h2><blockquote>
+<p>社会化媒体平台（如Twitter1、Facebook2、新浪微博3）彻底改变了信息的传播模式，大大提高了信息传播的速度、数量和种类。然而，社交媒体为事实和虚假信息的快速传播提供了便利。根据奈特基金会最近的一项调查4，美国人估计，他们在社交媒体上看到的新闻有65%是假新闻。此外，虚假信息通常在社交网络中传播得更快、更深、更广。</p>
+</blockquote>
+<p>利用社交媒体传播误导性信息的敌对行为构成了一种政治威胁[8]。例如，在2016年美国总统大选期间，有多达529种不同的低可信度言论在推特上传播[73]，约有1900万个恶意机器人账户发布或转发了支持特朗普或克林顿的帖子，这有可能影响了选举。2018年，《科学》杂志发表了关于 “假新闻 “的主题期刊，他们报道说，假 statements 声明可以引起人们的恐惧和惊讶的感觉，这有助于社会恐慌。例如，一段名为索马里人 “被推入浅坟 “埃塞俄比亚的虚假视频，引起了埃塞俄比亚两个种族之间的暴力冲突；一条网上的虚假信息，暗示希腊已经取消了转机限制，导致希腊警察与移民发生了冲突。上述例子表明，虚假信息的泛滥对社会信息传播的生态构成了严重威胁[91]。社交媒体用户每天都会接触到大量关于各种主题的信息。对用户来说，判断每条信息的可信度是不现实的，也是不可行的[140]。因此，检测社交媒体上的虚假信息是非常迫切的。</p>
+<p>随着新媒体时代的到来，多模态的社交媒体帖子已经逐渐成为社交媒体的主流。因此，随着人工智能（AI）的快速发展，未来的网络虚假信息将超越文字，大规模地扩展到高质量和可操控的信息材料，如图像、视频和音频[8]。例如，DeepFakes[44, 56]利用深度学习模型创建了真实人物的音频和视频，说和做他们从未说过或做过的事情，这使得虚假信息越来越逼真，越来越难以辨别。虽然自动虚假信息检测不是一个新现象，但目前它已经引起了越来越多的公众关注。</p>
+<p>为了便于理解和解释网络和社交媒体上的虚假信息，Kumar等人[89]根据其意图和知识对虚假信息进行总结和分类。</p>
+<p><img src="https://i.loli.net/2021/11/03/kq1zrQMWtJ9jx2U.png" alt=""></p>
+<p>按照意图，false information 可以分为错误信息 misinformation 和虚假信息 disinformation，错误信息是指在事件演变过程中产生的虚假信息，或者是在知识更新过程中产生的虚假信息，没有误导的目的[87，150]；虚假信息是指为了某种目的而故意误导他人的虚假信息[36，166]。根据知识，虚假信息可以被认为是基于意见的，它表达了用户的主观意见，描述了一些没有独特基础真相的情况，而基于事实的，是捏造或违背绝对基础真相的信息[172]。此外，相关文献中还有一些类似的术语，<strong>如谣言、假新闻。谣言一词通常指的是在发布时未经核实的信息</strong>[204]。<strong>因此，谣言可能会被证明是真的或假的。与谣言不同的是，假新闻一词被广泛用于指那些故意的、可验证的虚假新闻文章</strong>[162]。我们根据其意图对这些术语进行分类，如图1所示。尽管上述术语之间有区别，但它们都涉及到虚假信息的传播，并有能力或意图影响一些用户。因此，本调查坚持这些术语的定义，并从技术角度回顾了社交媒体上虚假信息检测（FID）的发展。</p>
+<blockquote>
+<p>近年来，在FID方面有很多努力。根据现有FID方法中使用的特征类型，我们将其分为<strong>四类：基于内容的方法、基于社会环境的方法、基于特征融合的方法和基于深度学习的方法</strong>。<strong>基于内容的检测方法</strong>主要利用从社交帖子中提取的文本或视觉特征进行二元分类（真实或虚假）。<strong>基于社会环境的方法</strong>一般依赖于丰富的用户之间的互动特征，如评论、转贴、关注等。<strong>基于特征融合的方法</strong>综合利用了内容特征和社会环境特征。此外，<strong>基于深度学习的方法</strong>主要通过神经网络学习信息的潜在深度表示。</p>
+</blockquote>
+<p>尽管过去几年对FID做了很多研究，但仍有许多遗留问题需要解决。<strong>首先，现有的FID方法大多利用内容或传播特征，并且通常在虚假信息的整个生命周期中工作良好，这可能导致早期检测的性能不佳。</strong>由于虚假信息可能在短短几分钟内产生严重影响，因此在早期阶段检测它们是至关重要的。第二，随着多模态帖子在社交网络上传播的增加，传统的基于文本的检测方法已不再可行，在更复杂的情况下，利用图像或视频进行FID是有益的。第三，目前的检测方法只给出了声明是否为假的最终结果，但缺乏做出决定的理由。对于揭穿不准确的信息并防止其进一步传播，给出一个令人信服的解释是非常重要的。</p>
+<p>本文旨在深入调查与FID方法有关的最新发展。目前已经有一些关于FID的调查[39, 162, 201, 204]。Zhou等人[201]从<strong>基于知识、基于风格、基于传播和基于可信度</strong>等四个角度研究假新闻，并总结了心理学和社会科学的相关检测方法。Zubiaga等人[204]专注于谣言分类系统，研究了现有的识别疑似谣言、收集谣言相关帖子、检测帖子立场和评估目标事件可信度的方法。同样，Fernandez等人[39]将错误<strong>信息检测分为四个阶段：错误信息识别、传播、验证和驳斥。</strong>他们相应地组织了现有的在线错误信息检测系统。Shu等人[162]从数据挖掘的角度将检测模型分为基于新闻内容的模型和基于社会背景的模型，并总结了虚假新闻检测算法的评估测量方法。我们的调查与其他相关调查的区别如下：</p>
+<ul>
+<li>上述调查对基于深度学习的虚假信息检测方法关注甚少。然而，在过去的三年里，深度学习模型已经被广泛地应用于FID。为了给检测方法提供一个最新的全面调查，我们调查并交叉比较了最近基于深度学习的方法。</li>
+<li>本文回顾了近年来在FID领域出现的新问题和新技术，如早期检测、多模态数据融合检测和解释式检测等。此外，我们的论文从人群智能的角度调查了这些新问题和有前途的工作，研究了利用人群智能促进FID的潜力。</li>
+<li>人工智能的发展提高了FID模型的性能，因此数据集已经变得和算法一样重要。本文为未来的研究人员梳理了自2015年以来广泛使用的开放数据集，这些数据集被现有的调查所忽视。</li>
+</ul>
+<p>与现有研究大多使用帖子内容不同，基于人群智能的方法旨在检测基于聚合的用户意见、猜想和证据的虚假信息，这是人类与帖子互动过程中注入的隐性知识（如帖子的发布、评论和转贴）。最重要的是，我们工作的主要贡献包括：</p>
+<ul>
+<li>基于对FID的简要文献回顾，我们集中讨论了它的最新研究趋势，包括对新事件的模型通用性、早期检测、基于多模态融合的检测和解释式检测。</li>
+<li>我们对基于人群智能的FID方法进行了调查，包括FID中人群智能的范围，基于人群智能的检测模型，以及人机混合融合模型。</li>
+<li>我们进一步讨论了FID的开放性问题和有前途的研究方向，如模型对新事件的适应性/通用性，拥抱新型机器学习模型，以及FID模型中的对抗性攻击和防御。</li>
+</ul>
+<p>本文的其余部分组织如下。我们在第2节中对现有的FID工作进行了简要的文献回顾。然后，我们在第3节调查了FID的几个新的研究趋势。在第4节中，我们强调了基于人群智能的检测，然后在第5节中介绍了FID的开放问题和未来方向。最后，我们在第6节中总结了本文。</p>
+<h2 id="2-A-BRIEF-LITERATURE-REVIEW"><a href="#2-A-BRIEF-LITERATURE-REVIEW" class="headerlink" title="2 A BRIEF LITERATURE REVIEW"></a>2 A BRIEF LITERATURE REVIEW</h2><p>本调查主要关注检测在社交网络上传播的虚假或不准确的说法，因此我们首先给出虚假信息检测问题的一般定义。</p>
+<ul>
+<li>对于一个具体的声明 $s$ ，它包含一组相关的 $n$ 个帖子 $P={p_1, p_2, …, p_n }$ 和一组相关的用户 $U={u_1,u_2,…,u_m}$.每个 $p_i$ 由一系列代表帖子的属性组成，包括文字、图片、评论数量等。每个 $u_i$ 由一系列描述用户的属性组成，包括姓名、注册时间、职业等。</li>
+<li>让 $E = {e1,e2,…,en}$ 指的是 $m$ 个用户和 $n$ 个帖子之间的互动。每个 $e_i$ 被定义为 $e_i = {p_i,u_j,a,t}$，代表一个用户 $u_j$ 在时间 $t$ 通过行动 $a$ （发帖、转帖或评论）与帖子 $p_i$互动。</li>
+</ul>
+<p>定义2.1。false information错误信息检测：给定具有帖子集 $P$、用户集 $U$ 和参与集 $E$ 的语句 $s$，错误信息检测任务是学习预测函数 $F(S)\to {0，1}$</p>
+<p>在下文中，我们对现有的FID技术进行了简要的文献回顾，分为四大类型，即基于内容、基于社会环境、基于特征融合和基于深度学习的方法，如表1（前三种类型）和表2（最后一种类型）所总结的。此外，我们还对现有的几个在线FID工具进行了总结，这些工具对于减轻虚假信息的影响和防止其进一步传播具有重要意义。</p>
+<h3 id="2-1-Content-based-Methods"><a href="#2-1-Content-based-Methods" class="headerlink" title="2.1 Content-based Methods"></a>2.1 Content-based Methods</h3><p>对于一个具体的事件，其微博一般是由一段文字来描述，往往与几张图片或视频相关。基于内容的方法主要是基于特定的写作风格或虚假文章的耸人听闻的标题，如词汇特征、句法特征和主题特征[143]。例如，Castillo等人[16, 17]发现，高可信度的推文有更多的URL，而且文本内容长度通常比低可信度的推文长。</p>
+<p>许多研究利用词法和句法特征来检测虚假信息。例如，Qazvinian等人[136]发现，语篇（POS）是FID的一个可区分的特征。Kwon等人[90]发现一些类型的情感是机器学习分类器的明显特征，包括积极的情感词（如爱、好、甜）、否定词（如不、不、永不）、认知行动词（如原因、知道）和推断行动词（如可能、也许）。然后，他们提出了一个周期性的时间序列模型来识别真实推文和虚假推文之间的关键语言差异。此外，Pérez-Rosas等人[128]总结了真实和虚假内容的语言学特征的差异，可以分为五类。”Ngrams”、”标点符号” “心理语言学特征”、”可读性 “和 “句法”。基于上述特征，使用线性SVM来识别虚假信息。Rashkin等人[141]总结了不可信的新闻内容的语言风格。具体来说，他们发现第一/第二人称代词在低可信度信息中使用的频率更高，夸张的词汇也是如此。</p>
+<p>词汇特征有时不能完全反映虚假信息的特征，因为它的位置性。因此，许多研究为FID引入了语义特征，如话题、情感和写作风格。例如，Potthast等人[134]利用不同的写作风格来检测虚假声明。同样地，Horne等人根据假新闻文章在标题风格上与真实新闻文章有很大不同的观察，提出了一个FID模型。Hu等人[68]提出了一个利用情感信息检测低可信度社交帖子的框架。Ito等人[70]将Latent Dirichlet Allocation（LDA）主题模型引入到推文可信度的评估中，他们提出了推文主题特征和用户主题特征，用于检测虚假信息。</p>
+<h3 id="2-2-Social-Context-based-Methods"><a href="#2-2-Social-Context-based-Methods" class="headerlink" title="2.2 Social Context-based Methods"></a>2.2 Social Context-based Methods</h3><p>传统的基于内容的方法是孤立地分析单个微博或主张的可信度，忽略了不同微博和事件之间的高度关联性。此外，大量的人类内容互动数据（发帖、评论、转帖、评级和标签等）为FID提供了丰富的参考信息。具体来说，基于社会环境的方法可以进一步分为基于帖子和基于传播的方法。</p>
+<p>(1) Post-based features</p>
+<p>基于帖子的方法主要依靠用户的帖子来表达他们对特定事件的情绪或意见。许多研究通过分析用户的可信度[95, 118]或立场[63, 116]来检测虚假信息。例如，Shu等人[164]从用户档案中探索出对FID真正有用的特征，从而减少检测过程中特征提取的负担。具体来说，他们发现性格外向和随和的用户不太可能受到虚假信息的影响。此外，Guess等人[57]指出，保守派更倾向于在Facebook中分享虚假帖子。Long等人[104]发现，在基于内容的检测方法中应用用户档案（如党派、验证信息和位置）可以提高其在FID上的表现。他们提出了一个混合检测模型，分别提取新闻内容的主题特征和用户属性特征。此外，Tacchini等人[170]发现，有不准确信息的社交帖子通常比真实的事实有更多的赞。因此，他们使用逻辑回归（LR）模型和众包算法，在用户喜欢的基础上检测虚假信息。</p>
+<p>(2) Propagation-based features</p>
+<p>基于传播的方法将帖子和事件的可信度作为一个整体进行评估[14]，这些方法通常关注信息传播网络的构建和可信度的传播。<br>一些研究通过分析其传播模式来检测虚假信息。例如，Ma等人[107]发现，社会环境的特征会随着时间的推移而逐渐改变。因此，他们提出了一个DSTS模型来描述FID的社会背景特征的时间模式，该模型将信息传播序列划分为固定长度的片段，然后从每段帖子中提取基于内容和社会背景的特征，最后用SVM进行分类。Liu等人[102]构建了基于异质用户特定属性的信息传播网络，用于识别虚假信息的特殊传播结构。Kim等人[79]提出了一个贝叶斯非参数模型来描述新闻文章的传播特征，该模型联合利用文章的主题和用户兴趣来进行FID。此外，Wu等人[186]观察到虚假信息通常先由普通用户发布，然后由一些意见领袖转发，最后由大量的普通用户传播。然而，真相往往是由一些意见领袖发布，然后由大量用户直接传播。基于这一观察，他们提出了一个用于FID的混合SVM分类器，该分类器对信息传播结构、主题信息、用户属性等共同建模。<br>此外，许多研究还通过构建特定的树状或网络结构来检测虚假信息。例如，Ma等人[108]将谣言相关的微博传播建模为传播树，他们提出了一种基于内核的方法来捕捉这些传播树之间的模式，以实现FID。此外，Gupta等人[62]构建了一个包含用户、帖子和事件的可信度传播网络来模拟虚假信息的传播过程。Jin等人[74]提出了一个连接微博、子事件和事件的三层可信度传播网络，用于信息可信度验证。</p>
+<h3 id="2-3-Feature-Fusion-based-Methods"><a href="#2-3-Feature-Fusion-based-Methods" class="headerlink" title="2.3 Feature Fusion-based Methods"></a>2.3 Feature Fusion-based Methods</h3><p>基于内容的检测方法主要从写作风格、词汇和句法特征方面来识别真实和非真实的主张之间的差异，而基于社会背景的检测方法主要利用从信息传播过程中提取的特征。由于两类方法应用的特征可以互补[145]，最近许多研究者开始研究基于特征融合的新方法。例如，Vedova等人[30]利用了用户和帖子之间的互动信息，以及帖子的文本信息。具体来说，他们对社交帖子进行词干分析，并将每个帖子表示为单词的TF-IDF向量。之后，他们利用用户的喜欢行为来描述社会背景特征，与Tacchini等人的工作类似[170]，最后通过整合这两种信号来识别虚假信息。为了利用传统的内容特征（如词汇或句法特征），Volkova等人[176]将来自新闻内容的心理语言学信号和来自社会环境的作者观点作为FID中不同分类器的输入数据。此外，Shu等人[165]进一步探讨了出版商、新闻作品和用户之间的社会关系。他们提出了一个名为TriFN的通用检测框架，通过非负矩阵分解（NMF）算法对新闻内容、社会互动和新闻发布者之间的内在关系进行建模，用于识别低可信度信息。</p>
+<h3 id="2-4-Deep-Learning-based-Methods"><a href="#2-4-Deep-Learning-based-Methods" class="headerlink" title="2.4 Deep Learning-based Methods"></a>2.4 Deep Learning-based Methods</h3><p><img src="https://i.loli.net/2021/11/03/stFAr7x1CKzyXME.png" alt=""></p>
+<h2 id="3-NEW-TRENDS-IN-FALSE-INFORMATION-DETECTION"><a href="#3-NEW-TRENDS-IN-FALSE-INFORMATION-DETECTION" class="headerlink" title="3 NEW TRENDS IN FALSE INFORMATION DETECTION"></a>3 NEW TRENDS IN FALSE INFORMATION DETECTION</h2><p>在回顾了关于FID的传统研究后，本节调查了这一领域的几个新的研究趋势，包括早期检测、通过多模态数据融合检测和解释性检测。</p>
+<h3 id="3-1-Early-Detection"><a href="#3-1-Early-Detection" class="headerlink" title="3.1 Early Detection"></a>3.1 Early Detection</h3><p>虚假信息很容易被社交网络上的大量用户传播，在很短的时间内造成严重影响[14, 46]。因此，对虚假信息的早期检测成为一个重要的研究课题。然而，大多数现有的研究（基于内容和社会背景的方法）通过假设他们拥有所有的生命周期数据来检测虚假信息。他们依赖于几个聚合特征，如内容特征和传播模式，这需要一定数量的帖子来训练强大的分类器。虚假信息开始时的可用数据非常有限，以至于在早期阶段检测它很有挑战性。最近，有一些针对早期FID的努力。</p>
+<p>传统的机器学习方法通常会分析帖子早期传播中的用户交互信息，手动提取大量的特征，最后用分类器（如SVM、随机森林）来评估其中的可信度。例如，Liu等人[100]发现，在少量的数据中，来源的可靠性、用户的多样性和证据信号，如 “我看到 “和 “我听到”，对FID有很大的影响。此外，Qazvinian等人[136]观察到，在推文传播的早期阶段，用户倾向于表达自己的信念（如支持或质疑）。因此，合理利用信息中的用户信念，对早期发现虚假信息大有裨益。为了解决数据缺乏的问题，从相关事件中借用知识进行FID将是另一种有用的方法。例如，Sampson等人[149]提出了一种通过利用隐性链接（如标签链接、网络链接）从相关事件中获取额外信息的突发性FID方法。实验结果表明，当可用的文本或互动数据较少时，这种隐性链接明显有助于正确识别突发的不真实声明。</p>
+<p>许多检测方法利用深度学习模型对虚假信息进行早期检测。基于深度学习的检测方法通常使用神经网络来自动提取社会环境特征，并通过利用注意力机制找到FID的关键特征。例如，Liu等人[99]观察到只有少数帖子对FID有很大贡献。为了选择这些关键内容，他们提出了一个基于注意力的检测模型，该模型通过每个帖子的注意力值来评估其重要性。此外，实验结果表明，正确使用注意力机制有利于早期发现虚假信息。同样，Chen等人[20]发现，在信息传播的不同时期，用户倾向于对不同的内容进行评论（例如，从惊讶到质疑）。基于这一观察，提出了一个基于RNN的深度注意模型，有选择地学习连续帖子的时间性隐藏表征，以实现早期FID。Yu等人[195]利用一个基于CNN的模型从帖子序列中提取关键特征，并学习它们之间的高层次互动，这有利于用相对较少的互动数据识别虚假推文。Nguyen等人[123]也利用CNN来学习每条推文的潜在表征，相应地获得推文的可信度。然后，他们通过汇总事件开始时所有相关推文的预测，来评估目标事件是否是一条虚假信息。更重要的是，Liu等人[101]发现大多数用户在信息传播的早期过程中没有评论就转发源推文，这隐含着利用用户评论进行早期FID的一些延迟。因此，他们提出了一个传播路径分类模型，名为PPC，该模型联合使用CNN和GRU来提取转发路径中用户的局部和全局特征。</p>
+<h3 id="3-2-Detection-by-Multimodal-Data-Fusion"><a href="#3-2-Detection-by-Multimodal-Data-Fusion" class="headerlink" title="3.2 Detection by Multimodal Data Fusion"></a>3.2 Detection by Multimodal Data Fusion</h3><p>传统的FID方法专注于文本内容和传播结构。然而，社交媒体帖子也包含丰富的视觉数据，如图片和视频，而这种多模态数据往往被忽视。图片和视频比纯文本信息更吸引用户，因为它们可以生动地描述目标事件。<br>图像处理的巨大进步，如AE、VAE和GAN（如第2.4节所述），证明了图像可以很容易地被编辑和修改，使假图像的生成更加容易。因此，分析多模态数据之间的关系并开发基于融合的模型可以成为FID的一个有前途的方法[14]。社交媒体上的虚假信息中主要有三种假图像，包括图像篡改、图像不匹配和图像混合。</p>
+<h3 id="3-3-Explanatory-False-Information-Detection"><a href="#3-3-Explanatory-False-Information-Detection" class="headerlink" title="3.3 Explanatory False Information Detection"></a>3.3 Explanatory False Information Detection</h3><p>大多数基于深度学习的FID方法在输出决策结果时，往往不会呈现做出决策的原因，它们利用预先训练好的分类器来识别测试集中的可疑事件[14]。然而，找到支持决策的证据碎片将有利于揭穿虚假信息并防止其进一步扩散。因此，解释型FID已经成为另一个趋势性的研究课题。现有的解释性FID研究主要集中在两个方面：一是探索实用的可解释性检测模型（模型的解释），二是解释其结果（结果的解释）。</p>
+<h2 id="4-CROWD-INTELLIGENCE-BASED-DETECTION"><a href="#4-CROWD-INTELLIGENCE-BASED-DETECTION" class="headerlink" title="4 CROWD INTELLIGENCE-BASED DETECTION"></a>4 CROWD INTELLIGENCE-BASED DETECTION</h2><p>现有的研究表明，帖子的内容特征仍然是FID的首要任务。由于社交帖子是由用户产生、互动和消费的，它将在帖子的编辑、评论和转发中摄入各种人类智能（如意见、立场、质疑、证据提供）。在社交媒体帖子的传播过程中，所谓的人群智慧[58, 96, 185]也会以集体的方式被聚集起来。正如Castillo等人[16]所说，一个有希望的假设是，在社交媒体环境中存在一些内在的信号，有助于评估信息的可信度。Ma等人[110]也发现，Twitter支持基于聚合的用户意见、猜想和证据碎片的虚假信息的 “自我检测”。虽然，如何在FID中利用人群智能仍然是一个开放的问题。在第4节中，我们试图通过提炼和介绍人群智能在FID系统中的几种不同使用形式来解决这个问题，如图2所示。</p>
+<p><img src="https://i.loli.net/2021/11/03/oeDcFSqNtObuY1J.png" alt=""></p>
+<h3 id="4-1-Crowd-Intelligence-in-False-Information"><a href="#4-1-Crowd-Intelligence-in-False-Information" class="headerlink" title="4.1 Crowd Intelligence in False Information"></a>4.1 Crowd Intelligence in False Information</h3><p>在FID中，人群智能是指在信息产生和传播过程中，来自社交媒体用户智慧的聚合线索或社会信号。在本小节中，我们总结了FID中人群智能的含义和使用方式。<br>我们从社会背景、集体知识和集体行为等三个方面来描述人群智能。</p>
+<ul>
+<li>Social contexts. 源用户和传播者之间的社会关系和互动有助于理解信息的确定性。例如，Kim等人[80]认为用户的标记可以间接反映推文的可信度，所以他们使用PGM来生成人与内容的互动过程，推断推文的真实性。Zhao等人[199]发现群众在评论中对真实性的质疑或询问是低可信度信息的指示性信号，他们使用正则表达式从用户评论中提取上述信号进行FID。此外，Wu等人[188]认为类似的话题可能会在类似的人群中传播，所以他们对传播者进行编码，以捕捉他们的社会接近性，从而识别虚假信息。</li>
+<li>Collective knowledge. 群众提供的收集的证据对推断信息的可信度很有用。例如，Lim等人[97]利用用户对目标事件在线证据的支持或反对来检测不准确的言论。Rayana等人[142]认为用户的评分和评论是对帖子可信度的真实评价，所以他们提出了一个名为SpEagle的检测框架，从集体线索和关系数据（信息传播网络）中提取特征。此外，Qian等人[138]提出了一种用于FID的人群知识转移方法，其中利用了历史上真/假说法中的人群反应知识（如背景特征和行为特征）。</li>
+<li>Collective behaviors. 在很多情况下，虽然个人行为不能很好地描述信息的可信度，但一群用户的聚合行为往往能揭示更多信息。这可能是指人群互动模式，行为或意见偏离多数[88]，观点冲突，等等。例如，经常参与低可信度信息的生产和传播的用户有行为偏差，例如，在短时间内发布几个意见，或在一个固定的时间间隔后与内容互动。基于上述观察，Kumar等人[88]通过贝叶斯模型推断出回复者及其评论的可信度。此外，Jin等人[76]发现同一事件下的相关推文包含支持和反对的意见（通过LDA主题模型分析），他们利用这些冲突的观点来建立FID的可信度传播网络。</li>
+</ul>
+<p>在调查了现有的FID研究后，我们提炼出四种不同的人群智能使用方式，如下所示。</p>
+<ul>
+<li>群体学习模型。它主要使用特征工程和代表学习将人群智能融入到FID模型中。</li>
+<li>人群行为建模。它使用图或概率模型对人群行为和互动进行建模，以推断信息的可信度。</li>
+<li>群众的知识转移。学习到的FID模型通常在新事件上不能很好地发挥作用。这种方式解决了如何将人群知识从现有的事件转移到新的事件。</li>
+<li>人机混合模型。考虑到人类智能和机器智能的互补性，这种方式集中于开发用于FID的混合人机模型。</li>
+</ul>
+<p>前面三种方式的一个共同特点是，人群智能是以隐性方式使用的，没有明确的人类输入。具体来说，人群智能被表示为统计学上的人类行为模式，作为学习模型的特征或参数使用。然而，最后一种方式是基于明确的人类输入，例如使用众包进行数据标记。</p>
+<p><img src="https://i.loli.net/2021/11/03/WmdofhkMb9NeV2p.png" alt=""></p>
+<h3 id="4-2-Implicit-Crowd-Intelligence-Models"><a href="#4-2-Implicit-Crowd-Intelligence-Models" class="headerlink" title="4.2 Implicit Crowd Intelligence Models"></a>4.2 Implicit Crowd Intelligence Models</h3><p>在本节中，我们介绍了关于将隐式人群智能用于FID的开创性研究，特别关注4.1节中描述的前三种方式，如表4中总结的那样。</p>
+<p>(1) 群体学习模型。在该模型中，群体智能被表示为训练分类器以检测虚假信息的特征。这已被证明对早期的 FID 很有用。例如，刘等人。 [100] 尝试使用来自 Twitter 数据的人群线索来解决实时虚假索赔揭穿的问题，包括人们的意见、证人账户的统计数据、对事件的聚合信念、网络传播等。赵等人。 [199] 观察到，在决定是否相信此消息之前，有些人愿意质疑或询问 Twitter 中声明的真实性。特别是，他们发现使用探究思维有助于及早发现虚假信息。<br>社会关系和交互也是 FID 特征学习中广泛使用的群体智能。例如，吴等人。 [188] 假设相似的消息通常会导致相似的信息传播轨迹。他们提出了一种社交媒体用户嵌入方法来捕捉社交接近度和社交网络结构的特征，在此基础上利用 LSTM 模型对信息传播路径进行分类并识别其真实性。拉亚娜等人。 [142] 应用集体意见线索和相关数据来检测虚假信息。<br>通过利用发布虚假帖子的用户行为与发布真实事实的用户行为不同的人群情报来识别虚假信息也很有帮助。陈等人。 [22] 提出了一种无监督学习模型，该模型结合了 RNN 和自动编码器，以将低可信度信息与其他真实声明区分开来。此外，谢等人。 [189] 观察到垃圾评论攻击与其评分模式密切相关，这与正常评论者的行为模式不同。因此，他们提出了一种基于其时间行为模式的垃圾评论检测方法，为群体学习模型的 FID 提供了参考。</p>
+<p>(2) 人群行为建模。在这个模型中，集体的人群行为（人群智能的一种类型）被建模为图或概率模型来推断信息的可信度。Hooi等人[66]发现，欺诈性账户经常在短时间内呈现他们的评级（评级分数满足偏斜分布）。群众智慧的特点是贝叶斯推理模型，它可以估计一个用户的行为与相关社区的行为有多大偏差。他们通过测量行为偏差的程度来推断用户评级的可信度。同样，Kumar等人[88]提出了一个贝叶斯检测模型，该模型结合了聚合的人群智慧，如用户的行为属性、评级的可靠性和产品的优良性。通过对异常行为的惩罚，它可以推断出评级平台的信息可信度。<br>一些研究利用聚合的人群行为建模来促进虚假信息的早期检测。例如，Ma等人[110]假设回复者倾向于询问谁支持或否认给定的事件，并表达他们对更多证据的渴望。因此，他们提出了两个树状结构的递归神经网络（RvNN），用于有效的虚假推文表征学习和早期检测，可以对用户回复结构进行建模，并学习捕捉FID的聚合信号。</p>
+<p>(3) 群众的知识转移。<strong>现有的FID模型在新出现的和时间紧迫的事件上仍然表现不佳。换句话说，现有的FID模型通常捕捉到许多与事件相关的特征，而这些特征在其他事件中并不常见。</strong>因此，<strong>有必要学习并将从现有众包数据中获得的共享知识转移到新的事件中</strong>。Wang等人[182]的工作提出了一个利用可转移特征识别新产生的虚假事件的检测模型，名为事件对抗神经网络（EANN ），它包括三个部分，即 “特征提取器”、”事件判别器 “和 “假新闻检测器”。<strong>EANN使用事件判别器来学习与事件无关的共享特征，并在模型训练中减少事件特定特征的影响。</strong><br>群众知识转移模型也有助于早期FID。例如，Qian等人[138]提出了一个生成性条件变异自动编码器，从历史上用户对真实和虚假新闻文章的评论中捕捉用户反应模式。换句话说，当虚假信息传播的早期阶段没有社会互动数据时，人群智能被利用来产生对新文章的反应，以提高模型的检测能力。Wu等人[187]还探讨了历史众包数据中的知识是否能对新出现的虚假社交媒体帖子的检测有所帮助。他们观察到，内容相似的社交帖子往往会导致类似的行为模式（如好奇心、询问）。因此，他们建立了一个稀疏表示模型来选择共享特征并训练与事件无关的分类器。</p>
+<h2 id="5-OPEN-ISSUES-AND-FUTURE-DIRECTIONS"><a href="#5-OPEN-ISSUES-AND-FUTURE-DIRECTIONS" class="headerlink" title="5 OPEN ISSUES AND FUTURE DIRECTIONS"></a>5 OPEN ISSUES AND FUTURE DIRECTIONS</h2><p>尽管研究人员已经为解决FID系统的上述挑战做出了越来越多的努力，但仍有一些开放性的问题需要在未来进行研究，如下所述。</p>
+<h3 id="1-Cognitive-mechanisms-of-false-information"><a href="#1-Cognitive-mechanisms-of-false-information" class="headerlink" title="(1) Cognitive mechanisms of false information."></a>(1) Cognitive mechanisms of false information.</h3><p>人们对虚假信息的认知机制的研究对于虚假社交媒体帖子的检测和反驳具有很好的指导作用[87]，尤其是基于群体智能的检测方法。几部作品对社交媒体平台上的低可信帖子进行了分析，以研究虚假信息能够快速广泛传播的原因。莱万多夫斯基等人。 [92] 认为打击虚假信息需要在技术和心理学的背景下进行科学研究，因此他们提出了一种称为“技术认知”的跨学科解决方案。此外，他们将用户面对虚假信息的认知问题分为影响效应、熟悉度逆火效应、矫枉过正逆火效应和世界观逆火效应四类，为研究用户对虚假信息的感知奠定了基础。 93]。正如 Acerbi [1] 总结的那样，不准确信息的快速传播在于它们包含满足用户认知偏好的特定内容。为了探索虚假信息的认知特征，他们通过将认知偏好编码为“威胁”、“厌恶”、“社交”、“名人”等部分，进一步分析了真假新闻文章的偏好分布。未来一个有价值的研究点是将虚假和真实的信息与具有认知吸引力的特征进行比较，或者评估与认知偏好相关的特征如何促进信息病毒式传播。</p>
+<p>除了在数据分析层面研究认知机制外，我们还可以从人脑认知功能的角度来学习这种机制。神经科学的进步为研究虚假信息的认知机制提供了一个很好的途径。正如Poldrack等人[130]所说，利用脑电图（EEG）、脑磁图（MEG）、功能性磁共振成像（fMRI）和其他脑成像工具可以推动我们了解人脑如何形成社会行为。此外，Adolphs[3]已经确定了参与社会认知调控的神经结构，如扣带皮层、海马体和基底前脑。Arapakis等人[6]利用脑电图记录来测量用户对新闻文章的兴趣，实验结果显示，额叶α不对称性（FFA）可以客观地评价用户对媒体内容的偏好。为了解释信息病毒的机制，Scholz等人[151]提出了一个基于fMRI数据的神经认知框架来评估用户在Facebook上分享信息的意愿。如果我们能够理解虚假信息的认知机制，就可以把更多的精力放在探索揭穿信息最大化的方法上，从而找到针对虚假信息的有力对策。</p>
+<h3 id="2-Lack-of-standard-datasets-and-benchmarks"><a href="#2-Lack-of-standard-datasets-and-benchmarks" class="headerlink" title="(2) Lack of standard datasets and benchmarks."></a>(2) Lack of standard datasets and benchmarks.</h3><p>尽管研究人员在FID方面做了大量的工作，但仍然缺乏像ImageNet[31]这样的视觉对象识别基准数据集。数据集作为一种资源，与FID的算法同样重要。然而，收集虚假信息是一个耗时耗力的过程，这导致了权威基准的缺乏。<br>我们总结了2015年以来的公开数据集，如表6所示，其数据收集自新浪微博（如RUMDECT，Meida_Weibo）、Twitter（如。MediaEval、PHEME、RUMOUREVAL）和其他社交平台，以及snopes.com、politifact.com（例如Emergent、BuzzFeedWebis、LIAR、Declare、FakeNewsNet）和其他事实核查网站。然而，这些数据集的注解方法、数据维度以及真假陈述的比例都不一样，这给研究人员公平评估其模型性能带来了一定的挑战。Shu等人[162]总结了广泛使用的FID的评价指标，现有的评价指标仍然是精度、召回率、F1得分、准确率等机器学习模型评价指标。在FID中，我们需要定义一些更实用的评价指标。例如，在政治选举中，我们会更关注虚假声明是否被更全面地识别出来（即更关注召回率而不是精度），所以用F1得分来评价检测模型的性能并不是很合适。在未来的研究中，需要标准的数据集和实用的评价指标来比较各种FID算法，促进FID方法的发展。</p>
+<h3 id="3-Model-adaptivity-generality-to-new-events"><a href="#3-Model-adaptivity-generality-to-new-events" class="headerlink" title="(3) Model adaptivity/generality to new events"></a>(3) Model adaptivity/generality to new events</h3><p><strong>FID方法应该识别未见过的、新出现的事件，因为系统的现有数据可能与新出现的事件的内容不同。然而，现有的方法倾向于提取事件的特定特征，而这些特征很难与新事件共享[</strong>204]。正如Tolosi等人[173]所说，<strong>基于特征工程的检测方法很难检测到不同领域（如政治、犯罪、自然灾害）的虚假信息，因为不同事件的特征变化很大。因此，模型的通用性或适应性对于提高FID模型的稳健性相当重要。</strong>Zubiaga等人[206]指出，<strong>依赖于领域的特征分布可能会限制模型的泛化能力。</strong>由于大多数特征的分布直接对应于事件，FID模型的性能将受到影响。尽管我们在第4.2节中讨论了一些人群知识转移模型[138, 182, 187]，但还有更多的东西需要研究。在其他领域（如情感分类[50]和图像识别[103]）成功使用的转移学习模型[59, 126]，可以被用来设计领域适应性的FID模型。使用基于GAN的判别器[182]是另一种有前途的方法，以建立具有共享特征的通用FID模型。</p>
+<h3 id="4-Embracing-of-novel-machine-learning-models"><a href="#4-Embracing-of-novel-machine-learning-models" class="headerlink" title="(4) Embracing of novel machine learning models."></a>(4) Embracing of novel machine learning models.</h3><p>FID过程从本质上讲就是学习分类器，以识别给定主张的可信度。我们发现，许多研究建立了深度学习模型[20, 72, 101, 106, 123, 144, 195]来提高自动事实核查的性能。然而，仍有更多可以探索的地方。在下文中，我们将介绍几个有代表性的例子，它们利用先进的机器学习技术来进行FID。</p>
+<ul>
+<li>Multi-task learning.  多任务学习[109]旨在通过使用相关任务中包含的领域知识来提高模型的泛化性能。现有的方法通过对任务的相关性进行建模，如特征共享、子空间共享和参数共享等，来寻找多个任务之间的共同点，作为促进每个任务学习效果的一些补充知识。例如，Ma等人[109]认为FID任务与立场分类任务高度相关，所以他们提出了一个神经多任务学习框架，以更好地进行事实核查。在权重共享的机制下，他们提出了两个基于RNN的多任务结构来联合训练这两个任务，这可以为谣言表征提取普通以及特定任务的特征。在这项工作的启发下，我们可以研究FID和其他任务之间的联系和协作，并进一步设计基于多任务学习的算法来提高FID模型性能。</li>
+<li>Few-shot learning.  [183]致力于解决数据稀缺的问题，利用少数监督信息来识别未见过的类的样本。现有的少量学习方法通常将其训练程序分解为多个元任务学习程序，类似于元学习[43]，从不同任务的数据中提取可转移的知识。因此，这允许只用少量的标记数据对新类进行分类。据我们所知，在FID中应用的少量学习方法较少，因此我们可以从其他相关领域学习，如文本分类。为了提高分类器的归纳和泛化能力，Geng等人[48]提出了一个基于动态路由算法的分类架构，称为归纳网络，它从少数样本中学习泛化的类级表示。归纳网络主要包含一个编码器模块、一个归纳模块和一个关系模块。具体来说，编码器模块生成样本和查询表征，然后归纳模块利用一个转换矩阵将样本级表征映射到类级表征。最后，关系模块计算出查询和每个类别之间的匹配度。这项工作表明，Few-shot learning在NLP中有很大的潜力，我们可以继续研究基于Few-shot learning的FID方法。</li>
+<li>Semi-supervised models.大多数现有的FID工作集中在监督分类上，他们通常通过大量的标记数据（例如，假的或不假的）来训练分类器识别虚假信息。然而，在很多情况下，我们只有少量的标记数据。半监督模型经常被用来处理标签稀少的问题。例如，Guacho等人[55]提出了一种半监督的FID方法，它利用基于张量分解的文本嵌入来捕捉社交帖子的全局和局部特征。在构建所有帖子的K-近邻（K-NN）图后，他们使用信念传播算法将已知的标签传播到图中，以获得事件的最终可信度。此外，图神经网络的发展也为半监督检测模型的研究提供了机会。GNN，如DeepWalk[129]、LINE[171]和node2vec[54]，利用不同的采样算法来生成节点序列，然后通过跳格模型学习每个节点或传播路径的表示。他们在损失函数中引入了一阶接近性（两个相邻节点之间相似性的表征）和二阶接近性（两个节点之间结构相似性的表征），以确保神经网络能够充分提取图的特征。特别是GCNs[83]，如第2节所讨论的，在相邻的卷积层中通过图形的拉普拉斯矩阵的非线性变换来传递信息。每个卷积层只计算一阶接近度，所以GCN可以通过多个卷积层学习节点或传播路径的高级特征表示。特别是，GNN能够通过明确的图正则化方法[184]平滑标签信息，用于图的半监督学习。因此，FID模型可以建立信息传播图，并结合GNNs来检测虚假信息。</li>
+<li>Unsupervised models. 如果能够直接建立可靠的无监督检测模型，对于快速驳斥虚假信息具有重要意义。无监督模型可以从人与内容的互动（如发布或转发社交媒体帖子）和人与人的互动（如关注或提及某些用户）来评估帖子的可信度。一方面，GAN和VAE的进步为无监督的FID模型带来了新的可能性。另一方面，PGMs仍然可以在FID中发挥重要作用。例如，Chen等人[22]从用户的发帖行为中判断一个帖子是否是假的。这种无监督的方法利用AE来学习一个人最近的发帖和他们的评论的潜在代表。当其重建误差收敛时，该模型可用于评估新帖子的可信度。如果模型的重建误差超过一定的阈值，这个帖子可能是一个假消息。Yang等人[191]将新闻真实性和用户可信度视为潜在变量，并利用用户评论来推断他们对新闻真实性的看法。换句话说，新闻的真实性取决于用户意见的可信度，而意见的可信度则依赖于用户的声誉。他们利用贝叶斯网络对互动过程进行建模，在没有任何标记数据的情况下推断出新闻文章的真实性。实际上，用户的意见可能会受到其他用户的影响，而且他们对不同主题的虚假信息的识别能力也是不同的。在使用PGM时可以进一步考虑这些条件。</li>
+<li>Hybrid learning models. 混合学习模型的发展，结合了线性模型和深度学习模型，已经成为人工智能领域新的研究趋势，即显性特征和潜在特征的结合使用。它利用了两类学习模型的互补性。例如，Wide &amp; Deep[24]是一个表现良好的推荐系统框架，其中Wide部分提取显性特征，Deep部分学习非线性的潜性特征。在FID中也有初步的混合学习模型。Yang等人[192]提出了用于检测虚假信息的TI-CNN模型，该模型在融合显性和隐性特征空间的基础上，对文本和视觉信息进行整体训练。此外，Zhang等人[197]提出了一个基于贝叶斯深度学习的FID模型，该模型使用LSTM来编码索赔和用户评论，并利用贝叶斯模型来推断分类结果。由于混合学习模型仍处于早期阶段，在这个方向上还需要进一步的研究，如概率图模型和深度学习模型的融合。</li>
+</ul>
+<h3 id="5-Adversarial-attack-and-defense-in-FID-models"><a href="#5-Adversarial-attack-and-defense-in-FID-models" class="headerlink" title="(5) Adversarial attack and defense in FID models."></a>(5) Adversarial attack and defense in FID models.</h3><p>基于深度学习的FID模型有助于有效提高事实核查的性能。然而，Szegedy等人[169]已经证明，训练有素的神经网络可能无法抵御对抗性攻击，这意味着在输入向量中添加一些小的扰动会使模型得到错误的结果[4]。现有的FID研究很少强调深度模型的鲁棒性，这些模型可能被对抗性攻击所欺骗。</p>
+<p>虽然很少有关于FID模型中对抗性攻击和防御的研究，但关于其他任务（如图像分类[52，169]、语音识别[15]、文本分类[86]和强化学习[10]）的相关工作已经被调查。有几项工作侧重于对抗性攻击对模型的影响。例如，Dai等人[28]提出了一种基于强化学习（RL）的图数据的对抗性攻击方法，该方法通过增加或减少图中的边的数量来学习最佳攻击策略。为了生成通用的文本对抗性扰动，Behjati等人[9]提出了一种基于梯度投影的攻击方法。Jia等人[71]通过在问题中添加不会对人类理解造成困难的句子或短语来攻击问答系统。</p>
+<p>以上攻击研究可以指导FID模型的对抗性攻击防御研究。Zhou等人[202]进一步将FID模型的对抗性攻击分为事实失真、主客体交换和原因混淆。为了抵御对抗性攻击，他们进一步提出了一个众包知识图谱来及时收集新闻事件的事实。Qiu等人[139]将防御方法分为三类，包括修改数据（如对抗性训练、梯度隐藏）、修改模型（如正则化、防御性蒸馏）和使用辅助工具（如防御-GAN[148]）。无论是对模型的攻击还是对数据的操作，都对FID系统的稳健性提出了更高的要求。因此，在FID的对抗性攻击和防御方面仍有更多的工作要做。</p>
+<h3 id="6-Explanatory-detection-models"><a href="#6-Explanatory-detection-models" class="headerlink" title="(6) Explanatory detection models."></a>(6) Explanatory detection models.</h3><p>提供决策结果的证据或解释可以增加用户对检测模型的信任。尽管关于解释型FID模型的工作很少，但在其他相关领域，如推荐系统，解释的应用已经被研究过。</p>
+<p>可解释的推荐，提供关于为什么推荐一个项目的解释，在最近几年引起了越来越多的关注[198]。它可以提高用户对推荐系统的接受度、信任度和满意度，增强系统的说服力。例如，Chen等人[23]提出了一种基于atten- tive神经网络的可视觉解释的推荐方法，以模拟用户对图像的注意力。用户可以通过提供个性化和直观的视觉亮点来理解产品被推荐的原因。Catherine等人[18]研究了如何在外部知识图谱的支持下产生可解释的推荐，他们提出了一个个性化的PageRank程序，将项目和知识图谱实体一起排名。Wang等人[181]的工作提出了一个基于强化学习（RL）的模型诊断性解释推荐系统，它可以灵活地控制解释的呈现质量。最重要的是，这种可解释推荐系统所使用的方法可以启发我们设计更好的可解释FID系统。</p>
+<p>从更高的角度来看，机器学习模型已经在不同的应用领域（超越了推荐系统和FID）提供了突破性进展。尽管取得了巨大的成功，我们仍然缺乏对其固有行为的理解，例如分类器是如何得出一个特定的决定的。这导致了可解释机器学习（IML）研究方向的激增。IML使机器学习模型有能力以人类可理解的术语进行解释或呈现[2, 34]。Du等人[35]定义了两种类型的可解释性：模型级解释和预测级解释。模型级解释，为增加模型本身的透明度，可以阐明机器学习模型的内部工作机制。预测层面的解释有助于揭示特定输入和模型输出之间的关系。对于FID来说，它更关注预测层面的解释，它可以说明一个决定是如何得出的（使用来源的可靠性、证据和立场等要素）。构建预测级可解释模型的一个代表性方案是采用注意力机制，它被广泛用于解释序列模型（如RNN）做出的决策结果。我们还应该研究植根于IML的其他方法，以提高FID系统的可解释性。</p>
+<h3 id="7-Aggregation-of-crowd-wisdom"><a href="#7-Aggregation-of-crowd-wisdom" class="headerlink" title="(7) Aggregation of crowd wisdom."></a>(7) Aggregation of crowd wisdom.</h3><p>如何聚合人群智慧对FID系统来说非常重要，因为人群贡献的数据往往有噪音。大多数用户的意见可以有效地用于识别虚假信息，但也存在真理掌握在少数人手中的情况。因此，未来仍有必要探索FID的人群智慧的聚合和优化方法。</p>
+<p>我们可以从真相发现系统中学习。随着利用人类智慧从相互冲突的多源数据中提取可靠信息的能力，真相发现已经成为一个越来越重要的研究课题。对于FID，我们也有关于一个事件的多个帖子，目标是识别这个事件的真相。因此，这两个研究问题有相似之处，我们可以借用真相发现系统的知识来促进FID的研究。例如，Liu等人[98]提出了一种专家验证辅助的图像标签真相发现方法，旨在尽可能地从嘈杂的众包标签中推导出正确的标签。特别是，它以人机协作的方式利用了一种半监督学习算法，可以最大限度地发挥专家标签的影响，减少专家的努力。Zhang等人[196]提出了一个名为 “TextTruth “的基于概率图的真相发现模型，它通过全面学习关键因素（一组关键词）的可信度来选择高度可信的问题答案。TextTruth以无监督的方式将答案提供者的可信度和答案因素的可信度一起推断出来。Yin等人[193]提出了一个以无监督的方式进行人群智慧聚合的模型，称为标签感知自动编码器（Label-Aware Autoencoders，LAA），它提取了多源标签的基本特征和模式，并通过一个分类器和一个重构器推断出可信的标签。为了解决同一信息源在不同主题上具有不同可信度的挑战，Ma等人[105]提出了一种名为FaitCrowd的众包数据聚合方法。FaitCrowd通过在概率贝叶斯模型上对问题内容和发布者的答案进行建模，共同学习问题的主题分布、答案提供者的基于主题的知识和真实答案。</p>
+<h3 id="8-Propagation-by-social-bots"><a href="#8-Propagation-by-social-bots" class="headerlink" title="(8) Propagation by social bots."></a>(8) Propagation by social bots.</h3><p>现有的FID研究集中在索赔的内容和发布模式上。然而，对发布和传播帖子的 “账户 “的特征并没有很好的调查。最近，人们已经做出了一些努力来研究虚假信息像病毒一样迅速传播的根本原因。例如，Shao等人[155]对2016年美国总统选举期间的1400万条推文进行了详细分析，他们观察到<br>“社交机器人 “显然促进了虚假信息的快速传播。社交机器人通常指的是一种计算机算法或软件程序，为了某种目的而模仿人类的互动行为（例如，生产内容、关注其他账户、转发帖子等）[40]。这些恶意的机器人账户在虚假推文传播的早期阶段异常活跃。此外，在对社交机器人的社会互动和情感互动进行建模后，Stella等人[167]发现，他们增加了负面和暴力内容在社交网络上的曝光。</p>
+<p>以上发现表明，抑制社交机器人可以成为缓解虚假信息传播的一个有前景的方法。一些研究者分析了社交机器人的行为模式并提出了一些检测方法。例如，Ferrara等人[40]将现有的社交机器人检测方法分为四类，包括基于图的模型、众包、基于特征的模型和混合模型。Almaatoug等人[5]设计了一种社交机器人检测方法，该方法结合了内容属性、社交互动和个人资料属性。同样，Minnich等人[115]提出了BotWalk检测方法，该方法利用几个特征来区分用户和机器人账户，如元数据、内容、时间信息和网络互动。Cresci等人[27]对社交机器人的集体行为进行了穿透性分析，并介绍了一种用于垃圾邮件检测的社会指纹技术。特别是，他们利用数字DNA技术来描述所有账户的集体行为，然后他们提出了一种受DNA启发的方法来识别真实账户和垃圾邮件。Cresci等人[26]也利用集体账户的特征来检测恶意的机器人。由于社交机器人促进了低可信度声明的传播和负面内容的曝光[155, 167]，未来的工作可以将FID与社交机器人检测相结合，为快速驳斥虚假信息提供新的解决方案。</p>
+<h3 id="9-False-Information-Mitigation"><a href="#9-False-Information-Mitigation" class="headerlink" title="(9) False Information Mitigation."></a>(9) False Information Mitigation.</h3><p> 有效的FID是预防虚假信息的一部分，也需要科学研究来减少虚假信息的影响，这属于虚假信息缓解的研究范畴。一些著作对虚假信息缓解和干预的方法进行了回顾。例如，Sharma等人[156]从信息扩散的角度总结了三种缓解方法，即 “去污” “竞争级联 “和 “多阶段干扰”。Shu等人[159]将现有的缓解策略分为 “用户识别”、”网络规模估计 “和 “网络干预”。由于每个用户在虚假信息的传播中扮演着不同的角色，如意见领袖、监护人、恶意传播者和旁观者，因此有必要采取灵活的缓解措施。例如，意见领袖和监护人适合被推荐使用事实信息，以帮助传播真相[175]，而恶意账户或机器人应被遏制[122]。正如Ozturk等人[125]曾经说过的，在Twitter上用事实核查信息展示虚假信息，有助于减少虚假信息的持续传播。基于这一观察，Budak等人[13]提出了多运动独立级联模型，它包含一个虚假信息的运动和一个真实信息的运动。此外，我们还可以利用多变量霍克斯过程[37]来模拟外部干预影响下的虚假信息的传播动态。</p>
+<p>在未来的研究中，FID可以与上述缓解策略相结合，在防止社交网络上的虚假信息传播方面探索出更多有前景的工作。此外，Sundar[168]曾经证实，社交帖子中存在的来源归属改善了用户对在线信息的可信度和质量的看法。因此，来源归属和因果推理[158]也可以用来指导社交媒体上虚假信息的检测。</p>
+</article><div class="post-reward"><div class="reward-button button--animated"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2021/10/30/Learn-Continually-Generalize-Rapidly-Lifelong-Knowledge-Accumulation-for-Few-shot-Learning/"><img class="next-cover" src="https://i.loli.net/2021/10/30/L9XTOjA4csqBRMt.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Learn Continually, Generalize Rapidly, Lifelong Knowledge Accumulation for Few-shot Learning</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/10/30/Learn-Continually-Generalize-Rapidly-Lifelong-Knowledge-Accumulation-for-Few-shot-Learning/" title="Learn Continually, Generalize Rapidly, Lifelong Knowledge Accumulation for Few-shot Learning"><img class="cover" src="https://i.loli.net/2021/10/30/L9XTOjA4csqBRMt.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-10-30</div><div class="title">Learn Continually, Generalize Rapidly, Lifelong Knowledge Accumulation for Few-shot Learning</div></div></a></div><div><a href="/2021/10/28/Pattern-Exploiting-Training-PET/" title="Pattern Exploiting Training (PET)"><img class="cover" src="https://i.loli.net/2021/10/28/DjK6qxmT9cA7Ov3.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-10-28</div><div class="title">Pattern Exploiting Training (PET)</div></div></a></div><div><a href="/2021/10/23/Parameter-Efficient-Transfer-Learning-for-NLP/" title="Parameter-Efficient Transfer Learning for NLP"><img class="cover" src="https://i.loli.net/2021/10/23/93P1rDfEm6LtgnK.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-10-23</div><div class="title">Parameter-Efficient Transfer Learning for NLP</div></div></a></div><div><a href="/2021/10/18/Adapting-BERT-for-Continual-Learning-of-a-Sequence-of-Aspect-Sentiment-Classification-Tasks/" title="Adapting BERT for Continual Learning of a Sequence of Aspect Sentiment Classification Tasks"><img class="cover" src="https://i.loli.net/2021/10/18/Z5kr7snwvpqg1tG.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-10-18</div><div class="title">Adapting BERT for Continual Learning of a Sequence of Aspect Sentiment Classification Tasks</div></div></a></div><div><a href="/2021/10/09/Meta-Learning-Representations-for-Continual-Learning/" title="Meta-Learning Representations for Continual Learning"><img class="cover" src="https://i.loli.net/2021/10/09/r3nAOuS9TZw2U1m.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-10-09</div><div class="title">Meta-Learning Representations for Continual Learning</div></div></a></div><div><a href="/2021/10/09/Continual-Lifelong-Learning-in-Natural-Language-Processing-A-Survey/" title="Continual Lifelong Learning in Natural Language Processing: A Survey"><img class="cover" src="https://i.loli.net/2021/10/09/Ip9vHTfS5d8N2Qr.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-10-09</div><div class="title">Continual Lifelong Learning in Natural Language Processing: A Survey</div></div></a></div></div></div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Coding-Zuo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2021/11/03/A-Survey-on-Natural-Language-Processing-for-Fake-News-Detection/">http://example.com/2021/11/03/A-Survey-on-Natural-Language-Processing-for-Fake-News-Detection/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">Coding-Zuo</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/context-detection/">context detection</a></div><div class="post_share"><div class="addthis_inline_share_toolbox"></div><script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=null" async="async"></script></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%B0%A3%E8%A8%80%E3%80%81%E8%99%9A%E5%81%87%E4%BF%A1%E6%81%AF%E7%BB%BC%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">谣言、虚假信息综述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#A-Survey-on-Natural-Language-Processing-for-Fake-News-Detection"><span class="toc-number">2.</span> <span class="toc-text">A Survey on Natural Language Processing for Fake News Detection</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Abstract"><span class="toc-number">2.1.</span> <span class="toc-text">Abstract</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Introduction"><span class="toc-number">2.2.</span> <span class="toc-text">1 Introduction</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Related-Problems"><span class="toc-number">2.3.</span> <span class="toc-text">2 Related Problems</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-Fact-Checking"><span class="toc-number">2.3.1.</span> <span class="toc-text">2.1. Fact-Checking</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-Rumor-Detection"><span class="toc-number">2.3.2.</span> <span class="toc-text">2.2. Rumor Detection</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-Stance-Detection"><span class="toc-number">2.3.3.</span> <span class="toc-text">2.3. Stance Detection</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-Sentiment-Analysis"><span class="toc-number">2.3.4.</span> <span class="toc-text">2.4. Sentiment Analysis</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Task-Formulations"><span class="toc-number">2.4.</span> <span class="toc-text">3. Task Formulations</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-Classification"><span class="toc-number">2.4.1.</span> <span class="toc-text">3.1. Classification</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-Regression"><span class="toc-number">2.4.2.</span> <span class="toc-text">3.2. Regression</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-Datasets"><span class="toc-number">2.5.</span> <span class="toc-text">4. Datasets</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-Claims"><span class="toc-number">2.5.1.</span> <span class="toc-text">4.1. Claims</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-Entire-Article-Datasets"><span class="toc-number">2.5.2.</span> <span class="toc-text">4.2. Entire-Article Datasets</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-Posts-On-Social-Networking-Services"><span class="toc-number">2.5.3.</span> <span class="toc-text">4.3. Posts On Social Networking Services</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-Methods"><span class="toc-number">2.6.</span> <span class="toc-text">5. Methods</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-Preprocessing"><span class="toc-number">2.6.1.</span> <span class="toc-text">5.1. Preprocessing</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-Machine-Learning-Models"><span class="toc-number">2.6.2.</span> <span class="toc-text">5.2. Machine Learning Models</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#5-2-1-Non-Neural-Network-Models"><span class="toc-number">2.6.2.1.</span> <span class="toc-text">5.2.1. Non-Neural Network Models</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-2-2-Neural-Network-Models"><span class="toc-number">2.6.2.2.</span> <span class="toc-text">5.2.2. Neural Network Models</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-Rhetorical-Approach"><span class="toc-number">2.6.3.</span> <span class="toc-text">5.3. Rhetorical Approach</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-4-Collecting-Evidence"><span class="toc-number">2.6.4.</span> <span class="toc-text">5.4. Collecting Evidence</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#The-Future-of-False-Information-Detection-on-Social-Media-New-Perspectives-and-Trends"><span class="toc-number">3.</span> <span class="toc-text">The Future of False Information Detection on Social Media: New Perspectives and Trends</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#INTRODUCTION"><span class="toc-number">3.1.</span> <span class="toc-text">INTRODUCTION</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-A-BRIEF-LITERATURE-REVIEW"><span class="toc-number">3.2.</span> <span class="toc-text">2 A BRIEF LITERATURE REVIEW</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-Content-based-Methods"><span class="toc-number">3.2.1.</span> <span class="toc-text">2.1 Content-based Methods</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-Social-Context-based-Methods"><span class="toc-number">3.2.2.</span> <span class="toc-text">2.2 Social Context-based Methods</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-Feature-Fusion-based-Methods"><span class="toc-number">3.2.3.</span> <span class="toc-text">2.3 Feature Fusion-based Methods</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-Deep-Learning-based-Methods"><span class="toc-number">3.2.4.</span> <span class="toc-text">2.4 Deep Learning-based Methods</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-NEW-TRENDS-IN-FALSE-INFORMATION-DETECTION"><span class="toc-number">3.3.</span> <span class="toc-text">3 NEW TRENDS IN FALSE INFORMATION DETECTION</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-Early-Detection"><span class="toc-number">3.3.1.</span> <span class="toc-text">3.1 Early Detection</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-Detection-by-Multimodal-Data-Fusion"><span class="toc-number">3.3.2.</span> <span class="toc-text">3.2 Detection by Multimodal Data Fusion</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-Explanatory-False-Information-Detection"><span class="toc-number">3.3.3.</span> <span class="toc-text">3.3 Explanatory False Information Detection</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-CROWD-INTELLIGENCE-BASED-DETECTION"><span class="toc-number">3.4.</span> <span class="toc-text">4 CROWD INTELLIGENCE-BASED DETECTION</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-Crowd-Intelligence-in-False-Information"><span class="toc-number">3.4.1.</span> <span class="toc-text">4.1 Crowd Intelligence in False Information</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-Implicit-Crowd-Intelligence-Models"><span class="toc-number">3.4.2.</span> <span class="toc-text">4.2 Implicit Crowd Intelligence Models</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-OPEN-ISSUES-AND-FUTURE-DIRECTIONS"><span class="toc-number">3.5.</span> <span class="toc-text">5 OPEN ISSUES AND FUTURE DIRECTIONS</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-Cognitive-mechanisms-of-false-information"><span class="toc-number">3.5.1.</span> <span class="toc-text">(1) Cognitive mechanisms of false information.</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Lack-of-standard-datasets-and-benchmarks"><span class="toc-number">3.5.2.</span> <span class="toc-text">(2) Lack of standard datasets and benchmarks.</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-Model-adaptivity-generality-to-new-events"><span class="toc-number">3.5.3.</span> <span class="toc-text">(3) Model adaptivity&#x2F;generality to new events</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-Embracing-of-novel-machine-learning-models"><span class="toc-number">3.5.4.</span> <span class="toc-text">(4) Embracing of novel machine learning models.</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-Adversarial-attack-and-defense-in-FID-models"><span class="toc-number">3.5.5.</span> <span class="toc-text">(5) Adversarial attack and defense in FID models.</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-Explanatory-detection-models"><span class="toc-number">3.5.6.</span> <span class="toc-text">(6) Explanatory detection models.</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-Aggregation-of-crowd-wisdom"><span class="toc-number">3.5.7.</span> <span class="toc-text">(7) Aggregation of crowd wisdom.</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-Propagation-by-social-bots"><span class="toc-number">3.5.8.</span> <span class="toc-text">(8) Propagation by social bots.</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-False-Information-Mitigation"><span class="toc-number">3.5.9.</span> <span class="toc-text">(9) False Information Mitigation.</span></a></li></ol></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By Coding-Zuo</div><div class="footer_custom_text">Hi, welcome to my BLOG</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    loader: {
+      source: {
+        '[tex]/amsCd': '[tex]/amscd'
+      }
+    },
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        addClass: [200,() => {
+          document.querySelectorAll('mjx-container:not([display=\'true\']').forEach( node => {
+            const target = node.parentNode
+            if (!target.classList.contains('has-jax')) {
+              target.classList.add('mathjax-overflow')
+            }
+          })
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>if (document.getElementsByClassName('mermaid').length) {
+  if (window.mermaidJsLoad) mermaid.init()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(() => {
+      window.mermaidJsLoad = true
+      mermaid.initialize({
+        theme: 'default',
+      })
+      false && mermaid.init()
+    })
+  }
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'd652112bf81876e00118',
+      clientSecret: 'a5abed418c7cc2736af5b4d0cbd7ff97d460a5b3',
+      repo: 'Coding-Zuo.github.io',
+      owner: 'Coding-Zuo',
+      admin: ['Coding-Zuo'],
+      id: '2091f92c0f1d3ba173b22ed8ff60f5fc',
+      language: 'zh-CN',
+      perPage: 10,
+      distractionFreeMode: false,
+      pagerDirection: 'last',
+      createIssueManually: false,
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script src="/js/custom.js"></script><script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script src="//code.tidio.co/mak6nokafytw9mgrsuzglwzfxiy3fpdl.js" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
