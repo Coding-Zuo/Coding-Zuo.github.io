@@ -1,0 +1,352 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PADA: A Prompt-based Autoregressive Approach for Adaptation to Unseen Domains  | Coding-Zuo</title><meta name="keywords" content="context detection"><meta name="author" content="Coding-Zuo"><meta name="copyright" content="Coding-Zuo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="PADA: A Prompt-based Autoregressive Approach for Adaptation to Unseen DomainsPADA: A Prompt-based Autoregressive Domain Adaptation algorithm, based on the T5 model 作者提出解决的是这个领域适应问题，即一个算法在几个源域上进行训练，然后应">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PADA: A Prompt-based Autoregressive Approach for Adaptation to Unseen Domains ">
+<meta property="og:url" content="http://example.com/2021/11/23/PADA-A-Prompt-based-Autoregressive-Approach-for-Adaptation-to-Unseen-Domains/index.html">
+<meta property="og:site_name" content="Coding-Zuo">
+<meta property="og:description" content="PADA: A Prompt-based Autoregressive Approach for Adaptation to Unseen DomainsPADA: A Prompt-based Autoregressive Domain Adaptation algorithm, based on the T5 model 作者提出解决的是这个领域适应问题，即一个算法在几个源域上进行训练，然后应">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2021/11/23/cF1h7WGLEr6CegQ.png">
+<meta property="article:published_time" content="2021-11-23T01:49:35.000Z">
+<meta property="article:modified_time" content="2021-11-23T06:48:57.620Z">
+<meta property="article:author" content="Coding-Zuo">
+<meta property="article:tag" content="context detection">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/11/23/cF1h7WGLEr6CegQ.png"><link rel="shortcut icon" href="https://i.loli.net/2021/03/22/reFlcYOnP3dSuJX.png"><link rel="canonical" href="http://example.com/2021/11/23/PADA-A-Prompt-based-Autoregressive-Approach-for-Adaptation-to-Unseen-Domains/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.json","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-11-23 14:48:57'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    })(window)</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sviptzk/HexoStaticFile@latest/Hexo/css/footer.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css"><meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="Coding-Zuo" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://i.loli.net/2021/03/22/YP2oqk7lOAfceTD.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">119</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">16</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://i.loli.net/2021/11/23/cF1h7WGLEr6CegQ.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Coding-Zuo</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">PADA: A Prompt-based Autoregressive Approach for Adaptation to Unseen Domains </h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-11-23T01:49:35.000Z" title="发表于 2021-11-23 09:49:35">2021-11-23</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-11-23T06:48:57.620Z" title="更新于 2021-11-23 14:48:57">2021-11-23</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="PADA: A Prompt-based Autoregressive Approach for Adaptation to Unseen Domains "><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="PADA-A-Prompt-based-Autoregressive-Approach-for-Adaptation-to-Unseen-Domains"><a href="#PADA-A-Prompt-based-Autoregressive-Approach-for-Adaptation-to-Unseen-Domains" class="headerlink" title="PADA: A Prompt-based Autoregressive Approach for Adaptation to Unseen Domains"></a>PADA: A Prompt-based Autoregressive Approach for Adaptation to Unseen Domains</h1><p>PADA: A Prompt-based Autoregressive Domain Adaptation algorithm, based on the T5 model</p>
+<p>作者提出解决的是这个领域适应问题，即一个算法在几个源域上进行训练，然后应用于在训练时未知的未见过的领域的样本（更准确的说这其实是领域泛化问题）。</p>
+<p>在训练时，没有任何样本，不管是有标签的还是无标签的，或者关于目标领域的任何其他知识。</p>
+<p>给定一个测试样本，PADA首先生成一个独特的 prompt，然后以这个 prompt 为条件，在NLP任务方面给这个样本贴上标签。</p>
+<p>prompt 是一个长度不受限制的序列，由预先定义的领域相关特征（DRFs）组成，这些特征是每个源域的特征。直观地说，prompt 是一个独特的签名，它将测试实例映射到源域所跨越的语义空间。</p>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>NLP算法往往依赖于一个开创性的假设，即训练集和测试集来自相同的基础分布。不幸的是，这个假设往往不成立，因为文本可能来自许多不同的来源，每个来源都有独特的分布属性。由于超出训练分布的泛化仍然是一个基本的挑战，NLP算法在应用于非分布的应用时，会出现明显的退化。</p>
+<p>领域适应（DA）明确地解决了上述挑战，努力改善NLP算法的 out-of- distribution 。DA算法在源领域的标注数据上进行训练，以有效地应用于各种目标领域。</p>
+<p>多年来，人们为DA挑战付出了相当大的努力，专注于目标领域在训练时是已知的（例如，通过标记或未标记的数据），但仍未得到充分体现的各种情况（Roark和Bacchiani，2003；Daumé III和Marcu，2006；Reichart和Rappoport，2007；McClosky等人，2010；Rush等人，2012；Schnabel和Schütze，2014）。然而，对训练时未知的任何可能的目标领域的适应性挑战还没有得到充分的探索。</p>
+<p>PADA具有独特的建模优势，因为目标感知算法通常需要为每个目标域训练一个单独的模型，导致整体解决方案效率低下。</p>
+<p>直观地说，通过整合来自几个源域的知识，可以实现对未见过的事物更好的泛化。PADA：基于 Prompt 的自回归领域适应算法，它利用自回归语言模型（T5），并包括一个适应于多个源领域的新型 Prompt 机制。给定一个来自任何未知领域的新样本，该模型首先生成属于熟悉的（源）领域并与给定样本相关的属性。然后，在模型执行下游任务时，生成的属性被用作 prompts。</p>
+<p>为了产生有效的 prompts ，我们从以前关于 pivot features 的工作中得到启发（Blitzer等人，2006；Ziser和Reichart，2018a；Ben-David等人，2020），定义了领域相关特征（DRFs）的集合。DRFs是与源域之一密切相关的特征，编码了特定领域的语义。我们利用各个源域的DRFs，以跨越它们的共享语义空间。这些DRFs共同反映了源域之间的相似性和差异性，以及特定领域的知识。</p>
+<h2 id="Related-Work"><a href="#Related-Work" class="headerlink" title="Related Work"></a>Related Work</h2><p>在DA研究中，有两种突出的设置：有监督的和无监督的。有监督的算法利用来自目标领域的稀缺标记的例子（Daumé III, 2007），而无监督的方法只假设源标记的数据和未标记的源和目标数据在手（Blitzer等人，2006）。</p>
+<p>我们首先描述无监督DA的研究，重点是基于pivot-based的方法。然后，我们继续研究多源的DA方法，重点是专家混合模型。最后，我们描述了自回归语言模型和我们采用T5进行DA的独特方式。</p>
+<h3 id="Unsupervised-Domain-Adaptation-UDA"><a href="#Unsupervised-Domain-Adaptation-UDA" class="headerlink" title="Unsupervised Domain Adaptation (UDA)"></a>Unsupervised Domain Adaptation (UDA)</h3><p>随着深度神经网络（DNN）建模的突破，DA社区的注意力已经被引向了表征学习方法。其中一项工作是采用基于DNN的自编码器来学习潜在的表征。这些模型在无标签的源数据和目标数据上进行训练，并有输入重建损失（Glorot等人，2011；Chen等人，2012；Yang和Eisenstein，2014；Ganin等人，2016）。</p>
+<p>另一个分支采用 pivot 特征来弥补源域和目标域之间的差距（Blitzer等人，2006，2007；Pan等人，2010）。支点特征对感兴趣的任务很突出，在源域和目标域都很丰富。最近，Ziser和Reichart（2017，2018b）将这两种方法结合起来。后来，Han和Eisenstein（2019）提出了一种预训练方法，随后Ben-David等人（2020）提出了一种基于 pivot-based 的变体，用于预训练语境词嵌入。</p>
+<p>最重要的是，UDA模型假定在训练过程中可以获得来自目标领域的无标签数据。我们认为这是对超越训练分布的泛化目标的一个轻微的放松。此外，这个定义在工程上有缺点，因为每个目标域都需要一个新的模型。为此，我们追求任何领域的适应性设置，即在训练时无法获得未标记的目标数据。</p>
+<p>我们从 pivot-based 的模型中得到启发。pivot 的定义依赖于标记的 源域数据 和 未标记的源域 和 目标域数据。特别是，好的 pivot 是与任务标签相关的。相反，我们定义了任务变量DRF，这些特征与领域的身份高度相关。由于领域与单词高度相关，我们的DRFs在本质上是词汇性的。</p>
+<p>虽然我们的方法可以在单一的源域中运行，但我们利用多个源域来促进对未知目标域的推广。我们接下来讨论多源DA。</p>
+<h3 id="Multi-Source-Domain-Adaptation"><a href="#Multi-Source-Domain-Adaptation" class="headerlink" title="Multi-Source Domain Adaptation"></a>Multi-Source Domain Adaptation</h3><p>大多数现有的多源DA方法遵循无监督DA的设置定义，同时考虑一个以上的源域。一个突出的方法是融合几个来源的模型。早期的工作是为每个领域训练一个分类器，并假设所有的源领域对测试样本都是同等重要的（Li和Zong，2008；Luo等人，2008）。最近，基于对抗的方法使用未标记的数据，将源域与目标域对齐（Zhao等人，2018；Chen和Cardie，2018）。同时，Kim等人（2017年）和Guo等人（2018年）根据目标实例和每个源域之间的关系，明确地对专家混合模型（MoE）模型进行加权。然而，Wright和Augenstein（2020）在这项工作之后，在基于Transfomers的MoE上测试了各种加权方法，发现加权方法非常有效。</p>
+<p>我们认识到所提出的MoE解决方案的两个局限性。首先，它是不可扩展的，因为它要求每个源域都有一个专家，导致模型参数随着源域数量的增加而增加（通常是线性的）。第二，领域专家是针对特定领域的知识进行调整的。然而，测试实例可能来自未知的领域，并可能反映出来源的复杂组合。为了解决这个问题，MoE使用启发式方法将专家的预测集合起来，例如简单的平均数或基于领域分类器预测的加权平均数。我们的结果表明，这种方法是次优的。</p>
+<p>在这项工作中，我们训练一个模型，该模型在所有领域中共享其参数。此外，我们对适应任何目标领域感兴趣，这样在训练时就不需要知道关于潜在目标领域的信息。上述一些工作（Wright和Augenstein，2020年）事实上避免了利用目标数据，因此它们适合任何领域的设置，并形成了我们的两个基线。然而，与这些作品相比，我们认为这个定义是本研究的核心部分。</p>
+<h3 id="Autoregressive-Language-Modeling"><a href="#Autoregressive-Language-Modeling" class="headerlink" title="Autoregressive Language Modeling"></a>Autoregressive Language Modeling</h3><p>以前的工作在训练基于Transformer（Vaswani等人，2017）的语言模型时主要考虑两种方法。第一种实现了经典的马尔科夫语言建模方法，通过训练Transformer解码器模型，根据其之前的上下文自动生成下一个词（Radford和Narasimhan，2018；Radford等人，2019）。第二种是将自回归语言建模方法作为一个掩盖的标记预测任务，通过训练Transformer的编码器来得出上下文的单词嵌入（Devlin等人，2019；Liu等人，2019；Sanh等人，2019）。当为一个新的任务微调模型时，一个自定义的解码器被实现，并与模型的预训练编码器联合训练。</p>
+<p>最近提出了第三种方法，试图将以前的方法中的优点结合起来。它提出训练一个完整的Transformer（编码器-解码器）语言模型，从输入序列中自动渐进地生成屏蔽的、缺失的或扰乱的标记跨度，作为一个序列到序列的任务（Raffel等人，2020；Lewis等人，2020b）。最近，Raffel等人（2020）提出了T5，一个基于转化器的模型，提出了文本到文本的迁移学习方法。T5基本上将所有的任务视为生成性的，同时利用一个提示短语来表示正在执行的具体任务。结合其文本到文本的方法，T5在许多鉴别性和生成性任务中显示出其优越性，同时消除了对特定任务网络结构的需求。</p>
+<p>T5的一个特别有趣和有用的特点是其 prompting 机制。prompt 短语通常用于指示模型要执行的任务，被作为前缀添加到所有与任务相关的输入实例中。最近的工作也探索了这种 prompt 机制，以使语言模型适应不同的目的（Brown等人，2020年），激发情感或话题相关的信息（Jiang等人，2020年；Sun和Lai，2020年；Shin等人，2020年），或作为一种有效的微调方法（Li和Liang，2021年）。在这项工作中，我们利用T5的提示机制，作为激发模型编码与每个测试例子相关的特定领域特征的方式。</p>
+<h2 id="Any-Domain-Adaptation"><a href="#Any-Domain-Adaptation" class="headerlink" title="Any-Domain Adaptation"></a>Any-Domain Adaptation</h2><h3 id="DA-and-Transfer-Learning"><a href="#DA-and-Transfer-Learning" class="headerlink" title="DA and Transfer Learning"></a>DA and Transfer Learning</h3><p>一个预测任务被定义为 $T = {Y}$，其中 $Y$ 是任务的标签空间。定义 $X$ 为特征空间，$P(X)$ 是 $X$ 上的边缘分布，$P(Y)$ 对 $Y$ 的先验分布。domain 被定义为 $D^T={X, P(X), P(Y),P(Y|X)}$</p>
+<p>DA是迁移学习的一个特殊案例，即过渡性转移学习，其中 $T_S$ 和 $T_T$，即源任务和目标任务，是相同的。</p>
+<p>$D<em>S^T, D^{T}</em>{T}$ 是源域和目标域，至少有一个基础概率分布不同，即$P(X),P(Y) \ or \ P(Y|X)$。</p>
+<p>DA 的目标是从一组源域 ${ D<em>{S_i}}^K</em>{i=1}$ 中学习一个函数 $f$ ，这个函数可以很好地泛化到一组目标域$ { D<em>{T_i} }^M</em>{i=1}$ </p>
+<h3 id="The-Any-Domain-Setting"><a href="#The-Any-Domain-Setting" class="headerlink" title="The Any-Domain Setting"></a>The Any-Domain Setting</h3><p>我们专注于为一个给定的任务建立一个能够适应任何领域的算法。为此，我们假设在训练时对目标领域 $D_T$ 的了解为零。因此，我们稍微修改了无监督多源领域适应的经典设置，假设我们不知道或无法获得目标领域的标记或未标记数据。</p>
+<p>我们只假设可以从K个源域中获得标记的训练数据  $ {D<em>{s_i}}$，其中 $D</em>{S_i} = {(x_t^{S_i}, y_t^{S_i})}$。目标是学习一个仅使用源域数据的模型，该模型可以很好地概括到一个未知的目标域。</p>
+<h3 id="Any-Domain-Adaptation-and-Zero-Shot-Learning"><a href="#Any-Domain-Adaptation-and-Zero-Shot-Learning" class="headerlink" title="Any-Domain Adaptation and Zero-Shot Learning"></a>Any-Domain Adaptation and Zero-Shot Learning</h3><p>我们避免将我们的设置命名为 “Zero-Shot DA”，因为我们认为Zero-Shot学习是一个过载的术语，而且它的用法在不同的作品中是不同的。一方面，GPT-3的作者（Brown等人，2020）用这个术语来表示向未知目标任务 $T^T$和未知领域 $D^T$的转变。</p>
+<p>另一方面，Kodirov等人（2015）假设任务/标签空间漂移，而目标域在训练期间是已知的，Blitzer等人（2009）假设可以访问来自包括目标域在内的各种领域的无标签数据，而Peng等人（2018）使用来自目标域的不同任务数据。我们的问题设置与上述作品不同，但在某种程度上都可以被描述为 “Zero-shot”。在我们看来，这些差异应该被澄清，因此我们为我们的设置提出了一个指定的术语。</p>
+<h2 id="Prompt-based-Autoregressive-DA"><a href="#Prompt-based-Autoregressive-DA" class="headerlink" title="Prompt-based Autoregressive DA"></a>Prompt-based Autoregressive DA</h2><p>正如前面第2节所讨论的，我们认识到基于MoE的方法所提出的解决方案有两个主要限制。(1) 它是不可扩展的。训练的参数总数，对于单个模型来说已经很大了，随着源域数量的增加而线性增长，因为需要为每个域分别训练一个专家模型。自然，这也增加了整体的训练时间；（2）在这种方法中，每个领域都要训练一个单独的模型。直观地说，针对特定领域的专家被调整为针对特定领域的知识，有时会牺牲跨领域的知识，因为跨领域的知识强调不同领域之间的关系。此外，由于领域的划分往往是任意的（例如考虑dvd和电影领域之间的差异），我们不希望将我们的模型严格限制在一个特定的分区，而是鼓励对领域边界采取更宽松的方法。</p>
+<p>因此，我们提出一个单一的模型来编码来自多个领域的信息。我们的模型是这样设计的：来自新的未知领域的测试样本可以触发模型中最相关的参数。这样，我们允许我们的模型在各领域之间共享信息，并在测试时使用最相关的信息。我们的模型受到最近关于自回归语言模型 prompt 机制的研究启发。最近的工作显示了prompt 机制在激发这些模式方面的有效性（§2），尽管不是在DA的背景下。</p>
+<p>我们首先（第4.1节）描述了我们模型的一般结构，然后（第4.2节）介绍了形成我们prompt的领域相关特征。</p>
+<h3 id="The-Model"><a href="#The-Model" class="headerlink" title="The Model"></a>The Model</h3><p><img src="https://i.loli.net/2021/11/23/mtD8MgoxRXGOSJz.png" alt=""></p>
+<p>我们提出了基于提示的领域适应自回归算法（PADA，图2a）。PADA采用了一个预先训练好的T5语言模型，并学习生成特定样本的领域相关特征（DRFs），以促进准确的任务预测。这是通过一个两步多任务机制实现的，首先生成一个DRF集以形成一个prompt，然后预测任务标签。</p>
+<p>形式上，假设一个输入样本  $ (x_i, yi) \sim S_i $ ，这样 $x_i$ 是输入文本，$y_i$ 是任务label，$S_i$是这个例子的领域。</p>
+<p> 对于输入的 $x_i$，PADA被训练成首先生成 $N_i$，即域名，然后是 $R_i$，即 $x_i$ 的DRF签名，并根据这个 prompt 来预测标签$y_i$。在测试时，当模型遇到一个来自未知领域的例子时，它会产生一个 prompt，该 prompt 可能由一个或多个域名以及一个或多个源域的DRF集的特征组成，并基于该 prompt 预测任务标签。</p>
+<p><img src="https://i.loli.net/2021/11/23/ot5qEnNY1HCzx4K.png" alt=""></p>
+<p>考虑到图1中的例子，它描述了一个情感分类模型，在餐馆、家庭家具、电子设备和电影等源域上进行训练。该模型观察到一个来自航空公司领域的测试例子，这是一个以前没有见过的领域，模型不知道其名称。该模型首先生成最适合这个例子的训练域的名称，在这个例子中是餐馆。然后，它继续生成 “食物 “和 “椅子”，这两个词分别与餐馆和家庭家具领域有关。最后，鉴于这一 prompt，该模型预测了该例子的（负面）情绪。</p>
+<p>为了将 prompt 生成任务与判别分类任务分开，我们在一个多任务框架内训练我们的模型。根据样本的prompt，PADA被训练成执行两个任务。一个是生成 prompt，由例子领域的DRF集的特征组成，另一个是预测样本的标签。</p>
+<p>对于第一个生成任务，模型接收带有特殊prompt “域：”的例子，这为模型生成 $N_i$ 和 $R_i$ 提供了条件。请注意，$R_i$是一组从 $S_i$ 的DRF集衍生出来的特征，如第4.2节所述，训练的样本被自动注释了它们的 $R_i$。对于第二个判别性任务，模型收到一个 prompt ，由 $N_i$ 和 $R_i$ 组成，其任务是预测 $y_i$。</p>
+<p>按照T5的多任务训练协议，我们对每个任务的样本进行混合。为此，我们定义了一个任务比例混合参数 $α$。 训练集中的每个例子都以 $α$ 的概率形成生成性任务的样本，以 $1-α$ 的概率形成鉴别性任务的样本。$α$ 的值越大，模型对生成性任务的训练就越多。</p>
+<p>PADA以生成的 prompt 为条件进行分类。为了评估这一条件的效果，我们还考虑了一个更简单的PADA变体，它联合执行分类和生成任务，但不使用生成任务的输出作为分类任务的 prompt 。我们把这个变体命名为PADA-NC，以强调判别任务不以生成部分的输出为条件。PADA和PADA-NC之间的区别在图2中得到了强调。</p>
+<p>我们方法的核心是巧妙地选择每个领域的DRF集。我们接下来讨论这些特征和它们的选择过程。</p>
+<h3 id="Domain-Related-Features"><a href="#Domain-Related-Features" class="headerlink" title="Domain Related Features"></a>Domain Related Features</h3><p>对于每个领域，我们定义DRF集，使这些特征为该领域提供一个语义签名。重要的是，如果两个领域有共同的语义，例如餐馆和烹饪领域，我们希望它们的DRFs在语义上是重叠的。由于每个训练样本的 prompt 由其领域的DRF集的特征子集组成，我们也应该决定一个 prompt 生成规则，可以用其相关的特征来注释这些训练样本。</p>
+<p>为了反映该领域的语义，DRF应该经常出现在该领域。此外，相对于所有其他领域，它们在该特定领域中应该是非常普遍的。尽管DRF在一个特定的领域中很突出，但它也可以与其他领域相关。例如，考虑图2中的例子。人质 “这个词与 “Charlie-Hebdo “领域高度相关，而且确实是其DRFs之一。然而，这个词也与 “Sydney-Siege “域相关，这是Rumour Detection数据集的另一个域（Zubiaga等人，2016）。此外，由于这两个领域都与类似的事件有关，前者的DRF集包含恐怖分子的特征，后者的DRF集包含枪手的特征，这并不令人惊讶。<strong>这些特征的相似性促进了我们模型中的参数共享。</strong></p>
+<p>我们对每个源域的DRF集定义如下。让第 $j$ 个源域（$S_j$）的样本（文本）被标记为1，所有其他域（ $S\setminus S_j$ ）的例子被标记为 0。我们首先计算所有 tokens 和这个二元变量之间的相互信息（MI），并选择 MI 得分最高的 $l$ 个token。注意，MI标准可能会促进与（ $S\setminus S_j$ ）高度相关的标记，而不是与 $S_j$ 。因此，我们根据以下条件来过滤 $l$ 个token:</p>
+<script type="math/tex; mode=display">
+\frac{C_{S\setminus S_j}(n)}{C_{S_j}(n)} \le \rho , C_{S_j}(n) \gt 0</script><p>其中 $C<em>{S_j}(n)$ 是 $S_j$ 中n-gram $n$ 的计数， $C</em>{S\setminus S_j}(n)$ 是在所有源域中除了 $ S_j$ 的 n-gram 计数，$ρ$ 是 n-gram 频率比参数。</p>
+<p>直观地说，$ρ$ 越小，我们就越确定这个n-gram与 $S_j$ 特别相关，与其他领域相比。由于 $S_j$ 中的样本数量远远小于  $S\setminus S_j$  中的样本数量，我们选择 $ρ≥1$ ，但不允许它过大。因此，这个标准允许与 $S_j$ 相关但也与其他源域相关的特征成为 $S_j$ 的DRF集的一部分。我们用 $R_j$ 来表示第 $j$ 个域的DRF集。</p>
+<p>给定一个来自领域 $j$ 的训练样本 $i$ ，我们从 $R_j$ 中选择与该样本最相关的 $m$ 个特征来形成其 prompt。为此，我们计算DRF特征的T5嵌入 和 每个样本的T5嵌入 之间的欧几里得距离。然后，我们根据分数对这个列表进行排序，并选择最重要的 $m$ 个特征。（在这个计算中，我们考虑了T5在其预训练期间学到的非语境嵌入。在我们的实验中，我们只考虑单字（单词）作为DRFs。）</p>
+<p>总而言之，我们针对特定领域的 DRF 集提取和训练样本的 prompt 注释的方法，展示了三个有吸引力的特性。首先，每个样本都有它自己独特的prompt 。其次，我们的 prompt 将每个训练样本映射到其领域的语义空间。最后，特定领域的DRF集可能会在其语义上重叠，要么包括相同的token，要么包括具有类似含义的token。这样，与单独的域名相比，它们提供了一个更细微的领域签名。在推理阶段，模型可以生成一个特定的样本prompt，该提示由不同源域的DRF集的特征组成，这一点后来被使用。</p>
+<h2 id="Experimental-Setup"><a href="#Experimental-Setup" class="headerlink" title="Experimental Setup"></a>Experimental Setup</h2><p>我们的主要模型是PADA：这个多任务模型首先生成域名和领域相关的特征，形成一个prompt，然后用这个prompt来预测任务标签。我们将其与两种类型的模型进行比较。(a) 基于T5的基线，对应于多源DA工作中提出的想法，以及其他最近的最先进的模型；以及(b) 使用PADA特定部分的消融模型，以强调其组成部分的重要性。</p>
+<h3 id="Baseline-Models"><a href="#Baseline-Models" class="headerlink" title="Baseline Models"></a>Baseline Models</h3><ul>
+<li><em>Content-CRF</em> ： 一个为谣言检测而训练的CRF模型。每个预测都以相关的推文以及之前的推文为条件，同时结合了基于内容和社会特征。</li>
+<li><em>Transformer-based Mixture of Experts</em>： 对于每个源域，在该域的训练集上训练一个单独的基于变压器的DistilBERT专家模型（Sanh等人，2019），并在所有源域的数据上训练另一个模型。在测试时，计算这些模型的类别概率的平均值，并选择最高概率的类别。这个模型被Wright和Augenstein（2020）命名为MoE-avg，并证明了在谣言检测方面取得了最先进的性能（该论文将CCRF的重新结果报告为其之前的最先进性能）。</li>
+<li><em>T5-MoE</em> ：一个基于T5的MoE集合模型。对于每个源域，一个单独的预训练的T5模型在该域的训练集上进行微调（即一个领域专家模型）。在推理过程中，模型的最终预测是用Tr-MoE中相同的平均程序决定的。</li>
+<li><em>T5-No-Domain-Adaptation (T5-NoDA)</em> ：一个预先训练好的T5模型，它向PADA（见下文）中使用的同一任务分类器提供信息，以预测任务标签。 在每个DA设置中，该模型是在所有源域的训练数据上训练的。</li>
+<li><em>T5-Domain-Adversarial-Network (T5-DAN)</em> ：一个将T5-NoDA与对抗性领域分类器整合的模型，以学习领域不变的表征（Ganin和Lempitsky，2015）。</li>
+<li><em>T5-Invariant-Risk-Minimization (T5-IRM)</em> ：一个基于T5的模型，它对每个领域有不同的最佳线性分类器的特征分布进行惩罚。IRM（Arjovsky等人，2019）是一个成熟的机器学习基线，用于超越多源分布的泛化（Koh等人，2020）。该模型是在所有源域的训练数据上训练的。</li>
+<li><em>T5-UpperBound (T5-UB)</em> ：一个与T5-NoDA结构相同的域内模型。它在所有领域的训练数据上进行训练，在每个领域的开发数据上进行测试。我们将其性能视为所有DA设置中平均目标性能的上限，对于我们设置中的任何基于T5的模型。</li>
+</ul>
+<h3 id="Ablation-Models"><a href="#Ablation-Models" class="headerlink" title="Ablation Models"></a>Ablation Models</h3><ul>
+<li>PADA-DN 我们的PADA模型的一个简化变体，它只给输入文本分配一个域名作为prompt。由于域名在测试时是未知的，我们为每个测试样本创建多个变体，每个变体都有一个训练域名作为prompt。对于模型的最终预测，我们遵循与Tr-MoE和T5-MoE相同的平均化过程。</li>
+<li>PADA-NC 一个类似于PADA的多任务模型，只是它同时生成特定于样本的域名和DRF prompt并预测任务标签。这个模型不以提示为条件进行任务预测。</li>
+</ul>
+<p><img src="https://i.loli.net/2021/11/23/z4rZXTJYnOytFRE.png" alt=""></p>
+<p>表2显示了我们的结果。 PADA在10个设置中的6个中优于所有的模型，在Rumour Detection和MNLI中分别比T5-NoDA的平均性能提高了3.5%和1.3%，T5-NoDA是不属于我们PADA框架的最佳模型。此外，在10个设置中的9个中，PADA模型是表现最好的模型之一。有趣的是，不执行任何DA的T5-NoDA的性能超过了所有不属于PADA系列的模型，包括MoE模型（平均和大多数模型之间的比较）。</p>
+<p>虽然不同任务之间的性能提升不同，但它们部分源于每个任务中源域和目标域之间的不同性能差距。回顾一下，我们认为T5-UB在谣言检测（82.8%）和MNLI（80.8%）的开发集上的表现，是任何基于T5的模型在所有DA设置中平均目标表现的上限。当考虑到这个上限和T5-NoDA之间的差距时（Rumour Detection为65.8%，MNLI为78.3%），PADA将Rumour Detection的错误率降低了21%，MNLI为52%。事实上，PADA在这两项任务中获得的改进是巨大的。</p>
+<p>虽然不同任务之间的性能提升不同，但它们部分源于每个任务中源域和目标域之间的不同性能差距。回顾一下，我们认为T5-UB在谣言检测（82.8%）和MNLI（80.8%）的开发集上的表现，是任何基于T5的模型在所有DA设置中平均目标表现的上限。当考虑到这个上限和T5-NoDA之间的差距时（Rumour Detection为65.8%，MNLI为78.3%），PADA将Rumour Detection的错误率降低了21%，MNLI为52%。事实上，PADA在这两项任务中获得的改进是巨大的。<br>与MoE相比，PADA的优势并不局限于改进预测。特别是，对于PADA，我们训练一个单一的模型，而对于MoE，我们为每个源域训练一个独特的模型，因此MoE框架中的参数数量随着源域的数量而线性增加。例如，在我们的设置中，Tr-MoE训练了五个DistilBERT模型（每个源域一个，所有源域一个），导致5 - 66M = 330M参数。相比之下, PADA模型保留了T5的220M参数, 而不考虑源域的数量。</p>
+<p>我们的研究结果显示，在10个环境中的9个中，PADA及其变体PADA-DN和PADA-NC优于所有其他模型。特别是，PADA在10个环境中的7个环境中优于非PADA模型，PADA-NC在6个环境中优于这些模型，而PADA-DN在5个环境中优于这些模型。此外，PADA在所有的谣言检测设置中和5个MNLI设置中的3个中优于PADA-DN变体，而其PADA-NC变体在10个设置中的8个中优于PADA-DN。这些结果突出了我们设计选择的重要性。(a) 在特定例子的提示中包括DRFs，使它们能够表达源域和测试例子之间的关系（PADA vs PADA-DN）；以及(b) 利用自回归组件，其中生成的DRF提示被任务分类组件使用（PADA vs PADA-NC）。</p>
+<h3 id="Performance-Shifts-between-Source-and-Target"><a href="#Performance-Shifts-between-Source-and-Target" class="headerlink" title="Performance Shifts between Source and Target"></a>Performance Shifts between Source and Target</h3><p><img src="https://i.loli.net/2021/11/23/x1Lza6UsSTZbhk4.png" alt=""></p>
+<p>当DA方法提高了模型在目标域的性能时，这可能会导致源域和目标域之间的性能差距增加或减少。如果一个模型在其源训练域和未见过的目标域的表现相似，其源域的表现也可以为其未来在这些未见过的域的表现提供一个重要的指示。因此，在我们的设置中，如果未来的目标域是未知的，我们认为这种性能的稳定性是一个理想的属性。</p>
+<p>图3显示了三个热图，描述了每个模型在源域和目标域之间的性能变化。如第6节所述，我们通过计算所有源域开发样本的F1得分和目标域测试集的表现来衡量每个模型的域内性能。然后，我们计算源域和目标域性能指标之间的差异，并对实验中表现最好的模型进行重新定位。总的趋势是明确的：PADA不仅在目标域表现更好，而且它还大大减少了源-目标性能的差距。虽然不是DA模型的T5-NoDA引发了最大的平均绝对性能转变—Rumour Detection为17%，MNLI为4.3%，Aspect Prediction为34%，但PADA的平均绝对性能转变分别为8.7%、3.5%和26%。</p>
+<h2 id="Discussion"><a href="#Discussion" class="headerlink" title="Discussion"></a>Discussion</h2><p>我们解决了在训练时不知道目标域的情况下的多源域适应问题。这种设置的有效模型可以应用于任何目标域，对目标域没有任何数据再要求，而且模型参数的数量不会随着源或目标域的数量而增加。我们的算法PADA利用了T5自回归语言模型的提示机制，将测试例子映射到源域所跨越的语义空间。<br>我们对三个任务和十四个多源适应性设置的实验结果表明，与强大的替代方案相比，我们的方法是有效的，同时也表明了模型组件和我们的设计选择的重要性。此外，与MoE范式相比，PADA提供了一个统一的模型，即为每个源域训练一个模型。从直觉上讲，这种方法似乎也更符合认知规律—一个单一的模型试图使自己适应新的输入领域，而不是在每个领域采用一个独立的模型。<br>PADA的提示生成机制自然受到它所训练的源域集的限制。这可能会产生次优的DRF，而这些测试例子来自于与任何源域在语义上极不相关的领域。此外，我们没有直接用主要预测任务来优化提示生成过程，这也可能导致次优的DRF生成。在未来的工作中，我们希望改进我们方法的这些方面，并探索在一个单一模型中容纳多个任务和领域的自然扩展。</p>
+</article><div class="post-reward"><div class="reward-button button--animated"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2021/11/19/%E4%BA%8C%E5%8F%89%E6%A0%91%E5%88%B7%E9%A2%981/"><img class="next-cover" src="https://i.loli.net/2021/11/19/ymAL8Xxges6OpD7.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">二叉树刷题1</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/11/17/Towards-a-Unified-View-of-Parameter-Efficient-Transfer-Learning/" title="Towards a Unified View of Parameter-Efficient Transfer Learning"><img class="cover" src="https://i.loli.net/2021/11/17/hMK8qF4Jne6sTYC.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-17</div><div class="title">Towards a Unified View of Parameter-Efficient Transfer Learning</div></div></a></div><div><a href="/2021/11/14/Generalizing-to-Unseen-Domains-A-Survey-on-Domain-Generalization/" title="Generalizing to Unseen Domains: A Survey on Domain Generalization"><img class="cover" src="https://i.loli.net/2021/11/14/GaehtZq4ViLP2lp.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-14</div><div class="title">Generalizing to Unseen Domains: A Survey on Domain Generalization</div></div></a></div><div><a href="/2021/11/12/EANN-Event-Adversarial-Neural-Networks-for-Multi-Modal-Fake-News-Detection/" title="EANN: Event Adversarial Neural Networks for Multi-Modal Fake News Detection"><img class="cover" src="https://i.loli.net/2021/11/12/qoSKeg3OQdv9Hu5.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-12</div><div class="title">EANN: Event Adversarial Neural Networks for Multi-Modal Fake News Detection</div></div></a></div><div><a href="/2021/11/09/SPoT-Better-Frozen-Model-Adaptation-through-Soft-Prompt-Transfer/" title="SPoT: Better Frozen Model Adaptation through Soft Prompt Transfer"><img class="cover" src="https://i.loli.net/2021/11/09/PdMk5FLmlYjEnc8.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-09</div><div class="title">SPoT: Better Frozen Model Adaptation through Soft Prompt Transfer</div></div></a></div><div><a href="/2021/11/08/The-Power-of-Scale-for-Parameter-Efficient-Prompt-Tuning/" title="The Power of Scale for Parameter-Efficient Prompt Tuning"><img class="cover" src="https://i.loli.net/2021/11/08/TiLQpECoWymr9eH.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-08</div><div class="title">The Power of Scale for Parameter-Efficient Prompt Tuning</div></div></a></div><div><a href="/2021/11/05/Parameter-Efficient-Transfer-Learning-with-Diff-Pruning/" title="Parameter-Efficient Transfer Learning with Diff Pruning"><img class="cover" src="https://i.loli.net/2021/11/05/F412fHCJ9SnPOER.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-05</div><div class="title">Parameter-Efficient Transfer Learning with Diff Pruning</div></div></a></div></div></div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Coding-Zuo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2021/11/23/PADA-A-Prompt-based-Autoregressive-Approach-for-Adaptation-to-Unseen-Domains/">http://example.com/2021/11/23/PADA-A-Prompt-based-Autoregressive-Approach-for-Adaptation-to-Unseen-Domains/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">Coding-Zuo</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/context-detection/">context detection</a></div><div class="post_share"><div class="addthis_inline_share_toolbox"></div><script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=null" async="async"></script></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#PADA-A-Prompt-based-Autoregressive-Approach-for-Adaptation-to-Unseen-Domains"><span class="toc-number">1.</span> <span class="toc-text">PADA: A Prompt-based Autoregressive Approach for Adaptation to Unseen Domains</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Introduction"><span class="toc-number">1.1.</span> <span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Related-Work"><span class="toc-number">1.2.</span> <span class="toc-text">Related Work</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Unsupervised-Domain-Adaptation-UDA"><span class="toc-number">1.2.1.</span> <span class="toc-text">Unsupervised Domain Adaptation (UDA)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Multi-Source-Domain-Adaptation"><span class="toc-number">1.2.2.</span> <span class="toc-text">Multi-Source Domain Adaptation</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Autoregressive-Language-Modeling"><span class="toc-number">1.2.3.</span> <span class="toc-text">Autoregressive Language Modeling</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Any-Domain-Adaptation"><span class="toc-number">1.3.</span> <span class="toc-text">Any-Domain Adaptation</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#DA-and-Transfer-Learning"><span class="toc-number">1.3.1.</span> <span class="toc-text">DA and Transfer Learning</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#The-Any-Domain-Setting"><span class="toc-number">1.3.2.</span> <span class="toc-text">The Any-Domain Setting</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Any-Domain-Adaptation-and-Zero-Shot-Learning"><span class="toc-number">1.3.3.</span> <span class="toc-text">Any-Domain Adaptation and Zero-Shot Learning</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Prompt-based-Autoregressive-DA"><span class="toc-number">1.4.</span> <span class="toc-text">Prompt-based Autoregressive DA</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#The-Model"><span class="toc-number">1.4.1.</span> <span class="toc-text">The Model</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Domain-Related-Features"><span class="toc-number">1.4.2.</span> <span class="toc-text">Domain Related Features</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Experimental-Setup"><span class="toc-number">1.5.</span> <span class="toc-text">Experimental Setup</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Baseline-Models"><span class="toc-number">1.5.1.</span> <span class="toc-text">Baseline Models</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Ablation-Models"><span class="toc-number">1.5.2.</span> <span class="toc-text">Ablation Models</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Performance-Shifts-between-Source-and-Target"><span class="toc-number">1.5.3.</span> <span class="toc-text">Performance Shifts between Source and Target</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Discussion"><span class="toc-number">1.6.</span> <span class="toc-text">Discussion</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By Coding-Zuo</div><div class="footer_custom_text">Hi, welcome to my BLOG</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    loader: {
+      source: {
+        '[tex]/amsCd': '[tex]/amscd'
+      }
+    },
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        addClass: [200,() => {
+          document.querySelectorAll('mjx-container:not([display=\'true\']').forEach( node => {
+            const target = node.parentNode
+            if (!target.classList.contains('has-jax')) {
+              target.classList.add('mathjax-overflow')
+            }
+          })
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>if (document.getElementsByClassName('mermaid').length) {
+  if (window.mermaidJsLoad) mermaid.init()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(() => {
+      window.mermaidJsLoad = true
+      mermaid.initialize({
+        theme: 'default',
+      })
+      false && mermaid.init()
+    })
+  }
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'd652112bf81876e00118',
+      clientSecret: 'a5abed418c7cc2736af5b4d0cbd7ff97d460a5b3',
+      repo: 'Coding-Zuo.github.io',
+      owner: 'Coding-Zuo',
+      admin: ['Coding-Zuo'],
+      id: '985c6fe84257a45e9cb560889c21418a',
+      language: 'zh-CN',
+      perPage: 10,
+      distractionFreeMode: false,
+      pagerDirection: 'last',
+      createIssueManually: false,
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script src="/js/custom.js"></script><script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script src="//code.tidio.co/mak6nokafytw9mgrsuzglwzfxiy3fpdl.js" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
