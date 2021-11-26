@@ -1,0 +1,325 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>P-Tuning v2，Prompt Tuning Can Be Comparable to Fine-tuning Universally Across Scales and Tasks | Coding-Zuo</title><meta name="keywords" content="context detection"><meta name="author" content="Coding-Zuo"><meta name="copyright" content="Coding-Zuo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="P-Tuning v2: Prompt Tuning Can Be Comparable to Fine-tuning Universally Across Scales and TasksPrompt tuning 只用冻结的语言模型来调整连续的prompts，大大减少了训练时每个任务的存储和内存使用。但  prompt tuning 对于正常大小的预训练模型来说表现并不理想。  现有的 pro">
+<meta property="og:type" content="article">
+<meta property="og:title" content="P-Tuning v2，Prompt Tuning Can Be Comparable to Fine-tuning Universally Across Scales and Tasks">
+<meta property="og:url" content="http://example.com/2021/11/25/P-Tuning-v2-Prompt-Tuning-Can-BeComparable-to-Fine-tuning-Universally-Across-Scales-and-Tasks/index.html">
+<meta property="og:site_name" content="Coding-Zuo">
+<meta property="og:description" content="P-Tuning v2: Prompt Tuning Can Be Comparable to Fine-tuning Universally Across Scales and TasksPrompt tuning 只用冻结的语言模型来调整连续的prompts，大大减少了训练时每个任务的存储和内存使用。但  prompt tuning 对于正常大小的预训练模型来说表现并不理想。  现有的 pro">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2021/11/23/cF1h7WGLEr6CegQ.png">
+<meta property="article:published_time" content="2021-11-25T09:29:41.000Z">
+<meta property="article:modified_time" content="2021-11-26T12:29:43.360Z">
+<meta property="article:author" content="Coding-Zuo">
+<meta property="article:tag" content="context detection">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/11/23/cF1h7WGLEr6CegQ.png"><link rel="shortcut icon" href="https://i.loli.net/2021/03/22/reFlcYOnP3dSuJX.png"><link rel="canonical" href="http://example.com/2021/11/25/P-Tuning-v2-Prompt-Tuning-Can-BeComparable-to-Fine-tuning-Universally-Across-Scales-and-Tasks/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.json","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-11-26 20:29:43'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    })(window)</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sviptzk/HexoStaticFile@latest/Hexo/css/footer.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css"><meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="Coding-Zuo" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://i.loli.net/2021/03/22/YP2oqk7lOAfceTD.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">120</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">16</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://i.loli.net/2021/11/23/cF1h7WGLEr6CegQ.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Coding-Zuo</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">P-Tuning v2，Prompt Tuning Can Be Comparable to Fine-tuning Universally Across Scales and Tasks</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-11-25T09:29:41.000Z" title="发表于 2021-11-25 17:29:41">2021-11-25</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-11-26T12:29:43.360Z" title="更新于 2021-11-26 20:29:43">2021-11-26</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="P-Tuning v2，Prompt Tuning Can Be Comparable to Fine-tuning Universally Across Scales and Tasks"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="P-Tuning-v2-Prompt-Tuning-Can-Be-Comparable-to-Fine-tuning-Universally-Across-Scales-and-Tasks"><a href="#P-Tuning-v2-Prompt-Tuning-Can-Be-Comparable-to-Fine-tuning-Universally-Across-Scales-and-Tasks" class="headerlink" title="P-Tuning v2: Prompt Tuning Can Be Comparable to Fine-tuning Universally Across Scales and Tasks"></a>P-Tuning v2: Prompt Tuning Can Be Comparable to Fine-tuning Universally Across Scales and Tasks</h1><p>Prompt tuning 只用冻结的语言模型来调整连续的prompts，大大减少了训练时每个任务的存储和内存使用。但</p>
+<ul>
+<li><p>prompt tuning 对于正常大小的预训练模型来说表现并不理想。</p>
+</li>
+<li><p>现有的 prompt tuning 方法不能处理困难的序列标记任务，缺乏普适性。</p>
+</li>
+</ul>
+<p>P-Tuning-v2 与微调的性能相匹配，并且只有0.1%-3%的调整参数。</p>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>微调，为目标任务更新整个模型参数集。虽然微调能获得良好的性能，但在训练过程中却很耗费内存，因为必须存储所有参数的梯度和优化器状态。</p>
+<p>此外，微调需要在推理过程中为每个任务保留一份模型参数，这很不方便，因为预训练的模型通常很大。</p>
+<p><strong>Prompting</strong> 另一方面，冻结PLMs的所有参数并使用自然语言 prompts 来查询语言模型。例如，对于情感分析，我们可以将一个样本与一个 prompts 串联起来 “这部电影是[MASK]”，并要求预训练的语言模型预测被mask的 token。然后，我们可以使用 “好 “和 “坏 “是被 MASK 的标记的预测概率来预测样本的标签。Prompting 完全不需要训练，只需存储一份模型参数。然而，与微调相比，提示 在许多情况下会导致次优的性能（Liu等人，2021b；Lester等人，2021）。</p>
+<p><strong>Prompt tuning</strong> 是一种只调谐连续 prompts 的想法。具体来说，Liu等人（2021b）；Lester等人（2021）提出在输入词嵌入的原始序列中加入可训练的连续嵌入。这些连续嵌入（也称为连续 prompts ）类似于 prompting 中离散的手动签名 prompts。在训练过程中，只有连续的 prompts 被更新。虽然 prompt tuning 在许多任务上比 prompting 有提高 （Liu等人，2021b；Lester等人，2021），但当模型规模较小，特别是小于100亿个参数时，它仍然不如 fine-tuning（Lester等人，2021）。</p>
+<p>从技术上讲，P-tuning v2可以被看作是 prefix-tuning  的优化版本，适用于NLU。最显著的改进来自于使用深度 prompt tuning，即对预训练模型的每一层应用连续的 prompt。深度 prompt tuning 增加了连续 prompt 的能力，并缩小了在各种设置中进行微调的差距，特别是对于小模型和困难任务。此外，还提出了一些优化和实施的细节，以进一步提高结果。</p>
+<h2 id="Preliminaries"><a href="#Preliminaries" class="headerlink" title="Preliminaries"></a>Preliminaries</h2><h3 id="NLU-Tasks"><a href="#NLU-Tasks" class="headerlink" title="NLU Tasks"></a>NLU Tasks</h3><p>在这项工作中，将NLU的挑战分为两个系列：</p>
+<ul>
+<li>Simple NLU tasks ：涉及单一标签的分类。GLUE（Wang等人，2018）和Super- GLUE（Wang等人，2019）的大多数数据集，包括文本分类（如SST-2）、自然语言推理（NLI，如MNLI-m，RTE）、多选题回答（如BoolQ）等，都属于这一类。</li>
+<li>Hard sequence NLU tasks ：涉及对一连串标签的分类。它们大多是与信息提取有关的问题，如开放式信息提取、命名实体识别、提取式问题回答和语义角色标签。</li>
+</ul>
+<h3 id="Prompt-Tuning"><a href="#Prompt-Tuning" class="headerlink" title="Prompt Tuning"></a>Prompt Tuning</h3><p>Prompt tuning（Lester等人，2021），或P-tuning（Liu等人，2021b），引入了可训练的连续prompts，作为骨干语言模型的参数被冻结时对NLU的自然语言 prompts 的替代。例如，让 $V$ 指的是语言模型 $M$ 的词汇表，$e$ 作为 $M$ 的嵌入函数。</p>
+<p>要把一篇电影评论 x=”Amazing movie!” 分类为正面或负面，很自然地就会想到在评论中加入一个 prompts  “It is [MASK]”，并生成MASK token被预测为 “好 “或 “坏 “的条件概率作为分类。在这种情况下，prompt tokens  {“It”、”is”、”[MASK]”} 都属于模型的词汇表 $V$，而输入嵌入序列将是：</p>
+<script type="math/tex; mode=display">
+[e(x), e("It"), e("is"), e("[MASK]")]</script><p>然而，由于模型 $M$ 在本质上是连续的，从优化的角度来看，人们永远不可能用离散的自然 prompts 来达到最佳效果。相反，P-tuning建议用可训练的连续 embeddings $[h_0, …, h_i]$ 代替 prompt tokens ，并将输入序列变成:</p>
+<script type="math/tex; mode=display">
+[e(x), h_0,...,h_i, e("[MASK]")]</script><p>并因此可以进行不同的优化（参考图2（a））。在骨干预训练模型的参数被冻结的严格约束下，在简单的NLU任务和知识探测中，prompt tuning 已被证明具有与100亿参数模型的 fine-tuning 相当的性能。</p>
+<h2 id="P-Tuning-v2"><a href="#P-Tuning-v2" class="headerlink" title="P-Tuning v2"></a>P-Tuning v2</h2><p><img src="https://i.loli.net/2021/11/25/hAoQrbPSGTtIsnz.png" alt=""></p>
+<h3 id="Lack-of-Universality"><a href="#Lack-of-Universality" class="headerlink" title="Lack of Universality"></a>Lack of Universality</h3><p>在许多NLP应用中，Prompt tuning 和  P-tuning 已经被证明是相当有效的。然而，考虑到缺乏普遍性， P-tuning 还不是微调的全面替代方法。</p>
+<h3 id="Lack-of-universality-across-scales"><a href="#Lack-of-universality-across-scales" class="headerlink" title="Lack of universality across scales"></a>Lack of universality across scales</h3><p> Lester等人（2021）表明，当模型规模超过100亿个参数时，prompt tuning 可以与微调相媲美。但是对于那些较小的模型（从100M到1B），prompt tuning和微调的表现有很大差异，这大大限制了prompt tuning的适用性。</p>
+<h3 id="Lack-of-universality-across-tasks"><a href="#Lack-of-universality-across-tasks" class="headerlink" title="Lack of universality across tasks."></a>Lack of universality across tasks.</h3><p>尽管Lester等人（2021年）和 P-tuning 在GLUE和SuperGLUE等NLU基准上显示出优越性，但它们在另一大类序列NLU任务（即序列标签）上的有效性却没有得到验证。</p>
+<p>首先，序列标签需要预测一连串的标签，而不是单一的标签。其次，序列标签通常预测的是无实际意义的标签，这对变成有效的言语者来说可能是个挑战。</p>
+<h3 id="Deep-Prompt-Tuning"><a href="#Deep-Prompt-Tuning" class="headerlink" title="Deep Prompt Tuning"></a>Deep Prompt Tuning</h3><p><img src="https://i.loli.net/2021/11/25/42eZyjHrnuWAmNv.png" alt=""></p>
+<p>Prefix-tuning（Li and Liang, 2021）最初是为自然语言生成（NLG）任务提出的，但我们发现它对NLU也非常有效。我们描述了一个适合NLU的 Prefix-tuning 版本。</p>
+<p>在(Lester et al., 2021)和P-tuning中，连续 prompts 只被插入到输入嵌入序列中（参考图2(a)），用于 transformer’s 第一层。在接下来的  transformer 中，插入连续 prompts 的位置的嵌入是由之前的transformer 层计算出来的，这可能导致两个可能的优化挑战。</p>
+<ul>
+<li>可调整的参数数量有限。大多数语言模型目前只能支持512的最大序列长度（由于注意力的二次计算复杂性的成本）。如果我们另外扣除我们的上下文的长度（例如，要分类的句子），那么我们用连续提示来填充的长度是有限的。</li>
+<li>在用非常深的 transformers 进行调整时，稳定性有限。随着 transformers 的不断深入，由于许多中间层的计算（具有非线性激活函数），来自第一个transformers 层的提示的影响可能是意想不到的，这使得我们的优化不是一个非常平稳的优化。</li>
+</ul>
+<p>鉴于这些挑战，P-tuning v2利用多层 prompts（即深度prompt tuning）作为 prefix-tuning（Li and Liang, 2021）中的提示（参见图2（b）），作为对P-tuning和Lester等人（2021）的重大改进。不同层的 prompt 作为前缀 tokens 添加到输入序列中，并独立于其他层（而不是由之前的 transformers 层计算）。一方面，通过这种方式，P-tuning v2 有更多的可调整的特定任务参数（从0.01%到0.1%-3%），以允许更多的每个任务容量，而它仍然比完整的预训练语言模型小得多；另一方面，添加到更深层的 prompt（例如图2中的LayerN Prompts）可以对输出预测产生更直接和显著的影响，而中间的transformers层更少。</p>
+<h3 id="Optimization-and-Implementation"><a href="#Optimization-and-Implementation" class="headerlink" title="Optimization and Implementation"></a>Optimization and Implementation</h3><p><strong>Optimization：Reparameterization</strong>。以前的方法利用重新参数化功能来提高训练速度、鲁棒性和性能（例如，MLP的 prefix-tuning 和 LSTM的P调整）。然而，对于NLU任务，我们发现这种技术的好处取决于任务和数据集。对于一些数据集（如RTE和CoNLL04），MLP的重新参数化带来了比嵌入更稳定的改进；对于其他的数据集，重新参数化可能没有任何效果（如BoolQ），有时甚至更糟（如CoNLL12）。</p>
+<p><img src="https://i.loli.net/2021/11/25/T1axhfKtEoXPZOR.png" alt=""></p>
+<p><strong>Optimization: Prompt length</strong> Prompt length在 prompt tuning 方法的超参数搜索中起着核心作用。在我们的实验中，我们发现不同的理解任务通常以不同的 Prompt length 达到最佳性能，这与 prefix- tuning 的发现一致，不同的文本生成任务可能有不同的最佳 Prompt length。</p>
+<p>从图3中，我们观察到，对于简单的NLU任务，通常，较短的prompts 就能获得最佳性能；对于困难的序列任务，通常，比100长的 prompts 语会有帮助。<br>我们还发现，重新参数化与 Prompt length 长度有着密切的联系。例如，在RTE、CoNLL04和BoolQ中，MLP的重新参数化比嵌入更早达到最佳结果。这一结论可能有助于对P-tuning的优化特性进行一些思考。</p>
+<p><strong>Optimization: Multi-task learning.</strong> 多任务学习对我们的方法来说是可选的，但可能是相当有帮助的。一方面，连续prompts 的随机惯性给优化带来了困难，这可以通过更多的训练数据或与任务相关的无监督预训练来缓解（Gu等人，2021）；另一方面，连续 prompts 是跨任务和数据集的特定任务知识的完美载体。 我们的实验表明，在一些困难的序列任务中，多任务学习可以作为P-tuning v2的有益补充，表示为MPT-2。</p>
+<p><strong>Implementation: [CLS] and token classification, rather than verbalizers.</strong>  Verbalizer 一直是 Prompt tuning 的核心组成部分，它将一类的labels变成有意义的词，以利用预训练语言模型head 。尽管它在少数情况下有潜在的必要性，但在全数据监督的情况下，verbalizer 不是必须的。它阻碍了 Prompt tuning 在我们需要无实际意义的标签和语义嵌入的场景中的应用。因此，P-tuning v2回到了传统的[CLS]标签分类（参照图2）范式，采用随机初始化的线性头。见第4.4节中的比较。</p>
+<h2 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h2><p>在这项工作中，”prompt tuning”、”P-tuning”、”P-tuning v2 “和 “多任务P-tuning v2 “的所有结果都是通过冻结transformer的参数，只调整连续prompts。特定任务参数的比率（例如0.1%）是通过比较连续prompts 的参数和transformer的参数得出的。只有 “微调 “的结果是通过调整transformer的参数（不使用连续提示）得到的。</p>
+<p>另外需要注意的是，我们的实验都是在全数据监督下的学习环境下进行的，而不是在少量的学习环境下进行的，这一点很重要，因为我们利用的一些特性（例如，使用具有线性head 的类标签而不是具有LM头的言语者）只可能在监督下进行。</p>
+<p><img src="https://i.loli.net/2021/11/25/q12FUMtevPgoI3V.png" alt=""></p>
+<h3 id="P-tuning-v2-Across-Scales"><a href="#P-tuning-v2-Across-Scales" class="headerlink" title="P-tuning v2: Across Scales"></a>P-tuning v2: Across Scales</h3><p>表1展示了P-tuning v2在不同模型规模下的表现。对于简单的NLU任务，如SST-2（单句分类），Lester等人（2021）和P-tuning在较小的规模下没有显示出明显的劣势。但是，当涉及到复杂的挑战，如自然语言推理（RTE）和多选题回答（BoolQ）时，它们的性能会非常差。相反，P-tuning v2在所有任务中以较小的规模与微调性能相匹配。令我们惊讶的是，P-tuning v2在RTE中的表现明显优于微调，特别是在BERT中。</p>
+<p>就较大尺度（2B到10B）的GLM（Du等人，2021）而言，P-调谐&amp;Lester等人（2021）与精细调谐之间的差距逐渐缩小了。在10B尺度上，我们有一个类似于（Lester等人，2021）报告的观察结果，即及时调谐变得与精细调谐竞争。然而，P-tuning v2在所有尺度上都与微调相当，但与微调相比，只需要0.1%的任务特定参数。<br>此外，我们观察到，在一些数据集中，RoBERTa-large的性能比BERT-large差。部分原因是，我们根据经验发现及时调谐对超参数相当敏感，有时调谐会被困住。P-tuning v2在调谐过程中可以更加稳定和稳健。关于超参数的更多细节，请参考我们的代码库。</p>
+<h3 id="P-tuning-v2-Across-Tasks"><a href="#P-tuning-v2-Across-Tasks" class="headerlink" title="P-tuning v2: Across Tasks"></a>P-tuning v2: Across Tasks</h3><p>在第4.2节中，我们讨论了P-tuning v2的一贯性，无论何种尺度，其性能都与微调相当。然而，GLUE和SuperGLUE的大多数任务都是相对简单的NLU问题。另一个重要的硬NLU挑战系列是序列标签，它与一些更高级的NLP应用有关，包括开放信息提取、阅读理解等。</p>
+<p>为了评估P-tuning v2在这些硬NLU挑战上的能力，我们选择了三个典型的序列标签任务。名称实体识别、外部问题回答（QA）和语义角色标签（SRL），共八个数据集。</p>
+</article><div class="post-reward"><div class="reward-button button--animated"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2021/11/23/PADA-A-Prompt-based-Autoregressive-Approach-for-Adaptation-to-Unseen-Domains/"><img class="next-cover" src="https://i.loli.net/2021/11/23/cF1h7WGLEr6CegQ.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">PADA: A Prompt-based Autoregressive Approach for Adaptation to Unseen Domains </div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/11/23/PADA-A-Prompt-based-Autoregressive-Approach-for-Adaptation-to-Unseen-Domains/" title="PADA: A Prompt-based Autoregressive Approach for Adaptation to Unseen Domains "><img class="cover" src="https://i.loli.net/2021/11/23/cF1h7WGLEr6CegQ.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-23</div><div class="title">PADA: A Prompt-based Autoregressive Approach for Adaptation to Unseen Domains </div></div></a></div><div><a href="/2021/11/17/Towards-a-Unified-View-of-Parameter-Efficient-Transfer-Learning/" title="Towards a Unified View of Parameter-Efficient Transfer Learning"><img class="cover" src="https://i.loli.net/2021/11/17/hMK8qF4Jne6sTYC.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-17</div><div class="title">Towards a Unified View of Parameter-Efficient Transfer Learning</div></div></a></div><div><a href="/2021/11/14/Generalizing-to-Unseen-Domains-A-Survey-on-Domain-Generalization/" title="Generalizing to Unseen Domains: A Survey on Domain Generalization"><img class="cover" src="https://i.loli.net/2021/11/14/GaehtZq4ViLP2lp.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-14</div><div class="title">Generalizing to Unseen Domains: A Survey on Domain Generalization</div></div></a></div><div><a href="/2021/11/12/EANN-Event-Adversarial-Neural-Networks-for-Multi-Modal-Fake-News-Detection/" title="EANN: Event Adversarial Neural Networks for Multi-Modal Fake News Detection"><img class="cover" src="https://i.loli.net/2021/11/12/qoSKeg3OQdv9Hu5.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-12</div><div class="title">EANN: Event Adversarial Neural Networks for Multi-Modal Fake News Detection</div></div></a></div><div><a href="/2021/11/09/SPoT-Better-Frozen-Model-Adaptation-through-Soft-Prompt-Transfer/" title="SPoT: Better Frozen Model Adaptation through Soft Prompt Transfer"><img class="cover" src="https://i.loli.net/2021/11/09/PdMk5FLmlYjEnc8.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-09</div><div class="title">SPoT: Better Frozen Model Adaptation through Soft Prompt Transfer</div></div></a></div><div><a href="/2021/11/08/The-Power-of-Scale-for-Parameter-Efficient-Prompt-Tuning/" title="The Power of Scale for Parameter-Efficient Prompt Tuning"><img class="cover" src="https://i.loli.net/2021/11/08/TiLQpECoWymr9eH.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-08</div><div class="title">The Power of Scale for Parameter-Efficient Prompt Tuning</div></div></a></div></div></div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Coding-Zuo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2021/11/25/P-Tuning-v2-Prompt-Tuning-Can-BeComparable-to-Fine-tuning-Universally-Across-Scales-and-Tasks/">http://example.com/2021/11/25/P-Tuning-v2-Prompt-Tuning-Can-BeComparable-to-Fine-tuning-Universally-Across-Scales-and-Tasks/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">Coding-Zuo</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/context-detection/">context detection</a></div><div class="post_share"><div class="addthis_inline_share_toolbox"></div><script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=null" async="async"></script></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#P-Tuning-v2-Prompt-Tuning-Can-Be-Comparable-to-Fine-tuning-Universally-Across-Scales-and-Tasks"><span class="toc-number">1.</span> <span class="toc-text">P-Tuning v2: Prompt Tuning Can Be Comparable to Fine-tuning Universally Across Scales and Tasks</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Introduction"><span class="toc-number">1.1.</span> <span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Preliminaries"><span class="toc-number">1.2.</span> <span class="toc-text">Preliminaries</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#NLU-Tasks"><span class="toc-number">1.2.1.</span> <span class="toc-text">NLU Tasks</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Prompt-Tuning"><span class="toc-number">1.2.2.</span> <span class="toc-text">Prompt Tuning</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#P-Tuning-v2"><span class="toc-number">1.3.</span> <span class="toc-text">P-Tuning v2</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Lack-of-Universality"><span class="toc-number">1.3.1.</span> <span class="toc-text">Lack of Universality</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Lack-of-universality-across-scales"><span class="toc-number">1.3.2.</span> <span class="toc-text">Lack of universality across scales</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Lack-of-universality-across-tasks"><span class="toc-number">1.3.3.</span> <span class="toc-text">Lack of universality across tasks.</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Deep-Prompt-Tuning"><span class="toc-number">1.3.4.</span> <span class="toc-text">Deep Prompt Tuning</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Optimization-and-Implementation"><span class="toc-number">1.3.5.</span> <span class="toc-text">Optimization and Implementation</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Experiments"><span class="toc-number">1.4.</span> <span class="toc-text">Experiments</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#P-tuning-v2-Across-Scales"><span class="toc-number">1.4.1.</span> <span class="toc-text">P-tuning v2: Across Scales</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#P-tuning-v2-Across-Tasks"><span class="toc-number">1.4.2.</span> <span class="toc-text">P-tuning v2: Across Tasks</span></a></li></ol></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By Coding-Zuo</div><div class="footer_custom_text">Hi, welcome to my BLOG</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    loader: {
+      source: {
+        '[tex]/amsCd': '[tex]/amscd'
+      }
+    },
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        addClass: [200,() => {
+          document.querySelectorAll('mjx-container:not([display=\'true\']').forEach( node => {
+            const target = node.parentNode
+            if (!target.classList.contains('has-jax')) {
+              target.classList.add('mathjax-overflow')
+            }
+          })
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>if (document.getElementsByClassName('mermaid').length) {
+  if (window.mermaidJsLoad) mermaid.init()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(() => {
+      window.mermaidJsLoad = true
+      mermaid.initialize({
+        theme: 'default',
+      })
+      false && mermaid.init()
+    })
+  }
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'd652112bf81876e00118',
+      clientSecret: 'a5abed418c7cc2736af5b4d0cbd7ff97d460a5b3',
+      repo: 'Coding-Zuo.github.io',
+      owner: 'Coding-Zuo',
+      admin: ['Coding-Zuo'],
+      id: 'f17f121a6282c59a50eb718352191929',
+      language: 'zh-CN',
+      perPage: 10,
+      distractionFreeMode: false,
+      pagerDirection: 'last',
+      createIssueManually: false,
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script src="/js/custom.js"></script><script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script src="//code.tidio.co/mak6nokafytw9mgrsuzglwzfxiy3fpdl.js" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
