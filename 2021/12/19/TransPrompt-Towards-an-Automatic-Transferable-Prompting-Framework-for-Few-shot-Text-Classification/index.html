@@ -1,0 +1,352 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TransPrompt Towards an Automatic Transferable Prompting Framework for Few-shot Text Classification | Coding-Zuo</title><meta name="keywords" content="GNN"><meta name="author" content="Coding-Zuo"><meta name="copyright" content="Coding-Zuo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="TransPrompt: Towards an Automatic Transferable Prompting Framework for Few-shot Text ClassificationAbstract最近的研究表明，prompts 可以提高大型预训练语言模型在 few-shot 文本分类中的表现。然而，目前还不清楚如何在类似的NLP任务中迁移 prompts 知识以达到相互强化的目的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TransPrompt Towards an Automatic Transferable Prompting Framework for Few-shot Text Classification">
+<meta property="og:url" content="http://example.com/2021/12/19/TransPrompt-Towards-an-Automatic-Transferable-Prompting-Framework-for-Few-shot-Text-Classification/index.html">
+<meta property="og:site_name" content="Coding-Zuo">
+<meta property="og:description" content="TransPrompt: Towards an Automatic Transferable Prompting Framework for Few-shot Text ClassificationAbstract最近的研究表明，prompts 可以提高大型预训练语言模型在 few-shot 文本分类中的表现。然而，目前还不清楚如何在类似的NLP任务中迁移 prompts 知识以达到相互强化的目的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2021/12/19/hTNkCw9jpLiZRWV.png">
+<meta property="article:published_time" content="2021-12-19T13:59:11.000Z">
+<meta property="article:modified_time" content="2022-01-21T11:01:19.095Z">
+<meta property="article:author" content="Coding-Zuo">
+<meta property="article:tag" content="GNN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2021/12/19/hTNkCw9jpLiZRWV.png"><link rel="shortcut icon" href="https://i.loli.net/2021/03/22/reFlcYOnP3dSuJX.png"><link rel="canonical" href="http://example.com/2021/12/19/TransPrompt-Towards-an-Automatic-Transferable-Prompting-Framework-for-Few-shot-Text-Classification/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.json","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-01-21 19:01:19'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    })(window)</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sviptzk/HexoStaticFile@latest/Hexo/css/footer.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css"><meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="Coding-Zuo" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://i.loli.net/2021/03/22/YP2oqk7lOAfceTD.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">131</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">16</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://s2.loli.net/2021/12/19/hTNkCw9jpLiZRWV.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Coding-Zuo</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">TransPrompt Towards an Automatic Transferable Prompting Framework for Few-shot Text Classification</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-12-19T13:59:11.000Z" title="发表于 2021-12-19 21:59:11">2021-12-19</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-01-21T11:01:19.095Z" title="更新于 2022-01-21 19:01:19">2022-01-21</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="TransPrompt Towards an Automatic Transferable Prompting Framework for Few-shot Text Classification"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="TransPrompt-Towards-an-Automatic-Transferable-Prompting-Framework-for-Few-shot-Text-Classification"><a href="#TransPrompt-Towards-an-Automatic-Transferable-Prompting-Framework-for-Few-shot-Text-Classification" class="headerlink" title="TransPrompt: Towards an Automatic Transferable Prompting Framework for Few-shot Text Classification"></a>TransPrompt: Towards an Automatic Transferable Prompting Framework for Few-shot Text Classification</h1><h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><p>最近的研究表明，prompts 可以提高大型预训练语言模型在 few-shot 文本分类中的表现。然而，目前还不清楚如何在类似的NLP任务中迁移 prompts 知识以达到相互强化的目的。基于连续的 prompts 嵌入，我们提出了TransPrompt，一个可迁移的 prompt 框架，用于在类似的任务中进行 few-shot 的学习。</p>
+<p> 在TransPrompt中，我们采用了一个多任务元知识获取程序来训练一个元学习者，以捕获跨任务的可迁移知识。我们进一步设计了两种去偏技术，使其对任何任务都更具有任务无关性和无偏性。</p>
+<p>之后，元学习器可以以高精确度适应目标任务。大量的实验表明，TransPrompt在多个NLP任务和数据集上的表现优于单任务和跨任务的强基线。我们进一步表明，元学习器可以有效地提高以前未见过的任务的性能。当用完整的训练集学习时，TransPrompt也优于强大的微调基线。</p>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>微调预训练语言模型（PLM）已经成为大多数NLP任务训练模型的标准做法（Devlin等人，2019；Liu等人，2019b；Qiu等人，2020）。为了确保高精确度，有必要为下游任务获得足够数量的训练数据，这往往是低资源场景下的瓶颈。</p>
+<p>超大型PLM的应用，如GPT-3（Brown等人，2020），证明了这种PLM可以通过很少的训练样本来学习解决一个任务。受这些工作的启发，Gao等人（2020）提出了一种基于 prompt 的方法，以在少量的学习环境中对BERT-风格的PLM进行微调，它使PLM适应于产生对应于每个类别的特定标记，而不是学习预测头。Schick和Schütze（2020）；Scao和Rush（2021）；Schick和Schütze（2021）等人也表明了 prompt 的有效性。然而，设计高绩效的提示语是具有挑战性的，需要非常大的验证集。为了缓解这个问题，Liu等人（2021）提出了具有完全可分参数的连续 prompt 嵌入，避免了繁琐的手工提示工程过程。</p>
+<p>尽管取得了显著的成功，我们注意到目前基于提示的方法可能有一些限制。对于 few-shot 的学习，下游任务的性能仍然受到训练实例数量的限制。如果模型能够在适应 few-shot 样本的特定任务之前，从类似的NLP任务中获得可迁移的知识，那将是非常理想的。然而，目前还不清楚提示编码器和具有提示技术的PLM中的知识是如何跨任务转移的。一个自然的问题出现了：我们如何为BERT风格的模型设计一个提示框架，以捕捉类似NLP任务中的可转移知识，从而提高少数样本学习的性能？</p>
+<p>上述问题的一个直接解决方案是在这些类似的NLP任务中采用多任务微调。当训练数据稀缺时，微调后的PLM很容易对特定实例过度拟合（Nakamura and Harada, 2019）。在机器学习中，元学习范式被广泛研究，它产生的模型能够以很少的学习步骤迅速适应一组类似的任务（Wang等人，2020c；Huisman等人，2020）。对于PLM，Wang等人（2020a）发现，训练PLM的元学习者能够有效地捕捉不同领域的可转移知识。然而，这种方法并不是为提示性的少量学习而设计的，而且缺乏为所有任务学习无偏见的表征的机制。</p>
+<p>在本文中，我们提出了TransPrompt这个提示框架，它允许PLMs为少量文本分类捕获跨任务的可转移知识，其高级架构如图1所示。TransPrompt首先采用多任务元知识获取（MMA）程序，在类似的NLP任务中共同学习提示编码器和PLM的可转移表示。为了减少过度拟合，使底层PLM更具有任务无关性，并减少对任何特定任务的偏倚，我们提出了两种去偏倚技术，即基于原型的去偏倚和基于熵的去偏倚。学习到的模型可以被看作是一组类似NLP任务的元学习器。</p>
+<p><img src="https://s2.loli.net/2021/12/22/qsxCBdtK18mHhgM.png" alt=""></p>
+<p>在MMA之后，TransPrompt采取了任务意识模型规范（TMS）的步骤，这可以进一步分为两种情况。 i）当模型在MMA期间适应现有任务时，可以应用P-tuning（Liu等人，2021）的变体来进行有效适应。 ii）当需要适应以前未见过的任务时，采用模型泛化策略，具体考虑模型中的通用提示知识。这通常是指由于数据隐私或计算效率问题，对所有任务的元精简器进行重新训练是不可行的情况。</p>
+<p>为了进行评估，我们在三组少有的NLP任务（共包括七个公共数据集）上测试了TransPrompt框架：i）情感分析；ii）自然语言推理（NLI）；以及iii）转述。实验结果表明，TransPrompt在单任务和跨任务的强大基线上都有稳定的表现。我们进一步证明：i）由TransPrompt训练的元学习器可以有效地推广到未见过的任务；ii）在用完整的训练集学习时，TransPrompt也优于流行的微调算法。综上所述，我们在这项工作中做出了以下主要贡献。</p>
+<ul>
+<li>我们介绍了新的TransPrompt框架，以学习跨任务的可转移知识，用于少数文本分类。</li>
+<li>我们提出了一个基于提示的元学习者训练算法和两种去偏技术，以获取可转移的知识。</li>
+<li>在多种类型的NLP任务上的实验表明，TransPrompt在少量学习和标准微调方面的表现一直优于强大的基线。</li>
+</ul>
+<h2 id="The-TransPrompt-Framework"><a href="#The-TransPrompt-Framework" class="headerlink" title="The TransPrompt Framework"></a>The <em>TransPrompt</em> Framework</h2><h3 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h3><p>$T_1, …, T_M$ 是 $M$ 个类似的 few-shot 的文本分类任务。第 $m$ 项任务可以表示为：$T_m:x \to y$， 其中 $x$ 和$y\in Y$ 表示输入文本和分类标签。</p>
+<p>$Y$ 是预先定义的标签集，$|Y| = N$, 其中 $N$ 是预定义的常数。假设在每个任务 $T_m$ 中，有 $K$ 个训练样本与每个类 $y\in Y$相关。因此，我们对每个任务 $T_m$ 有一个训练集 $D_m$，每个训练集包含 $N×K$ 个样本。$M$ 个任务的训练实例的总数是$ N×K×M$ 。</p>
+<p>在 TransPrompt 中，根据 $M$ 个few-shot的训练集 $D<em>1,…,D_M$ 来训练一个元学习器 $F</em>{meta}$，其参数从任何PLM中初始化。之后，$F_{meta}$ 根据每个任务的训练集 $D_m$ 来适应每个任务 $T_m$。特定任务的模型被表示为 $F_m$。</p>
+<p>由于 $F<em>{meta}$ 的设计是为了消化跨任务的可转移知识，而不是简单的多任务学习，$F</em>{meta}$ 也可以适应以前没有见过的任务。</p>
+<p>由于数据隐私或计算效率问题，当在 $F<em>{meta}$ 的训练过程中无法获得相似任务 $\hat T$ 的少量训练集 $\hat D$ 时，我们探索如何利用TransPrompt 来生成基于 $F</em>{meta}$ 和 $\hat D$ 的精确模型 $\hat F$。在这种情况下，$F_{meta}$ 在MMA期间接受训练时，对新任务 $\hat T$ 没有任何了解。</p>
+<p>在下文中，将介绍TransPrompt框架的详细技术，它由两个主要阶段组成，即多任务元知识获取（MMA）和任务意识模型规范（TMS）。最后，我们讨论了如何将 TransPrompt 应用于标准的微调场景，其中我们有相对较大的训练集，而不是解决 $N$ 路 K-shot 问题。</p>
+<h3 id="Multi-task-Meta-knowledge-Acquisition"><a href="#Multi-task-Meta-knowledge-Acquisition" class="headerlink" title="Multi-task Meta-knowledge Acquisition"></a>Multi-task Meta-knowledge Acquisition</h3><p><img src="https://s2.loli.net/2021/12/19/B5Zh3pWesnRJGai.png" alt=""></p>
+<h4 id="Prompt-Encoding"><a href="#Prompt-Encoding" class="headerlink" title="Prompt Encoding"></a>Prompt Encoding</h4><p>由于 TransPrompt 框架被置于多任务设置中，对于每个任务 $T_m$，我们有一个特定任务的提示模板 $t^{(m)} (x)$，如下所示:</p>
+<script type="math/tex; mode=display">
+P_1^{(m)},...,P_i^{(m)}, x, P_{i+1}^{(m)} ,..., P_I^{(m)} , MASK</script><p>其中 $P_i^{(m)}$ 是 prompt 伪 token，$I$ 是伪token的总数，MASK是特殊 token 是一个特殊标记，用作模型输出的占位符。 我们还为所有任务定义了一个通用提示模板 $t^{(∗)}(x)$ :</p>
+<script type="math/tex; mode=display">
+P_1^{(*)},...,P_i^{(*)}, x, P_{i+1}^{(*)} ,..., P_I^{(*)} , MASK</script><p>对于一个实例$(x,y)\in D_m$，提示嵌入 $PE^{(m)}(x)$可以计算如下:</p>
+<script type="math/tex; mode=display">
+PE^{(m)}(x) = AvgPool(MLP(BiLSTM(t^{(m)}(x))) , MLP(BiLSTM(t^{(*)}(x))))</script><p>其中我们使用双向LSTM网络与多层感知器作为提示编码器（Liu等人，2021）。特定任务和通用提示编码器的平均集合结果被视为提示嵌入。提示嵌入 $PE^{(m)}(x)$ 是一个序列，作为PLM的输入:</p>
+<script type="math/tex; mode=display">
+h_1,...,h_i, h_{[x]}, h_{i+1} ,..., h_I, h_{[MASK]}</script><p>其中 $h<em>{[x]}$ 是输入 $x$ 的序列嵌入，$h</em>{[MASK]}$ 是被MASK的输出 token 嵌入。由于提示参数是完全可微的，在反向传播过程中，它们有效地捕捉了特定任务和一般知识。</p>
+<h4 id="Training-the-Meta-learner"><a href="#Training-the-Meta-learner" class="headerlink" title="Training the Meta-learner"></a>Training the Meta-learner</h4><p>获得元学习者的一个天真的方法是在 $M+1$ 个 prompt 编码器的 $M$ 个任务中应用P-tuning过程（Staudemeyer和Morris，2019）。然而，在实践中，它不能保证满意的结果。由于大型PLMs在 few-shot 学习过程中很容易出现过度拟合（Gao等人，2020），在跨任务的情况下，元学习者会不幸地记住非目标任务中的不可转移的知识。为了缓解这个问题，我们提出了两种去偏技术，以获得一个用可转移知识编码的更无偏见的元学习者，</p>
+<p>即i）基于原型的去偏 和 ii）基于熵的去偏。</p>
+<ul>
+<li><p>Prototype-based De-biasing：这种技术旨在在元学习者的训练过程中对跨任务的原型实例给予更多的重视。在这里，我们扩展了Snell等人（2017）构建的轻量级多任务原型网络G。在网络G中，每个任务 $T_m$ 的类中心点嵌入$c_m(y)(y∈Y)$被计算并存储为:</p>
+<script type="math/tex; mode=display">
+c_m(y) = \frac{1}{|D_{m,y}|}\sum_{(x,y)\in D_{m,y}} \Epsilon(x)</script><p>其中 $D<em>{m,y}$ 是 $D_m$ 的子集，使得 $D</em>{m,y}$中的每个实例都有标签 $y$ ，而 $E(x)$ 是由前面描述的元学习器生成的 $x$ 的表示。对于每个实例 $(x,y)\in D_m$，我们将文本 $x$ 通过网络来生成跨任务原型得分，表示为 $s(x)$:</p>
+<script type="math/tex; mode=display">
+s(x) = \tau \cdot \frac{sim(E(x), c_m(y))}{\sum_{\hat y\in Y} sim(E(x), c_m(\hat y))}
++ \frac{1-\tau} {M-1} \sum_{\hat m=1 (m\neq\hat m)} \frac{sim(E(x), c_m(y))}{\sum_{\hat y\in Y} sim(E(x), c_m(\hat y))}</script><p>其中 $0&lt;\tau &lt;1$ 是预定义的平衡因素，$sim(\cdot, of K nowcdot)$ 是两个嵌入的相似函数，我们可以看到，如果一个实例与任务 $T<em>m$ 本身和其他任务的中心点都有语义上的联系，那么它就会得到更高的分数，因此更容易跨任务迁移。通过将 $s(x)$ 视为优化权重，$F</em>{meta}$ 的整体损失函数 $L(Θ)$可以通过以下方式给出:</p>
+<script type="math/tex; mode=display">
+L(\theta) = \sum_{m=1}^M \sum_{(x,y)\in D_m} s(x) l(x,y;\theta) + \lambda_1||\theta||</script><p>其中Θ是所有模型参数的集合，$l(x, y; Θ)$是样本间交叉熵损失，$λ_1$是正则化超参数。</p>
+</li>
+<li><p>Entropy-based De-biasing：仅仅应用基于原型的去偏移技术的一个潜在风险是获得一个非任务无关性的元学习者。考虑三个任务T1、T2和T3。如果T1和T2高度相似，而T3则更不相似。在D1和D2中，自然会得到较高的原型分数，使得元学习者偏向于T1和T2，而对T3很少关注。因此，当元学习者需要拟合T3时，它的参数初始化设置可能很差。为了使其更具任务无关性，受Jamal和Qi（2019）的启发，我们考虑了 $D_m$ 上的模型预测熵 $H(D_m)$：</p>
+<script type="math/tex; mode=display">
+H(D_m) = -\frac{1}{|D_m|} \sum_{(x,y)\in D_m} \sum_{\hat y \in Y} \hat y(x) log\hat y(x)</script><p>其中 $\hat y(x)$是 $x$ 被分配到 $\hat y∈Y$类的预测概率。当 $H(D_m)$ 被用作模型正则器的一部分时，元学习器在任何特定任务上的过度训练将减少。</p>
+<p>将 $H(D_m)$ 项插入损失函数 $L(Θ)$，我们就有了新的损失函数 $L’(Θ)$:</p>
+<script type="math/tex; mode=display">
+L'(\theta) = \sum_{m=1}^M\sum_{(x,y)\in D_m} (s(x) l(x,y;\theta) - \frac{\lambda_2}{|D_m|}\sum_{\hat y \in Y} \hat y(x)log\hat y(x)) + \lambda_1||\theta||</script><p>其中 $\lambda_2$ 是正则化超参数</p>
+</li>
+<li><p>Optimization Procedure：尽管它的公式很简单，但最小化 $L’(Θ)$是一个非简单的问题。 这是因为当我们计算 $s(x)$时，我们必须事先获得PLM的模型参数，而这在训练过程之前是无法获得的。另一方面，$L (Θ)$的优化重新要求所有训练样本的 $s(x)$ 值，这就造成了 “鸡生蛋，蛋生鸡 “问题。</p>
+<p>我们采用双重优化过程来解决 $L’(Θ)$的问题。在初始阶段，所有的 $s(x)$s都被均匀地初始化。接下来，我们将 $s(x)$s固定为常数，使 $L′(Θ)$ 中的 $l(x, y; Θ)$ 最小化。一个关于PLM的推理过程可以被应用来获得所有的 $s(x)$s。这个过程迭代了一定数量的epoch。读者也可以参考算法1来了解算法的概况。</p>
+<p><img src="https://s2.loli.net/2021/12/22/LdFBUD4zs3OrJcq.png" alt=""></p>
+</li>
+</ul>
+<h3 id="Task-aware-Model-Specification"><a href="#Task-aware-Model-Specification" class="headerlink" title="Task-aware Model Specification"></a>Task-aware Model Specification</h3><p>在MMA之后，元学习者可以很容易地适应特定的任务。对于一个已经被元学习器 “看到 “的任务 $T_m$，我们通过最小化损失函数 $L^{(m)}(Θ)$来微调相应的 prompt 编码器和PLM:</p>
+<script type="math/tex; mode=display">
+L^{(m)}(\theta) = \sum_{(x,y)\in D_m} l(x,y;\theta) + \lambda_1||\theta||</script><p>这是P-tuning的一个变种（Liu等人，2021），具有更好的参数初始化。</p>
+<p>对于一个先前未见过的任务 $\hat  T$，采用模型泛化策略。这里，我们使用通用 prompt 编码器来初始化其 prompt编码器。整个模型在数据集 $\hat D $上进行训练，损失函数 $\hat L(\theta)$如下:</p>
+<script type="math/tex; mode=display">
+\hat L(\theta) = \sum_{(x,y)\in \hat D} l(x,y;\theta) + \lambda_1||\theta||</script><p>由于元学习器是高度泛化的，它可以为少数几次的学习任务 $\hat T$提供良好的初始化。</p>
+<h3 id="Learning-with-Full-Training-Sets"><a href="#Learning-with-Full-Training-Sets" class="headerlink" title="Learning with Full Training Sets"></a>Learning with Full Training Sets</h3><p>当我们有相对较大的训练集时，TransPrompt也可以应用于标准的微调，并进行少量修改。在MMA过程中，我们注意到，当它不是一个N-way K-shot问题时，$D_1,…,D_M$ 的大小会有很大的不同。直接在这些数据集上优化 $L’(Θ)$ 会使元学习者偏向于大数据集。为了解决这个问题，当我们从 $D_1, …, D_M$ 中抽出一批样本时，我们采用分层抽样的方式，以与数据集分布 $Pr(D_m)$ 成比例的概率选择训练实例:</p>
+<script type="math/tex; mode=display">
+Pr(D_m) = \frac{log|D_m| +\gamma}{ \sum_{\hat m=1}^M log|D_{\hat m}| + \gamma}</script><p>其中 $γ&gt;0$ 是一个平滑系数。这导致了对小数据集的过度采样和对大数据集的不足采样。</p>
+<h2 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h2><p>本文旨在解决few-shot的分类问题。这个问题的定义从根本上不同于 与传统的分类法根本不同，传统的分类法的目标不是对其目的不是对未见过的样本进行分类，而是要快速地将元知识适应于新的任务。具体来说，提供一个有足够训练样本的标记数据集。提供了一个有足够训练样本的基础类 $C^{base}$，其目标是用非常有限的数据来学习概念。一组新类 $C^{novel}$，其中 $C^{base} ∩C^{novel} = ∅$。解决 few-shot 问题的一个有效方法是使用情节采样策略episodic sampling strategy.。</p>
+<p>在这个框架中，元训练和元测试中的样本不是样本，而是情节 ${T}$，每个情节包含 $N$ 个类别（方式）和每个类别的 $K$ 个镜头。</p>
+<p>特别地，对于N-way K-shot 任务，采样支持集 $S = {(x<em>i, y_i)}</em>{i=1}^{N\times K}$ 和查询集 $Q = {(x<em>i,y_i)}</em>{i=N\times K +1}^{N\times K +T}$ </p>
+<p>这里，$x_i$ 和 $y_i \in {C_1,…,C_N}$是第 $i$ 个输入数据，并且是来自 $C^{base}$。在元测试中，测试任务也是从未见过的类别$C^{novel}$ 中抽出同样大小的情节。其目的是将查询集中的 $T$ 个未标记的样本正确地分类到 $N$ 个类别中。</p>
+<h3 id="Overview-of-Framework"><a href="#Overview-of-Framework" class="headerlink" title="Overview of Framework"></a>Overview of Framework</h3><p><img src="https://s2.loli.net/2021/12/20/O1FaqzQe4CcDdfl.png" alt=""></p>
+<p>图1说明了所提方法的框架。它主要由三个部分组成，即用于鉴别性特征提取的编码器，用于表达性元知识存储的记忆模块，用于综合推理的图增强模块。一般来说，我们的方法可以概括为三个阶段（即预训练、元训练、元测试）。</p>
+<ul>
+<li>Phase-I Pre-Train. 我们遵循一个简单的基线[Chen <em>et al.</em>, 2020]：在元训练集C的基础上学习一个有监督的表示，然后在这个表示之上学习一个线性分类器。事实证明，这个预训练阶段对下游的 few-shot 任务是有益的[Tian <em>et al.</em>, 2020]，然后将训练好的特征提取器（<em>如ResNet-12[He </em>et al.*, 2016]）和分类器分别作为我们编码器和记忆库的初始化。</li>
+<li>Phase-II Meta-Train. 我们首先提取支持和查询样本的特征作为任务相关的嵌入$V^t$。然后为了促进快速适应，我们的方法拥有一个记忆库来存储支持集的表达式。这个记忆库通过一个新的更新方案进行优化，以逐步净化鉴别性信息（在第2.2节中介绍）。此外，净化后的内存与图的增强模块相结合，用于稳健预测（在第2.3节中介绍）。在这个模块中，我们挖掘相关的原型 $V^m$ ，在本文中被称为元知识，通过图神经网络传播 $V^t$ 和 $V^m$ 之间的相似性。因此，我们的模型能够以可忽略不计的内存成本方便地泛化到新的任务。</li>
+<li>Phase-III Meta-Test. Meta-Test的程序与Meta-Train相似，也是采用情节性抽样策略。但与第二阶段不同的是，记忆库和其他模块在整个过程中不会被更新。换句话说，开关将被关闭，如图1所示。</li>
+</ul>
+<h3 id="Refined-Memory-Updating"><a href="#Refined-Memory-Updating" class="headerlink" title="Refined Memory Updating"></a>Refined Memory Updating</h3><p>元知识在从未见过的样本中学习新概念方面起着重要作用，最近 FSL 的进展[Ramalho和Garnelo, 2019]经常利用内存机制来存储这种元知识。在其典型的设置中，存储器试图保留尽可能多的信息（例如，存储整个特征）。然而，我们认为这种策略是无效的和低效的。在FSL的背景下，偶发抽样使得特征提取器以很少的样本迅速学习新的概念，这就造成了一个问题：当特征提取器处于一个非常不同的任务背景下时，记忆中的特征会被更新。从这个角度来看，从不同的任务中学习到的表征需要一个净化的过程才能成为一个稳定的概念。</p>
+</article><div class="post-reward"><div class="reward-button button--animated"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/12/21/On-Transferability-of-Prompt-Tuning-for-Natural-Language-Understanding/"><img class="prev-cover" src="https://i.loli.net/2021/12/02/MVzbTiL5glWvtj4.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">On Transferability of Prompt Tuning for Natural Language Understanding</div></div></a></div><div class="next-post pull-right"><a href="/2021/12/07/Iterative-Network-Pruning-with-Uncertainty-Regularization-for-Lifelong-Sentiment-Classification/"><img class="next-cover" src="https://s2.loli.net/2021/12/07/YiNu7IOeRfMjyUX.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Iterative Network Pruning with Uncertainty Regularization for Lifelong Sentiment Classification</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/08/29/Edge-augmented-Graph-Transformers-Global-Self-attention-is-Enough-for-Graphs/" title="Edge-augmented Graph Transformers: Global Self-attention is Enough for Graphs"><img class="cover" src="https://i.loli.net/2021/08/29/7pyGPBNQZRmv3Tr.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-08-29</div><div class="title">Edge-augmented Graph Transformers: Global Self-attention is Enough for Graphs</div></div></a></div><div><a href="/2021/07/21/Rethinking-Graph-Transformers-with-Spectral-Attention/" title="Rethinking Graph Transformers with Spectral Attention"><img class="cover" src="https://i.loli.net/2021/07/23/6D5F2dmaKPg9hsw.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-07-21</div><div class="title">Rethinking Graph Transformers with Spectral Attention</div></div></a></div><div><a href="/2021/07/09/Heterogeneous-Graph-Transformer/" title="Heterogeneous Graph Transformer"><img class="cover" src="https://z3.ax1x.com/2021/07/09/RxuSu4.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-07-09</div><div class="title">Heterogeneous Graph Transformer</div></div></a></div><div><a href="/2021/05/27/Multi-hop-Attention-Graph-Neural-Networks/" title="Multi-hop Attention Graph Neural Networks"><img class="cover" src="https://i.loli.net/2021/05/27/SiYNaTvcVfu8hlb.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-05-27</div><div class="title">Multi-hop Attention Graph Neural Networks</div></div></a></div><div><a href="/2021/05/24/GCC-Graph-Contrastive-Coding-for-Graph-Neural-Network-Pre-Training/" title="GCC: Graph Contrastive Coding for Graph Neural Network Pre-Training"><img class="cover" src="https://i.loli.net/2021/05/24/1m9JndkQAEqhfML.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-05-24</div><div class="title">GCC: Graph Contrastive Coding for Graph Neural Network Pre-Training</div></div></a></div><div><a href="/2021/05/15/GPT-GNN-Generative-Pre-Training-of-Graph-Neural-Networks/" title="GPT-GNN: Generative Pre-Training of Graph Neural Networks"><img class="cover" src="https://i.loli.net/2021/05/15/E1H5xL7lm3nt8AD.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-05-15</div><div class="title">GPT-GNN: Generative Pre-Training of Graph Neural Networks</div></div></a></div></div></div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Coding-Zuo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2021/12/19/TransPrompt-Towards-an-Automatic-Transferable-Prompting-Framework-for-Few-shot-Text-Classification/">http://example.com/2021/12/19/TransPrompt-Towards-an-Automatic-Transferable-Prompting-Framework-for-Few-shot-Text-Classification/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">Coding-Zuo</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/GNN/">GNN</a></div><div class="post_share"><div class="addthis_inline_share_toolbox"></div><script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=null" async="async"></script></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#TransPrompt-Towards-an-Automatic-Transferable-Prompting-Framework-for-Few-shot-Text-Classification"><span class="toc-number">1.</span> <span class="toc-text">TransPrompt: Towards an Automatic Transferable Prompting Framework for Few-shot Text Classification</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Abstract"><span class="toc-number">1.1.</span> <span class="toc-text">Abstract</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Introduction"><span class="toc-number">1.2.</span> <span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#The-TransPrompt-Framework"><span class="toc-number">1.3.</span> <span class="toc-text">The TransPrompt Framework</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Overview"><span class="toc-number">1.3.1.</span> <span class="toc-text">Overview</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Multi-task-Meta-knowledge-Acquisition"><span class="toc-number">1.3.2.</span> <span class="toc-text">Multi-task Meta-knowledge Acquisition</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Prompt-Encoding"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">Prompt Encoding</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Training-the-Meta-learner"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">Training the Meta-learner</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Task-aware-Model-Specification"><span class="toc-number">1.3.3.</span> <span class="toc-text">Task-aware Model Specification</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Learning-with-Full-Training-Sets"><span class="toc-number">1.3.4.</span> <span class="toc-text">Learning with Full Training Sets</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Method"><span class="toc-number">1.4.</span> <span class="toc-text">Method</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Overview-of-Framework"><span class="toc-number">1.4.1.</span> <span class="toc-text">Overview of Framework</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Refined-Memory-Updating"><span class="toc-number">1.4.2.</span> <span class="toc-text">Refined Memory Updating</span></a></li></ol></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By Coding-Zuo</div><div class="footer_custom_text">Hi, welcome to my BLOG</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    loader: {
+      source: {
+        '[tex]/amsCd': '[tex]/amscd'
+      }
+    },
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        addClass: [200,() => {
+          document.querySelectorAll('mjx-container:not([display=\'true\']').forEach( node => {
+            const target = node.parentNode
+            if (!target.classList.contains('has-jax')) {
+              target.classList.add('mathjax-overflow')
+            }
+          })
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>if (document.getElementsByClassName('mermaid').length) {
+  if (window.mermaidJsLoad) mermaid.init()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(() => {
+      window.mermaidJsLoad = true
+      mermaid.initialize({
+        theme: 'default',
+      })
+      false && mermaid.init()
+    })
+  }
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'd652112bf81876e00118',
+      clientSecret: 'a5abed418c7cc2736af5b4d0cbd7ff97d460a5b3',
+      repo: 'Coding-Zuo.github.io',
+      owner: 'Coding-Zuo',
+      admin: ['Coding-Zuo'],
+      id: 'ad8f7f3925f4cb09634c52fe9f709684',
+      language: 'zh-CN',
+      perPage: 10,
+      distractionFreeMode: false,
+      pagerDirection: 'last',
+      createIssueManually: false,
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script src="/js/custom.js"></script><script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script src="//code.tidio.co/mak6nokafytw9mgrsuzglwzfxiy3fpdl.js" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
