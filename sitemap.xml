@@ -16,13 +16,6 @@
   </url>
   
   <url>
-    <loc>http://example.com/2022/01/22/A-Unified-Generative-Framework-for-Aspect-Based-Sentiment-Analysis/</loc>
-    
-    <lastmod>2022-01-22</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://example.com/2021/12/03/Continual-Learning-with-Hypernetworks/</loc>
     
     <lastmod>2022-01-22</lastmod>
@@ -992,13 +985,6 @@
   
   <url>
     <loc>http://example.com/tags/GNN-nlp/</loc>
-    <lastmod>2022-02-10</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://example.com/tags/NER/</loc>
     <lastmod>2022-02-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
