@@ -1,0 +1,351 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ZeroPrompt- Scaling Prompt-Based Pretraining to 1,000 Tasks Improves Zero-Shot Generalization | Coding-Zuo</title><meta name="keywords" content="context detection"><meta name="author" content="Coding-Zuo"><meta name="copyright" content="Coding-Zuo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="ZeroPrompt: Scaling Prompt-Based Pretraining to 1,000 Tasks Improves Zero-Shot Generalization任务数量极大的情况下，模型大小对性能的影响很小…  论文地址: https:&#x2F;&#x2F;arxiv.org&#x2F;pdf&#x2F;2201.06910.pdf  XLNet作者杨植麟团队发布了首个中文多任务Prompt统一模型：Zero">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ZeroPrompt- Scaling Prompt-Based Pretraining to 1,000 Tasks Improves Zero-Shot Generalization">
+<meta property="og:url" content="http://example.com/2022/02/21/ZeroPrompt-Scaling-Prompt-Based-Pretraining-to-1-000-Tasks-Improves-Zero-Shot-Generalization/index.html">
+<meta property="og:site_name" content="Coding-Zuo">
+<meta property="og:description" content="ZeroPrompt: Scaling Prompt-Based Pretraining to 1,000 Tasks Improves Zero-Shot Generalization任务数量极大的情况下，模型大小对性能的影响很小…  论文地址: https:&#x2F;&#x2F;arxiv.org&#x2F;pdf&#x2F;2201.06910.pdf  XLNet作者杨植麟团队发布了首个中文多任务Prompt统一模型：Zero">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s4.ax1x.com/2022/02/21/HXcFxA.png">
+<meta property="article:published_time" content="2022-02-21T01:56:43.000Z">
+<meta property="article:modified_time" content="2022-02-21T02:01:42.902Z">
+<meta property="article:author" content="Coding-Zuo">
+<meta property="article:tag" content="context detection">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s4.ax1x.com/2022/02/21/HXcFxA.png"><link rel="shortcut icon" href="https://i.loli.net/2021/03/22/reFlcYOnP3dSuJX.png"><link rel="canonical" href="http://example.com/2022/02/21/ZeroPrompt-Scaling-Prompt-Based-Pretraining-to-1-000-Tasks-Improves-Zero-Shot-Generalization/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.json","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-02-21 10:01:42'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    })(window)</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sviptzk/HexoStaticFile@latest/Hexo/css/footer.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css"><meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="Coding-Zuo" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://i.loli.net/2021/03/22/YP2oqk7lOAfceTD.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">134</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">16</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://s4.ax1x.com/2022/02/21/HXcFxA.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Coding-Zuo</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">ZeroPrompt- Scaling Prompt-Based Pretraining to 1,000 Tasks Improves Zero-Shot Generalization</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-02-21T01:56:43.000Z" title="发表于 2022-02-21 09:56:43">2022-02-21</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-02-21T02:01:42.902Z" title="更新于 2022-02-21 10:01:42">2022-02-21</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="ZeroPrompt- Scaling Prompt-Based Pretraining to 1,000 Tasks Improves Zero-Shot Generalization"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="ZeroPrompt-Scaling-Prompt-Based-Pretraining-to-1-000-Tasks-Improves-Zero-Shot-Generalization"><a href="#ZeroPrompt-Scaling-Prompt-Based-Pretraining-to-1-000-Tasks-Improves-Zero-Shot-Generalization" class="headerlink" title="ZeroPrompt: Scaling Prompt-Based Pretraining to 1,000 Tasks Improves Zero-Shot Generalization"></a>ZeroPrompt: Scaling Prompt-Based Pretraining to 1,000 Tasks Improves Zero-Shot Generalization</h1><p><strong>任务数量极大的情况下，模型大小对性能的影响很小…</strong></p>
+<blockquote>
+<p>论文地址: <em><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2201.06910.pdf">https://arxiv.org/pdf/2201.06910.pdf</a></em></p>
+</blockquote>
+<p>XLNet作者杨植麟团队发布了首个中文多任务Prompt统一模型：ZeroPrompt。研究的重点是 【任务的规模】 和 【zero-shot】 的 prompting。</p>
+<p>以前的模型只在几十个任务上进行训练，ZeroPrompt 使用真实世界的数据将其扩展到1000个任务（中文数据）。这导致了一个重要的发现，即<strong>任务规模可以成为模型尺寸的有效替代方案</strong>； 即，<strong>模型尺寸对大量任务的性能影响很小</strong>。</p>
+<p>此外，该文还提出了一种结合了遗传算法来自动搜索 unseen 任务的最佳 prompt。 </p>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>众所周知，prompt 可以激发语言模型的潜力，避免预训练和Fine tuning 之间的gap，并且是一个非常 Parameter-Efficient 的调整方法。不仅如此，Prompt 还可以对不同的NLP任务进行范式统一，统一为相同的数据形式。同时，受益于预训练语言模型的强大，就对多任务、多领域进行统一建模。</p>
+<p> 最初，GPT-3 证明了通过在更大规模模型上使用 prompt 来实现零样本和少样本学习的可能性。 然而，与全监督微调相比，zero-shot 和 few-shot 泛化的性能在许多任务上仍然不足。</p>
+<p>之前 FLAN 与 T0 分别探索了模型大小与 prompt数量对多任务预训练的性能和效率，但目前还不清楚扩展训练任务的数量的影响如何。</p>
+<p>如图 1 所示，实证研究表明，任务扩展可以成为模型尺寸的有效替代方案：</p>
+<p><img src="https://s4.ax1x.com/2022/02/17/H5ISCn.png" alt=""></p>
+<p>由于训练任务非常多，模型大小对性能的影响很小。 此外，任务规模可以提高各种模型规模的性能。 对于参考基线，RoBERTa-Large 以完全监督的方式进行微调，而 Pangu Alpha 和 CPM-2 是 zero-shot prompted。 所有模型都用中文训练和评估。</p>
+<p>除此之外，ZeroPrompt 还探索了，在多任务训练时：</p>
+<ul>
+<li>如何对不同任务类型更好地统一建模，Prompt如何设计？</li>
+<li>应该选择哪些任务数据进行多任务训练呢？</li>
+<li>对unseen domain的新任务如何获得高性能，如何自动构建Prompt？</li>
+</ul>
+<h2 id="ZeroPrompt"><a href="#ZeroPrompt" class="headerlink" title="ZeroPrompt"></a>ZeroPrompt</h2><h3 id="Zero-shot-Adaptation-with-Few-shot-Validation"><a href="#Zero-shot-Adaptation-with-Few-shot-Validation" class="headerlink" title="Zero-shot Adaptation with Few-shot Validation"></a>Zero-shot Adaptation with Few-shot Validation</h3><p>为了验证Prompt的效果，需要标注一些样本做验证集，论文将这一设置称为，“Zero-shot Adaptation with Few-shot Validation”，设置总结在下图:</p>
+<p><img src="https://s4.ax1x.com/2022/02/18/HTVtW4.png" alt=""></p>
+<h3 id="Datasets-for-scaling-to-1-000-tasks"><a href="#Datasets-for-scaling-to-1-000-tasks" class="headerlink" title="Datasets for scaling to 1,000+ tasks"></a>Datasets for scaling to 1,000+ tasks</h3><p>数据来源主要是学术界公开的数据集和工业生产数据，包括情感分析、新闻分类、推断、NER、MRC、摘要等多个任务。其中，公开数据集共80个。下图列出了每种任务类型中的任务数量：</p>
+<p><img src="https://s4.ax1x.com/2022/02/18/HTmcfU.png" alt=""></p>
+<p>一共的1110个任务数据上，有824个用作多任务预训练，剩余的286个数据是进行zero-shot测试的unseen任务。</p>
+<h3 id="ZeroPrompt-的pipeline"><a href="#ZeroPrompt-的pipeline" class="headerlink" title="ZeroPrompt 的pipeline"></a>ZeroPrompt 的pipeline</h3><p><img src="https://s4.ax1x.com/2022/02/20/HLVtKg.png" alt=""></p>
+<p>与传统的预训练-微调范式相比， ZeroPrompt 引入了两个关键差异：</p>
+<ul>
+<li>为所有下游任务提供通用模型，而不是为每个特定下游任务提供多个不同的微调模型。 </li>
+<li>其次，使用 Genetic Prompt Search （GPS）在我们的“Zero-shot Adaptation with Few-shot Validation”设置中自动生成高性能prompt。 此外，我们的 ZeroPrompt 使用混合 prompt 形式，包括 soft prompt 和 hard prompt。</li>
+</ul>
+<h3 id="Genetic-Prompt-Search"><a href="#Genetic-Prompt-Search" class="headerlink" title="Genetic Prompt Search"></a>Genetic Prompt Search</h3><p>目标在不更新模型参数的情况下自动获得高性能prompts，提出了 GPS 以进一步提高 ZeroPrompt 的 zero-shot性能。</p>
+<p>遵循更现实的零样本学习设置，采样少量数据作为下游任务的开发集 $D_{dev}$——“Zero-shot Adaptation with Few-shot Validation”。</p>
+<p>GPS 的过程在算法1中进-行了描述，其中 $f<em>{GPS}$是决定保留或消除哪个 prompt 的度量函数，$g</em>{GPS}$表示生成新 prompt 的遗传函数。 对于下游任务，算法首先使用一组手工 prompt $G_0$ 进行初始化。</p>
+<p>在实践中，通过 3 次初始化来实现良好的性能。 对于每次迭代，使用 $f<em>{GPS}$ 计算 $G^t$ 中 prompt 的分数，并选择前 K 个提示作为 $G^t</em><em>$。 然后我们使用基于 $G^t_</em>$ 的 $g_{GPS}$ 生成 $G^{t+1}$。最后，我们从整个生成的 prompt 集中选择前 K 个 prompts。 </p>
+<p><img src="https://s4.ax1x.com/2022/02/18/HT8ETJ.png" alt=""></p>
+<h3 id="Prompt-Design"><a href="#Prompt-Design" class="headerlink" title="Prompt Design"></a>Prompt Design</h3><p>尽管带有 prompt 的大规模预训练模型，例如 GPT-3  在没有任何标记数据的情况下对看不见的任务进行零样本泛化，显示出可喜的结果，快速设计对其性能至关重要。在本小节中，描述了我们选择的 prompt 设计和其他一些经过测试的变体。</p>
+<p>在 prompt 模板 $T$ 的最简单形式中，提示方法通过手工提示 $P$ 和文本输入序列 $X$ 构造 $T$：</p>
+<script type="math/tex; mode=display">
+T = \{P,X,[MASK]\}</script><p>其中 $[MASK]$ 是应填写答案以完成句子的空白。 这被称为句子填充。</p>
+<p>如图 4 所示，优化后的prompt $P$ 进一步分解为 $\Epsilon$、$V$ 和 $D$ 三个部分，其中有任务特定的 soft prompt $E$、verbalizer prompt $V$ 和任务描述prompt $D$。结果， 我们的提示模板 $T$ 可以表示为：</p>
+<script type="math/tex; mode=display">
+T = \{\Epsilon,V,D,X, [MASK]\}</script><p><img src="https://s4.ax1x.com/2022/02/20/HLNF3D.png" alt=""></p>
+<p>与 PET  类似，使用生成任务的 prompt 和用于分类任务的 prompt-verbalizer对 (PVPs)。 </p>
+<p>对于每种任务类型，我们首先设计一个基本 prompts 集合，然后通过添加特定任务的关键字或表达式来修改基本 prompts，以获得最终的任务描述 prompt。 强制每个任务类型中的任务具有相同或相似的 verbalizer 以保持一致性。</p>
+<h3 id="Prompts-with-Verbalizer-Candidates"><a href="#Prompts-with-Verbalizer-Candidates" class="headerlink" title="Prompts with Verbalizer Candidates"></a>Prompts with Verbalizer Candidates</h3><p>对于 unseen 的任务的零样本学习，在这种情况下微调不是一种选择，从大量候选词汇中找到表现最好的verbalizer v ∈ V 是一个难题。为了解决这个问题，我们将所有可能的 verbalizer 候选者 $V = {v_1 , v_2 , …}$ 连接起来，并将候选者放在任务描述提示之前，如图 4 所示。</p>
+<h3 id="Disentangled-Task-Representations"><a href="#Disentangled-Task-Representations" class="headerlink" title="Disentangled Task Representations"></a>Disentangled Task Representations</h3><p>如上所述，我们强制执行直观相似的任务以具有相似的 prompts 或 PVPs，以便与任务无关的知识已经以这种方式正确建模。 同时，特定于任务的知识也应该有助于零样本泛化。</p>
+<p>为了在多任务预训练中 解耦 特定于任务和与任务无关的知识，安装了一个连续 prompt 嵌入作为前缀，这被称为图 4 中所示的特定于任务的 soft prompt。</p>
+<p>对于 unseen 的任务，需要冷启动 并在没有标记数据的情况下从头开始初始化 prompt 嵌入。 一种直觉是直接使用来自具有相似数据分布的训练任务的soft prompt。 </p>
+<h2 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h2><h3 id="Experiment-Setups"><a href="#Experiment-Setups" class="headerlink" title="Experiment Setups"></a>Experiment Setups</h3><h4 id="Baseline-Models"><a href="#Baseline-Models" class="headerlink" title="Baseline Models"></a>Baseline Models</h4><ul>
+<li>Pangu-α : 具有多达 2000 亿个参数的预训练解码器模型。 在计算资源有限的情况下，以 130 亿版本的 Pangu-α 作为基准。</li>
+<li>CPM-2 : 具有 110 亿个参数的预训练编码器-解码器模型。 以中文版的 CPM-2 为基准。</li>
+<li>RoBERTa : 与强基线、微调的 RoBERTa-large 模型进行比较。</li>
+</ul>
+<h3 id="Main-Results"><a href="#Main-Results" class="headerlink" title="Main Results"></a>Main Results</h3><h4 id="Results-of-Task-Scaling"><a href="#Results-of-Task-Scaling" class="headerlink" title="Results of Task Scaling"></a>Results of Task Scaling</h4><p><img src="https://s4.ax1x.com/2022/02/18/H7k9j1.png" alt=""></p>
+<p>有上图可以看出：随着任务数量从20升至800个，不同参数大小模型间的差距变得很小，FLOPs提升30倍。</p>
+<h4 id="Results-Compared-with-Other-Approaches"><a href="#Results-Compared-with-Other-Approaches" class="headerlink" title="Results Compared with Other Approaches"></a>Results Compared with Other Approaches</h4><p>在unseen的测试数据集上将 ZeroPrompt 与其他强大的零样本和完全监督的方法进行比较。 由于篇幅有限，表 3 中仅包含部分保留的测试任务（ 17 个学术数据集和 10 个生产数据集以进行比较）。</p>
+<p><img src="https://s4.ax1x.com/2022/02/18/H7AJZ6.png" alt=""></p>
+<p>主要结论是：</p>
+<ul>
+<li>ZeroPrompt显著提升T5的zero-shot性能，从37.8提升到68.76，一共提升近31个点；</li>
+<li>ZeroPrompt显著提升CPM2和盘古的zero-shot性能，提升近28个点；</li>
+<li>ZeroPrompt的zero-shot性能与RoBERTa-large有监督finetune可比或更好（如上图红色标识）；</li>
+<li>ZeroPrompt与finetuned的RoBERTa-large相比，整体只差4.7个点，而ZeroPrompt没有使用任何标记数据进行微调。原论文表示：这是“令人欣喜”的结果。</li>
+</ul>
+<h3 id="Ablation-Studies"><a href="#Ablation-Studies" class="headerlink" title="Ablation Studies"></a>Ablation Studies</h3><h4 id="Effect-of-Prompt-Design"><a href="#Effect-of-Prompt-Design" class="headerlink" title="Effect of Prompt Design"></a>Effect of Prompt Design</h4><p><img src="https://s4.ax1x.com/2022/02/18/H7mjqs.png" alt=""></p>
+<p>【特定任务的soft prompt】 和 【候选标签verbalizer prompt】对最终结果有正向收益。</p>
+<h4 id="Effect-of-Genetic-Prompt-Search"><a href="#Effect-of-Genetic-Prompt-Search" class="headerlink" title="Effect of Genetic Prompt Search"></a>Effect of Genetic Prompt Search</h4><p><img src="https://s4.ax1x.com/2022/02/18/H7QZ6O.png" alt=""></p>
+<p>【Prompt遗传搜索算法】好于之前的LM-BFF、翻译等方式。</p>
+<h4 id="Effect-of-Cross-Task-Type-Transfer"><a href="#Effect-of-Cross-Task-Type-Transfer" class="headerlink" title="Effect of Cross Task Type Transfer"></a>Effect of Cross Task Type Transfer</h4><p><img src="https://s4.ax1x.com/2022/02/18/H7QYjS.png" alt=""></p>
+<p>在跨任务类型的zero-shot性能测试上，只能从某些任务类型中受益，而利用其他任务的更多标记数据并没有持续提升。</p>
+<h2 id="Limitations-and-Future-Work"><a href="#Limitations-and-Future-Work" class="headerlink" title="Limitations and Future Work"></a>Limitations and Future Work</h2><p>虽然可以将任务缩放视为模型缩放的替代方案，它提高了零样本学习的效率和性能。然而，仍一些局限性，未来通过研究这些问题可能会进一步提高零样本性能。</p>
+<ul>
+<li>跨任务迁移的zero-shot性能，并不总是随着任务规模的增加而持续提升</li>
+<li>在多任务训练中，如何选择更好的训练任务分布。 </li>
+<li>如何收集更多多样的任务数据，而当前的任务数据规模仍然是受限的。</li>
+</ul>
+</article><div class="post-reward"><div class="reward-button button--animated"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2022/02/10/Prompt-Guided-Few-Shot-Event-Detection/"><img class="next-cover" src="https://i.loli.net/2021/10/28/DjK6qxmT9cA7Ov3.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Prompt-Guided Few-Shot Event Detection</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2022/02/10/Prompt-Guided-Few-Shot-Event-Detection/" title="Prompt-Guided Few-Shot Event Detection"><img class="cover" src="https://i.loli.net/2021/10/28/DjK6qxmT9cA7Ov3.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-02-10</div><div class="title">Prompt-Guided Few-Shot Event Detection</div></div></a></div><div><a href="/2022/02/10/MetaPrompting-Learning-to-Learn-Better-Prompts/" title="MetaPrompting: Learning to Learn Better Prompts"><img class="cover" src="https://s4.ax1x.com/2022/01/22/7fJ3lV.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-02-10</div><div class="title">MetaPrompting: Learning to Learn Better Prompts</div></div></a></div><div><a href="/2022/01/04/Exploring-Low-dimensional-Intrinsic-Task-Subspace-via-Prompt-Tuning/" title="Exploring Low-dimensional Intrinsic Task Subspace via Prompt Tuning"><img class="cover" src="https://i.loli.net/2021/08/29/7pyGPBNQZRmv3Tr.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-04</div><div class="title">Exploring Low-dimensional Intrinsic Task Subspace via Prompt Tuning</div></div></a></div><div><a href="/2021/12/27/Unsupervised-Domain-Adaptation-of-a-Pretrained-Cross-Lingual-Language-Model/" title="Unsupervised Domain Adaptation of a Pretrained Cross-Lingual Language Model"><img class="cover" src="https://i.loli.net/2021/11/17/hMK8qF4Jne6sTYC.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-12-27</div><div class="title">Unsupervised Domain Adaptation of a Pretrained Cross-Lingual Language Model</div></div></a></div><div><a href="/2021/12/22/Contrastive-Representation-Distillation/" title="Contrastive Representation Distillation"><img class="cover" src="https://s2.loli.net/2021/12/22/aCcIO7GKrPo5DV3.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-12-22</div><div class="title">Contrastive Representation Distillation</div></div></a></div><div><a href="/2021/12/22/Achieving-Forgetting-Prevention-and-Knowledge-Transfer-in-Continual-Learning/" title="Achieving Forgetting Prevention and Knowledge Transfer in Continual Learning"><img class="cover" src="https://s2.loli.net/2021/12/22/OG4tHAZ7uEoJTfh.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-12-22</div><div class="title">Achieving Forgetting Prevention and Knowledge Transfer in Continual Learning</div></div></a></div></div></div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Coding-Zuo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2022/02/21/ZeroPrompt-Scaling-Prompt-Based-Pretraining-to-1-000-Tasks-Improves-Zero-Shot-Generalization/">http://example.com/2022/02/21/ZeroPrompt-Scaling-Prompt-Based-Pretraining-to-1-000-Tasks-Improves-Zero-Shot-Generalization/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">Coding-Zuo</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/context-detection/">context detection</a></div><div class="post_share"><div class="addthis_inline_share_toolbox"></div><script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=null" async="async"></script></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#ZeroPrompt-Scaling-Prompt-Based-Pretraining-to-1-000-Tasks-Improves-Zero-Shot-Generalization"><span class="toc-number">1.</span> <span class="toc-text">ZeroPrompt: Scaling Prompt-Based Pretraining to 1,000 Tasks Improves Zero-Shot Generalization</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Introduction"><span class="toc-number">1.1.</span> <span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ZeroPrompt"><span class="toc-number">1.2.</span> <span class="toc-text">ZeroPrompt</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Zero-shot-Adaptation-with-Few-shot-Validation"><span class="toc-number">1.2.1.</span> <span class="toc-text">Zero-shot Adaptation with Few-shot Validation</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Datasets-for-scaling-to-1-000-tasks"><span class="toc-number">1.2.2.</span> <span class="toc-text">Datasets for scaling to 1,000+ tasks</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ZeroPrompt-%E7%9A%84pipeline"><span class="toc-number">1.2.3.</span> <span class="toc-text">ZeroPrompt 的pipeline</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Genetic-Prompt-Search"><span class="toc-number">1.2.4.</span> <span class="toc-text">Genetic Prompt Search</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Prompt-Design"><span class="toc-number">1.2.5.</span> <span class="toc-text">Prompt Design</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Prompts-with-Verbalizer-Candidates"><span class="toc-number">1.2.6.</span> <span class="toc-text">Prompts with Verbalizer Candidates</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Disentangled-Task-Representations"><span class="toc-number">1.2.7.</span> <span class="toc-text">Disentangled Task Representations</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Experiments"><span class="toc-number">1.3.</span> <span class="toc-text">Experiments</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Experiment-Setups"><span class="toc-number">1.3.1.</span> <span class="toc-text">Experiment Setups</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Baseline-Models"><span class="toc-number">1.3.1.1.</span> <span class="toc-text">Baseline Models</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Main-Results"><span class="toc-number">1.3.2.</span> <span class="toc-text">Main Results</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Results-of-Task-Scaling"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">Results of Task Scaling</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Results-Compared-with-Other-Approaches"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">Results Compared with Other Approaches</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Ablation-Studies"><span class="toc-number">1.3.3.</span> <span class="toc-text">Ablation Studies</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Effect-of-Prompt-Design"><span class="toc-number">1.3.3.1.</span> <span class="toc-text">Effect of Prompt Design</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Effect-of-Genetic-Prompt-Search"><span class="toc-number">1.3.3.2.</span> <span class="toc-text">Effect of Genetic Prompt Search</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Effect-of-Cross-Task-Type-Transfer"><span class="toc-number">1.3.3.3.</span> <span class="toc-text">Effect of Cross Task Type Transfer</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Limitations-and-Future-Work"><span class="toc-number">1.4.</span> <span class="toc-text">Limitations and Future Work</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By Coding-Zuo</div><div class="footer_custom_text">Hi, welcome to my BLOG</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    loader: {
+      source: {
+        '[tex]/amsCd': '[tex]/amscd'
+      }
+    },
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        addClass: [200,() => {
+          document.querySelectorAll('mjx-container:not([display=\'true\']').forEach( node => {
+            const target = node.parentNode
+            if (!target.classList.contains('has-jax')) {
+              target.classList.add('mathjax-overflow')
+            }
+          })
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>if (document.getElementsByClassName('mermaid').length) {
+  if (window.mermaidJsLoad) mermaid.init()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(() => {
+      window.mermaidJsLoad = true
+      mermaid.initialize({
+        theme: 'default',
+      })
+      false && mermaid.init()
+    })
+  }
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'd652112bf81876e00118',
+      clientSecret: 'a5abed418c7cc2736af5b4d0cbd7ff97d460a5b3',
+      repo: 'Coding-Zuo.github.io',
+      owner: 'Coding-Zuo',
+      admin: ['Coding-Zuo'],
+      id: 'b51ad808c73a68240540af53a163a505',
+      language: 'zh-CN',
+      perPage: 10,
+      distractionFreeMode: false,
+      pagerDirection: 'last',
+      createIssueManually: false,
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script src="/js/custom.js"></script><script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script src="//code.tidio.co/mak6nokafytw9mgrsuzglwzfxiy3fpdl.js" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
