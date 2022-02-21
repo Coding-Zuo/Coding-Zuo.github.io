@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://example.com/2022/02/21/Auto-Encoding-Variational-Bayes/</loc>
+    
+    <lastmod>2022-02-21</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://example.com/2022/02/21/A-Survey-of-Active-Learning-for-Text-Classification-Using-Deep-Neural-Networks/</loc>
     
     <lastmod>2022-02-21</lastmod>
