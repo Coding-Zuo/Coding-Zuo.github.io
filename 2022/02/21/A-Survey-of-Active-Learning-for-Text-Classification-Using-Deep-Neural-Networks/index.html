@@ -1,0 +1,374 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>A Survey of Active Learning for Text Classification Using Deep Neural Networks | Coding-Zuo</title><meta name="keywords" content="Active Learning"><meta name="author" content="Coding-Zuo"><meta name="copyright" content="Coding-Zuo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="A Survey of dy for Text Classification Using Deep Neural Networks通过利用NN的卓越文本分类性能进行Active Learning (AL)，我们可以使用相同数量的数据提高模型的性能，或者减少数据，从而减少所需的注释工作，同时保持相同的性能。 我们回顾了使用深度神经网络(DNNs)进行文本分类的AL，并阐述了阻碍其采用的两个主要原因：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="A Survey of Active Learning for Text Classification Using Deep Neural Networks">
+<meta property="og:url" content="http://example.com/2022/02/21/A-Survey-of-Active-Learning-for-Text-Classification-Using-Deep-Neural-Networks/index.html">
+<meta property="og:site_name" content="Coding-Zuo">
+<meta property="og:description" content="A Survey of dy for Text Classification Using Deep Neural Networks通过利用NN的卓越文本分类性能进行Active Learning (AL)，我们可以使用相同数量的数据提高模型的性能，或者减少数据，从而减少所需的注释工作，同时保持相同的性能。 我们回顾了使用深度神经网络(DNNs)进行文本分类的AL，并阐述了阻碍其采用的两个主要原因：">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s4.ax1x.com/2022/02/21/HXgKw6.png">
+<meta property="article:published_time" content="2022-02-21T02:03:15.000Z">
+<meta property="article:modified_time" content="2022-02-21T02:05:10.504Z">
+<meta property="article:author" content="Coding-Zuo">
+<meta property="article:tag" content="Active Learning">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s4.ax1x.com/2022/02/21/HXgKw6.png"><link rel="shortcut icon" href="https://i.loli.net/2021/03/22/reFlcYOnP3dSuJX.png"><link rel="canonical" href="http://example.com/2022/02/21/A-Survey-of-Active-Learning-for-Text-Classification-Using-Deep-Neural-Networks/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.json","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-02-21 10:05:10'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    })(window)</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sviptzk/HexoStaticFile@latest/Hexo/css/footer.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css"><meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="Coding-Zuo" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://i.loli.net/2021/03/22/YP2oqk7lOAfceTD.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">135</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">17</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://s4.ax1x.com/2022/02/21/HXgKw6.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Coding-Zuo</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https:www.baidu.com"><i class="fa-fw fas fa-heart"></i><span> 我的简历</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li><li><a class="site-page child" href="/%E7%85%A7%E7%89%87"><i class="fa-fw /Gallery/"></i><span> 2</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">A Survey of Active Learning for Text Classification Using Deep Neural Networks</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-02-21T02:03:15.000Z" title="发表于 2022-02-21 10:03:15">2022-02-21</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-02-21T02:05:10.504Z" title="更新于 2022-02-21 10:05:10">2022-02-21</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="A Survey of Active Learning for Text Classification Using Deep Neural Networks"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="A-Survey-of-dy-for-Text-Classification-Using-Deep-Neural-Networks"><a href="#A-Survey-of-dy-for-Text-Classification-Using-Deep-Neural-Networks" class="headerlink" title="A Survey of dy for Text Classification Using Deep Neural Networks"></a>A Survey of dy for Text Classification Using Deep Neural Networks</h1><p>通过利用NN的卓越文本分类性能进行Active Learning (AL)，我们可以使用相同数量的数据提高模型的性能，或者减少数据，从而减少所需的注释工作，同时保持相同的性能。</p>
+<p>我们回顾了使用深度神经网络(DNNs)进行文本分类的AL，并阐述了阻碍其采用的两个主要原因：</p>
+<ul>
+<li>NNs无法提供可靠的不确定性估计，这是最常用的查询策略所依赖的</li>
+<li>在小数据上训练DNN的挑战。</li>
+</ul>
+<p>为了研究前者，我们构建了一个查询策略分类，区分了<strong>基于数据、基于模型和基于预测</strong>的实例选择，并调查了这些类别在最近的研究中的流行情况。</p>
+<p>通过利用NN的卓越文本分类性能进行AL，我们可以使用相同数量的数据提高模型的性能，或者减少数据，从而减少所需的注释工作，同时保持相同的性能。</p>
+<p>最后，我们分析了AL在文本分类方面的最新工作，将各自的查询策略与分类法联系起来，并概述了它们的共性和不足。因此，我们强调了当前研究中的差距，并提出了开放的研究问题。</p>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>数据是机器学习应用的燃料，因此其价值一直在稳步增长。在许多设置中，产生了大量的未标记数据，但是为了在有监督的机器学习中使用这些数据，除了提供标记之外别无选择。这通常需要手动标记过程，这通常不是微不足道的，甚至可能需要领域专家，例如在专利分类[52，23]或临床文本分类[75，24，28]中。</p>
+<p>此外，这很耗时，并且迅速增加了货币成本，因此很快就使这种方法变得不可行。即使有专家，由于现代数据集的巨大规模，通常也不可能标记每个数据。这尤其阻碍了自然语言处理(NLP)领域，在自然语言处理领域，每个文档中的数据集和文本量都可能是巨大的，导致人类专家无法承受大量的注释工作。</p>
+<p>主动学习(AL)旨在减少人类专家标注的数据量。这是一个 oracle (通常是人工注释者)和 active learner 之间的迭代循环过程。<strong>与被动学习不同的是，在被动学习中，数据被简单地馈送到算法中，主动学习者选择下一步要标记哪些样本。</strong>然而，标签本身是由人类专家完成的，也就是所谓的圈中人。在收到新标签后，active learner 训练一个新模型，这个过程从头开始。使用主动学习者这个术语，我们指的是一个模型、一个查询策略和一个停止标准的组成。</p>
+<p>在这项工作中，模型是w.l.o.g.文本分类模型，<strong>查询策略决定哪些实例应该被贴上标签</strong>，而<strong>停止标准定义了何时停止AL循环</strong>。根据Settles[85]的说法，AL有三种主要情况。</p>
+<ul>
+<li>Pool-based : 在这种情况下，学习者可以访问封闭的未标记的实例集，称为池。</li>
+<li>Stream-based : 学习者一次收到一个实例，可以选择保留或丢弃。</li>
+<li>membership query synthesis : 学习者创建新的人工实例来进行标记。</li>
+</ul>
+<p>如果基于池的方案不是在单个实例上操作，而是在一批实例上操作，这被称为批模式batch-model AL[85]。在整个工作中，我们假设了一个基于池的批处理方案，因为在文本分类设置中，数据集通常是一个封闭的集合，而批处理操作减少了再训练操作的数量，这将导致用户的等待时间。</p>
+<p><strong>AL的基本思想是，少数有代表性的实例可以作为完整数据集的代用品。</strong>不仅较小的数据子集可以降低计算成本，而且已经证明，与在完整数据集上学习相比，AL甚至可以提高所产生模型的质量[83, 24]。因此，AL已经被用于许多NLP任务中，例如文本分类[95, 39]，命名实体识别[88, 94, 89]，或机器翻译[35]，并且仍然是一个活跃的研究领域。</p>
+<p>对于AL从业者来说，这意味着用更少的样本达到相同的性能，或者用相同的数据量提高性能。</p>
+<p>一个有利的发展是，迁移学习，特别是微调预训练的语言模型（LMs）的范式，已经在NLP中流行。在AL的背景下，这尤其有助于小数据情况下的训练，在这种情况下，可以利用预训练的模型，只用很少的数据进行微调来训练一个模型，否则是不可行的。最后，通过对子词单元的操作，LM还可以处理词汇外的标记，这比许多传统方法更有优势。</p>
+<p>尽管NN目前很受欢迎，但在NLP的背景下，关于基于NN的主动学习的研究却很少，在文本分类的背景下就更少了。这是由于以下原因造成的。</p>
+<ul>
+<li>许多DL模型都需要大量的数据[103]，这与旨在需要尽可能少的数据的AL形成了强烈的对比；</li>
+<li>有一个基于人工数据生成的整体AL方案，不幸的是，这对于文本来说更具挑战性，而对于图像来说，数据增强通常用于分类任务[100]；</li>
+<li>NNs缺乏关于其预测的不确定性信息（如第3.2节所述），这使得使用整个突出类别的查询策略变得复杂。</li>
+</ul>
+<p>本文旨在总结现有的基于(D)NN的AL文本分类方法。我们的主要贡献如下：</p>
+<ul>
+<li>我们提供了一个查询策略的分类法，并对与文本分类的AL相关的策略进行分类。</li>
+<li>我们调查了在AL、文本分类和（D）NN的交叉点上的现有工作。</li>
+<li>文本分类的最新进展被总结出来并与AL过程相关。然后调查了它们是否以及在多大程度上被应用于AL。</li>
+<li>在数据集、模型和查询策略方面，对以往研究的实验设置进行了集体分析，以确定实验中的最新趋势、共性和不足之处。</li>
+<li>我们确定了研究差距并概述了未来的研究方向。</li>
+</ul>
+<p>因此，我们对基于NN的主动文本分类的最新进展进行了全面调查。在回顾了这些最新进展之后，我们阐明了需要重新评估的领域，或者尚未在最近的背景下进行评估的领域。作为最后的结果，我们提出了研究问题，概述了未来的研究范围。</p>
+<h2 id="Related-Work"><a href="#Related-Work" class="headerlink" title="Related Work"></a>Related Work</h2><p>Settles[85]提供了一个一般的主动学习综述，总结了普遍的AL场景类型和查询策略。他们介绍了基本的AL设置的变化，如可变的标签成本或替代的查询类型，最值得一提的是，他们讨论了调查AL有效性的经验和理论研究 :他们提到的研究表明，AL在实践中是有效的，并在现实世界的应用中越来越多地得到了采用。然而，有人指出，实证研究也报告了AL比被动学习表现更差的案例，而且对AL的理论分析也不完整。最后，说明了与相关研究领域的关系，从而将AL与强化学习和半监督学习等联系起来。</p>
+<p>Fu, Zhu, and Li[25]的综述主要围绕着对基于不确定性的查询策略的全面分析，这些策略被归类为一个分类法。这个分类法在最顶层<strong>区分了i.i.d.实例的不确定性和实例的关联性。后者是前者的超集，旨在通过在查询时考虑特征、标签和结构的相关性来减少实例间的冗余</strong>。此外，他们对每种查询策略进行了算法分析，并按各自的时间复杂度对策略进行排序，强调了基于相关性的策略的复杂度增加。</p>
+<p>Aggarwal等人[1]进行了另一项涵盖广泛主题的一般性调查。他们提供了一个查询策略的平面分类，这与Fu, Zhu, and Li[25]的分类法大相径庭，将其分为以下三类：</p>
+<ul>
+<li>“基于异质性”，通过预测的不确定性或与现有标记实例的不相似性对实例进行采样。</li>
+<li>“基于性能”，根据模型损失的预测变化来选择实例</li>
+<li>“基于代表性”，选择数据点以反映更大的集合的属性，通常通过分布密度的手段实现[1]。</li>
+</ul>
+<p>与[85]类似，他们提出并讨论了许多非标准的主动学习场景的变化。</p>
+<p>Olsson[71]进行了一项以NLP为重点的主动学习综述。这项工作的主要贡献是对基于分歧的查询策略的调查，该策略使用多个分类器之间的分歧来选择实例。此外，Olsson回顾了一些实际的考虑，例如，选择初始种子集，决定基于流和基于池的方案，以及决定何时终止学习过程。</p>
+<p>虽然提到了一些基于NN的应用，但上述调查都没有深入地涵盖基于NN的AL。此外，没有一个是最近才涵盖NN架构的，这些架构最近才被成功地适应于文本分类问题，例如KimCNN[48]。NLP的最新进展也是如此，如词嵌入、上下文语言模型（在第4.1节中解释），或由此产生的文本分类的进展（在第4.1节和第4.2节中讨论）。我们打算在本调查的剩余部分填补这些空白。</p>
+<h2 id="Active-Learning"><a href="#Active-Learning" class="headerlink" title="Active Learning"></a>Active Learning</h2><p><strong>AL的目标是使用尽可能少的标记实例来创建一个模型，即最大限度地减少 oracle 和主动学习者之间的相互作用。</strong>AL的过程（如图1所示）如下：</p>
+<p><img src="https://s4.ax1x.com/2022/02/11/Hagr3d.png" alt="img"></p>
+<p>oracle 从主动学习者那里请求未标记的实例（查询，见图1：步骤1），然后由主动学习者（根据选定的查询策略）选择这些实例并传递给oracle（见图1：步骤2）。随后，这些实例被 oracle 标记并返回给主动学习者（更新，见图1：步骤3）。在每个更新步骤之后，主动学习者的模型被重新训练，这使得这个操作至少和基础模型的训练一样昂贵。这个过程不断重复，直到达到停止标准（例如，最大的迭代次数或分类精度变化的最小阈值）。</p>
+<p><strong>AL最重要的组成部分是查询策略。</strong>在介绍中，我们声称很大一部分的查询策略是基于不确定性的。为了分析这一点，我们在下面的章节中提供了一个查询策略的分类，并强调了涉及不确定性的部分。关于AL的一般和更详细的介绍，请参考Settles[85]和Aggarwal等人[1]的调查。</p>
+<h3 id="Query-Strategies"><a href="#Query-Strategies" class="headerlink" title="Query Strategies"></a>Query Strategies</h3><p>在图2中，我们根据策略的输入信息对最常见的AL查询策略进行了分类，输入信息表示一个策略所操作的数字值。在我们的分类法中，输入信息可以是随机的，也可以是数据、模型和预测中的一种。</p>
+<p><img src="https://s4.ax1x.com/2022/02/11/HahnFf.png" alt="img"></p>
+<p>这些类别是按照复杂性的增加来排序的，并不是相互排斥的。显然，模型是数据的一个函数，而预测也是模型和数据的一个函数，此外，在许多情况下，一个策略会使用这些标准中的多个标准。在这种情况下，我们将查询策略归入最具体的类别（即基于预测的先于基于模型的，而基于模型的又先于基于数据的）。</p>
+<ul>
+<li>Random: 传统上，随机性被用作许多任务的基线。在这种情况下，随机抽样是随机选择实例，是AL实例选择的一个强有力的基线[55, 83, 81]。它的表现往往比更复杂的策略更有竞争力，特别是当标签池变得更大时[84, 22]。</li>
+<li>Data-based : 基于数据的策略具有最低水平的知识，即它们只对原始输入数据和可选的标签池的标签进行操作。我们把它们进一步分为：（1）依靠数据不确定性的策略，它可能使用关于数据分布、标签分布和标签相关性的信息，以及（2）代表性，它试图通过使用较少的代表性实例来代表整体的属性，来几何地压缩一组点。</li>
+<li>Model-based ：基于模型的策略类具有关于数据和模型的知识。这些策略根据模型给定的实例所提供的措施来查询实例。这方面的一个例子是对模型解释给定实例的信心的衡量[26]，例如，模型对遇到的特征的可靠程度。这也可以是一个预期的量，例如在梯度的大小方面[86]。虽然仍然可以从模型中获得预测，但我们施加了一个限制，即目标度量必须是模型的一个（观察到的或预期的）数量，不包括最终预测。基于模型的不确定性是这里值得注意的一个子类，它利用模型的权重的不确定性来操作[26]。Sharma和Bilgic[87]描述了一个类似的类别，其中的不确定性源于在训练数据中没有找到足够的证据，也就是说，在训练时未能分离出类别。他们把这种不确定性称为证据不足的不确定性。</li>
+<li>Prediction-based ： 基于预测的策略通过对预测输出的评分来选择实例。这一类中最突出的成员是基于预测不确定性和基于分歧的方法。Sharma和Bilgic[87]用冲突证据不确定性来表示基于预测的不确定性，他们与这项工作相反，将其视为基于模型的不确定性的另一种形式。基于模型的不确定性和基于预测的不确定性这两个概念之间有时只有一线之隔。粗略地说，基于预测的不确定性在分类环境中对应于类间不确定性，而基于模型的不确定性则对应于类内不确定性。在文献中，不确定性采样[55]通常指的是基于预测的不确定性，除非另有说明。</li>
+<li>Ensembles ：当一个查询策略结合了其他多个策略的输出时，这被称为集成。由于一些原因，我们只在分类法中对集合策略的概念进行了分类（见图2中基于分歧的子类），而没有详细说明。(1) 集合体又是由原始的查询策略组成，可以用我们的分类法进行分类。(2) 组合体可以是混合体，即它们可以是不同类别的查询策略的混合体。此外，集合体的输出通常是单个分类器之间分歧的函数，这在Olsson[71]和Fu, Zhu, and Li[25]以前的调查中已经涉及。</li>
+</ul>
+<p>我们并不是第一个提供查询策略分类的人。Aggarwal等人[1]提供了另一种分类，将查询策略分为基于异质性的模型、基于性能的模型和基于代表性的模型。基于异质性的模型试图对不同的数据点进行采样，而不是对当前的标签库进行采样。这类模型包括不确定性抽样和合集，也就是说，合集和单一模型策略之间没有区别。基于性能的模型旨在以提高模型性能为目标进行数据采样，例如减少模型的误差。这与我们的基于模型的类别有交叉，然而，它缺乏关注参数变化（例如，预期梯度长度[86]）而不是指标变化的策略。最后，基于代表性的策略对实例进行抽样，使子样本的分布与训练集尽可能地相似。尽管与我们基于数据的类别相似，但它们总是假设存在一个模型，而基于数据的策略则不然。</p>
+<p>Fu, Zhu和Li[25]将查询策略分为基于不确定性和基于多样性两类。基于不确定性的策略假设实例的i.i.d.分布；他们为每个实例计算单独的分数，这是选择实例的基础。基于多样性的策略是其超集，还考虑了实例之间的相关性。因此，他们将不确定性和相关性作为查询策略的关键组成部分。这种分类法通过完全考虑不确定性和相关性，成功地区分了查询策略。然而，它在输入信息方面不太透明，而我们的分类法强调了这一点。然而，相关性是一个与我们的分类法正交的因素，可以作为一个额外的标准加入。</p>
+<p>在创建了我们的分类法之后，我们发现了最近对深度学习中的不确定性的分类[26]，它区分了数据-、模型-和预测-的不确定性，类似于分类法的第一个层次（基于数据、模型、预测的查询策略）。虽然这种分类自然来自于数据的处理程度，但我们强调，我们不是第一个提出这种抽象概念的人。</p>
+<p>通过使用输入信息作为决定性的标准，这个分类法提供了一个以信息为导向的查询策略观点。它强调了在现有的查询策略中，哪些部分以及如何涉及到不确定性。然而，如第3.2节所述，就NN而言，不确定性是具有挑战性的。此外，我们在第4.3节中使用分类法对最近在文本分类方面的AL工作进行了分类。</p>
+<h3 id="Neural-Network-Based-Active-Learning"><a href="#Neural-Network-Based-Active-Learning" class="headerlink" title="Neural-Network-Based Active Learning"></a>Neural-Network-Based Active Learning</h3><p>在这一节中，我们调查了这样一个问题：为什么神经网络在AL应用中没有更普遍的应用。这可以归结为两个中心议题。<strong>神经网络的不确定性估计</strong>，以及<strong>需要大数据的神经网络和处理小数据的AL之间的对比</strong>。我们从NN的角度来研究这些问题，缓解NLP的焦点。</p>
+<p><strong>Previous Work</strong></p>
+<p>基于NN的AL的早期研究可以分为基于不确定性的[16]，和基于集合的[50, 63]策略。前者通常使用预测熵[62, 81]作为不确定性的衡量标准，而后者则利用单个分类器之间的分歧。Settles, Craven和Ray[86]提出了预期梯度长度（EGL）查询策略，该策略通过模型权重的预期变化来选择实例。Zhang, Lease和Wallace [104]是第一个将CNN用于AL的人。他们提出了一个预期梯度长度策略的变种[86]，在这个策略中，他们选择了预期会导致嵌入空间最大变化的实例，从而训练了高度鉴别性的表示。Sener和Savarese[84]观察到基于不确定性的查询策略对基于CNN的批处理模式AL并不有效，并提出了核心集选择，即对一个小的子集进行采样以代表整个数据集。Ash等人[5]提出了BADGE，一种用于DNN的查询策略，它在最后一层的梯度上使用k-means++播种[4]，以便通过不确定性和多样性来查询。</p>
+<p>最后，生成对抗网络（GANs; [30]）也被成功应用于AL任务。Zhu和Bento[106]使用GANs在一个使用SVM模型的主动学习器中对图像进行查询合成。实例被合成，因此它们将被分类为具有高度不确定性。作者报告说，这种方法优于随机抽样、使用SVM的基于池的不确定性抽样[95]，在某些情况下也优于被动学习，但其弱点是产生的实例过于相似。该方法本身既不是纯粹的基于NN的方法，也不属于基于池的方案，然而，它是第一个报道的将GANs用于AL的方法。Ducoffe和Precioso[22]使用对抗性攻击来寻找跨越决策边界的实例，目的是提高模型的稳健性。他们训练了两种CNN架构，并报告了在图像分类任务上优于核心集[84]策略的结果。很明显，GANs本质上属于成员查询综合的场景。因此，它们的性能与人工数据合成的质量相关，也就是说，它们通常对NLP任务不是那么有效。这一点已经被认识到了，并且已经对更好的文本生成进行了首次改进[105]。</p>
+<p><strong>Uncertainty in Neural Networks</strong></p>
+<p>最早并在许多变化中采用的一类策略是不确定性采样[83, 95]。不幸的是，这个被广泛使用的概念并不能直接应用于NN，因为它们并不提供固有的不确定性指标。在过去，这个问题已经通过集合[50, 36, 12]，或通过学习误差估计[70]来解决。最近的方法进一步使用贝叶斯扩展[11]，使用dropout获得不确定性估计[91，27]，或使用概率NN来估计预测的不确定性[51]。然而，在较大的数据集上，集合和贝叶斯方法很快就变得不可行了，而且众所周知，NN架构对其预测过于自信[33, 51]。因此，NN的不确定性只是没有得到充分的解决，因此仍然是一个高度相关的研究领域。</p>
+<p><strong>Contrasting Paradigms</strong></p>
+<p>众所周知，DNN尤其在大规模数据集方面表现出色，但往往拥有大量的数据是对其表现的严格要求（例如，[103]）。另一方面，AL试图最小化标记的数据。小的标记数据集对DNN来说是一个问题，因为它们在小的数据集上已知会过度拟合（例如，[93，100]），这导致测试集上的泛化性能不好。此外，DNN在使用小数据集进行训练时，往往比浅层模型没有什么优势[89]，因此缺乏对其较高计算成本的证明。另一方面，我们显然不能要求AL来标记更多的数据，因为这将违背它的目的。因此，已经有关于使用小数据集处理（D）NN的研究，然而，这只是一个稀缺的数量，特别是相对于一般的NN文献的大量内容而言。处理小数据集大多是通过使用预训练[37, 97]或其他转移学习方法[13, 8, 97]来规避的。最后，对最佳超参数的搜索常常被忽视，而是使用相关工作的超参数，这些参数是为大数据集优化的，如果有的话。</p>
+<h2 id="Active-Learning-for-Text-Classification"><a href="#Active-Learning-for-Text-Classification" class="headerlink" title="Active Learning for Text Classification"></a>Active Learning for Text Classification</h2><p>在第4.1和4.2节中，我们首先总结了最近的文本分类和NNs的方法。我们阐述了每种方法在AL背景下的重要性，并分析了最近的研究对其的采用情况。对于未被充分采用的方法，我们介绍了它们如何能够推动文本分类的AL。最重要的是，我们概述了最近在文本分类方面的AL实验，并分析了共同点和缺点。</p>
+<h3 id="Recent-Advances-in-Text-Classification"><a href="#Recent-Advances-in-Text-Classification" class="headerlink" title="Recent Advances in Text Classification"></a>Recent Advances in Text Classification</h3><p><strong>Representations</strong> 传统的方法使用词袋（BoW）表示，它是稀疏和高维的。然而，随着word2vec[66, 65]、GloVe[74]或fastText[46]等词嵌入的引入，词嵌入在许多情况下已经取代了BoW表示。这是由几个原因造成的。</p>
+<ul>
+<li>(1)它们在向量空间中表示语义关系，避免了例如由于同义词造成的特征不匹配问题；</li>
+<li>(2)纳入词嵌入后，在许多下游任务中表现出色[66, 74, 46] 。</li>
+<li>(3) 与词袋不同，词向量是密集的、低维的表示，这使得它们适用于更广泛的算法—特别是在有利于固定大小输入的NN的背景下。为了获得类似的固定大小的词序列表示，即句子、段落或文件，已经提出了各种方法[53]。</li>
+</ul>
+<p>词嵌入是一种表征，它为每个词提供一个向量，因此也提供一个含义。这使得它们也不知道当前单词的上下文，因此无法检测和处理歧义。与词嵌入不同，语言模型（LMs）使用单词和周围的语境来计算单词向量[76]。这就产生了一个上下文表示法，它继承了词嵌入的优点，同时允许针对具体语境的表示（与静态嵌入相反）[76]。ELMo是第一个获得广泛采用的LM，并在几个NLP任务上超过了最先进的模型[76]。此后不久，BERT[20]被引入，提供了基于双向预训练的语言建模。创建基于BERT的模型的过程包括一个预训练和一个微调步骤，与ELMO的直接基于特征的方法相反，在这种方法中，从预训练的模型中获得上下文向量并直接作为特征使用[20]。通过屏蔽，即在训练过程中随机删除一部分标记，训练被调整为预测被屏蔽的单词。这使得双向训练成为可能，否则会受到阻碍，因为在计算给定上下文的出现概率时，一个词可以 “看到自己”[20]。在此之后，XLNet[102]引入了类似的使用自回归语言模型进行预训练和微调的方法，然而，它克服了BERT的局限性，因为它在预训练过程中不依赖屏蔽数据[102]，而且，成功地整合了最近的TransformerXL架构[17]。此后，各种LM相继发表，它们进一步优化了以前LM架构的预训练（如RoBERTa[59]和ELECTRA[15]），或者将知识提炼成一个较小的模型（如DistilBERT[82]）。与词嵌入类似，也有使用LM的方法，以便从LM中获得句子表示[80]。</p>
+<p>所有提到的表示法都比传统的BoW表示法提供了更丰富的表现力，因此非常适合主动学习的目的。</p>
+<p><strong>Neural-Network-Based Text Classification</strong> Kim[48]提出的一个著名的CNN架构（KimCNN）在预先训练好的单词向量上运行，并且只用一个简单而优雅的架构就取得了当时最先进的结果。所调查的CNN设置不需要太多的超参数调整，并证实了dropout[91]作为基于CNN的文本分类的正则器的有效性。</p>
+<p>fastText[46]的词嵌入与其他词嵌入不同，因为该方法（1）有监督，（2）专门为文本分类设计。作为一个浅层神经网络，它仍然非常有效，同时仍然获得了与当时的深度学习方法相当的性能。</p>
+<p>Howard和Ruder[41]开发了通用语言模型微调（ULMFiT），这是一种使用AWD-LSTM架构的LM转移学习方法[64]，在几个文本分类数据集上，当只对100个标记的例子进行训练时，其表现优于目前的技术水平，从而取得了明显优于以前工作中更复杂架构的结果。像BERT[20]和XLNet[102]这样的特定语境的LM为每个标记产生一个与语境相关的向量，从而有力地改善了基于NN的文本分类[20, 102, 92]。在基于NN的文本分类中，最先进的是基于LM的XLNet微调，它在测试错误率方面比BERT略胜一筹[102, 92]。ULMFiT紧随其后，而KimCNN仍然是一个强有力的竞争者。值得注意的是，ULMFiT、BERT和XLNet都进行转移学习，其目的是将知识从一个模型转移到另一个模型[79, 13]，从而大量减少所需的数据量。</p>
+<h3 id="Text-Classification-for-Active-Learning"><a href="#Text-Classification-for-Active-Learning" class="headerlink" title="Text Classification for Active Learning"></a>Text Classification for Active Learning</h3><p>传统的文本分类的AL严重依赖于基于预测-不确定性的查询策略[55]和集合[58]。常见的模型选择包括支持向量机（SVMs；[95]）、朴素贝叶斯[69]、逻辑回归[39]和神经网络[50]。据我们所知，以前的调查没有涵盖用于文本分类的传统AL，然而，Olsson[71]已经深入介绍了用于NLP的基于集合的AL。</p>
+<p>关于现代基于NN的文本分类的AL，相关模型主要是基于CNN和LSTM的深度架构。Zhang, Lease和Wallace[104]声称他们是第一个考虑使用DNN进行文本分类的AL。他们使用CNN并贡献了一个查询策略，该策略根据单词嵌入的预期变化和模型给定的不确定性来选择实例，从而学习用于文本分类的判别性嵌入。An, Wu和Han[2]评估了SVM、LSTM和门控递归单元（GRU; Cho等人[14]）模型，并报告说后两者在中国新闻数据集ThucNews上的表现明显优于SVM基线。Lu和MacNamee[61]研究了不同文本表示法在基于池的AL场景中的表现。此外，他们使用这一策略获得了一个代理数据集（包括总数据的5%到40%），在此基础上使用ULMFiT[41]训练基于LSTM的LM，达到了接近于在完整数据集上训练的准确性。与过去的出版物不同，他们报告说这种<strong>基于不确定性的策略是有效的、稳健的，同时在计算上也很便宜</strong>。这是文本分类、NN和DL之间的交叉点方面最相关的工作。</p>
+<h3 id="Commonalities-and-Limitations-of-Previous-Experiments"><a href="#Commonalities-and-Limitations-of-Previous-Experiments" class="headerlink" title="Commonalities and Limitations of Previous Experiments"></a>Commonalities and Limitations of Previous Experiments</h3><p>表1显示了最新的文本分类实验的AL，它们都比Settles[85]和Olsson[71]的调查要新。对于每个出版物，我们列出了所使用的数据集、模型和查询策略的类别（关于第3.1节中的分类法）。我们提出这个表格是为了了解最近喜欢的分类模型和查询策略类别。</p>
+<p><img src="https://s4.ax1x.com/2022/02/15/HcO9Yt.png" alt="img"></p>
+<p>我们可以从表1中得出多个结论：很明显，这些查询策略中的绝大多数属于基于预测的查询策略，更具体地说，属于基于预测的不确定性和基于分歧的子类。除此之外，我们还可以发现一些不足之处。首先，在许多实验中，有两个或更多的标准数据集被评估，但很多时候，这些实验在数据集方面几乎没有交集。因此，我们失去了与以往研究的可比性。</p>
+<p>我们可以从表1中得出多个结论：很明显，这些查询策略中的绝大多数属于基于预测的查询策略，更具体地说，属于基于预测的不确定性和基于分歧的子类。除此之外，我们还可以发现一些不足之处。首先，在许多实验中，有两个或更多的标准数据集被评估，但很多时候，这些实验在数据集方面几乎没有交集。因此，我们失去了与以往研究的可比性。对于最近的研究，可以从表1中看出，唯一较大的交集是Zhang, Lease, and Wallace [104] 和Lowell, Lipton, and Wallace [60] 的作品之间。Siddhant和Lipton[90]通过各自的一个数据集，至少提供了与Zhang, Lease, and Wallace[104]和Lowell, Lipton, and Wallace[60]的一些可比性。此外，RMA[3]是R21[54]的一个子集，Bloodgood[10]和Hu, Mac Namee, and Delany[44]都使用了R21，所以它们在某种程度上可能具有可比性。[78]是唯一在较新的大规模文本分类数据集[103]上进行评估的，虽然这些数据集在规模上更真实，但作者省略了经典数据集，所以很难将他们的贡献与之前的工作联系起来。此外，由于这个原因，我们不知道过去的实验是否以及在何种程度上可以推广到DNN[78]。</p>
+<p>最后，尚不清楚最近的（D）NN是否从相同的查询策略中受益，也就是说，过去的研究结果可能不适用于现代NN架构。Prabhu, Dognin和Singh[78]在最近的文献中发现了关于使用预测不确定性与NN结合的有效性的相互矛盾的说法。他们使用FastText.zip（FTZ）模型和预测不确定性查询策略取得了有竞争力的结果，事实证明，尽管所有报道的关于NN和不确定性估计的弱点，但在只需要少量数据的情况下，还是非常有效。</p>
+<h2 id="Open-Research-Questions"><a href="#Open-Research-Questions" class="headerlink" title="Open Research Questions"></a>Open Research Questions</h2><p><strong>Uncertainty Estimates in Neural Networks</strong> 在第3节中，说明了基于不确定性的策略已经成功地与非NN模型结合使用，在第4.3节中，说明了它们在最近基于NN的AL中也占了查询策略的最大部分。<strong>不幸的是，由于不确定性估计不准确，或者可扩展性有限</strong>（如第3.2节所述），NN的不确定性仍然是一个挑战。</p>
+<p><strong>Representations</strong> 正如第4.1节所概述的，NLP中文本表示法的使用已经从词包转向静态和上下文的词嵌入。这些表示法显然提供了许多优势，如消歧义能力、非稀疏向量，以及许多任务的性能提高。尽管已经有一些应用[104, 78, 61]，但还没有专门针对AL的系统评估来比较使用NN的词嵌入和LMs。此外，它们目前只是很少被使用，这暗示着要么采用得很慢，要么是一些没有被调查的实际问题。</p>
+<p><strong>Small Data DNNs</strong> DL方法通常是在大数据集的背景下应用的。然而，AL的目的是使（标记的）数据集尽可能的小。在第3节中，我们概述了为什么小数据集对DNN来说是个挑战，以及基于DNN的AL的一个直接后果。使用预训练的语言模型，这个问题在一定程度上得到了缓解，因为微调允许使用相当小的数据集训练模型。然而，要想成功地微调一个模型，还需要调查有多少数据是必要的。</p>
+<p><strong>Comparable Evaluations</strong> 在第4.3节中，我们对文本分类中最常见的AL策略进行了概述。不幸的是，实验中使用的数据集的组合往往是完全不相干的，例如Siddhant和Lipton[90]，Lowell, Lipton和Wallace[60]，以及Prabhu, Dognin和Singh[78]。因此，可比性降低甚至丧失，特别是在最近和过去的工作之间。然而，可比性对于验证过去关于基于浅层NN的AL的见解是否仍然适用于基于DNN的AL[78]至关重要。</p>
+<p><strong>Learning to Learn</strong> 有大量的查询策略可供选择，我们在第3.1节中对这些策略进行了（非详尽的）分类。这就引入了选择最优策略的问题。正确的选择取决于许多因素，如数据、模型或任务，甚至在AL过程中的不同迭代中也会有所不同。因此，学习学习(或元学习)已经变得很流行，可以用来学习最优选择[42]，甚至可以学习整个查询策略[6, 49]。</p>
+<h2 id="Conclusions"><a href="#Conclusions" class="headerlink" title="Conclusions"></a>Conclusions</h2><p>在这项调查中，我们调查了基于(D)NN的文本分类的AL，并检查了阻碍其采用的因素。我们创建了一个分类法，通过它们对基于数据、基于模型和基于预测的输入信息的依赖来区分查询策略。我们分析了用于文本分类的AL的查询策略，并将它们归入各自的分类法类别。我们提出了AL、文本分类和DNN之间的交集，就我们所知，这是这个主题的第一次调查。此外，我们回顾了基于(D)NN的AL，确定了当前的挑战和技术状态，并指出它的研究不足，而且经常缺乏可比性。除此之外，我们还介绍了NLP的相关最新进展，将其与AL联系起来，并指出其应用的差距和限制。我们的主要发现之一是，无论分析是否限于NN，基于不确定性的查询策略仍然是使用最广泛的一类。基于LM的表征提供了更细粒度的上下文特定表征，同时也处理了词汇外的词汇。此外，我们发现基于微调的迁移学习在一定程度上缓解了小数据问题，但缺乏采用。最重要的是，DNN在许多任务上都有很强的性能，在AL中的首次采用也显示了很好的效果[104, 90]。所有这些成果对AL来说都是非常理想的。所有这些收益对AL来说都是非常理想的。因此，在AL中改进DNN的采用是至关重要的，特别是由于预期的性能提高可以在使用相同数量的数据时用于提高分类结果，或者通过减少数据和标签工作来提高标签过程的效率。基于这些发现，我们确定了未来工作的研究方向，以进一步推进基于（D）NN的AL。</p>
+</article><div class="post-reward"><div class="reward-button button--animated"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/HzNFBbkvZ2QMOKV.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" target="_blank"><img class="post-qr-code-img" src="https://i.loli.net/2021/03/22/wMGegPYTAXx9cJo.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2022/02/21/ZeroPrompt-Scaling-Prompt-Based-Pretraining-to-1-000-Tasks-Improves-Zero-Shot-Generalization/"><img class="next-cover" src="https://s4.ax1x.com/2022/02/21/HXcFxA.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">ZeroPrompt- Scaling Prompt-Based Pretraining to 1,000 Tasks Improves Zero-Shot Generalization</div></div></a></div></nav><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Coding-Zuo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2022/02/21/A-Survey-of-Active-Learning-for-Text-Classification-Using-Deep-Neural-Networks/">http://example.com/2022/02/21/A-Survey-of-Active-Learning-for-Text-Classification-Using-Deep-Neural-Networks/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">Coding-Zuo</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Active-Learning/">Active Learning</a></div><div class="post_share"><div class="addthis_inline_share_toolbox"></div><script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=null" async="async"></script></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#A-Survey-of-dy-for-Text-Classification-Using-Deep-Neural-Networks"><span class="toc-number">1.</span> <span class="toc-text">A Survey of dy for Text Classification Using Deep Neural Networks</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Introduction"><span class="toc-number">1.1.</span> <span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Related-Work"><span class="toc-number">1.2.</span> <span class="toc-text">Related Work</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Active-Learning"><span class="toc-number">1.3.</span> <span class="toc-text">Active Learning</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Query-Strategies"><span class="toc-number">1.3.1.</span> <span class="toc-text">Query Strategies</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Neural-Network-Based-Active-Learning"><span class="toc-number">1.3.2.</span> <span class="toc-text">Neural-Network-Based Active Learning</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Active-Learning-for-Text-Classification"><span class="toc-number">1.4.</span> <span class="toc-text">Active Learning for Text Classification</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Recent-Advances-in-Text-Classification"><span class="toc-number">1.4.1.</span> <span class="toc-text">Recent Advances in Text Classification</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Text-Classification-for-Active-Learning"><span class="toc-number">1.4.2.</span> <span class="toc-text">Text Classification for Active Learning</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Commonalities-and-Limitations-of-Previous-Experiments"><span class="toc-number">1.4.3.</span> <span class="toc-text">Commonalities and Limitations of Previous Experiments</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Open-Research-Questions"><span class="toc-number">1.5.</span> <span class="toc-text">Open Research Questions</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Conclusions"><span class="toc-number">1.6.</span> <span class="toc-text">Conclusions</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By Coding-Zuo</div><div class="footer_custom_text">Hi, welcome to my BLOG</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    loader: {
+      source: {
+        '[tex]/amsCd': '[tex]/amscd'
+      }
+    },
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        addClass: [200,() => {
+          document.querySelectorAll('mjx-container:not([display=\'true\']').forEach( node => {
+            const target = node.parentNode
+            if (!target.classList.contains('has-jax')) {
+              target.classList.add('mathjax-overflow')
+            }
+          })
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>if (document.getElementsByClassName('mermaid').length) {
+  if (window.mermaidJsLoad) mermaid.init()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(() => {
+      window.mermaidJsLoad = true
+      mermaid.initialize({
+        theme: 'default',
+      })
+      false && mermaid.init()
+    })
+  }
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'd652112bf81876e00118',
+      clientSecret: 'a5abed418c7cc2736af5b4d0cbd7ff97d460a5b3',
+      repo: 'Coding-Zuo.github.io',
+      owner: 'Coding-Zuo',
+      admin: ['Coding-Zuo'],
+      id: 'c1d02f7c078dcd7527ce5c4dce7edce9',
+      language: 'zh-CN',
+      perPage: 10,
+      distractionFreeMode: false,
+      pagerDirection: 'last',
+      createIssueManually: false,
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script src="/js/custom.js"></script><script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script src="//code.tidio.co/mak6nokafytw9mgrsuzglwzfxiy3fpdl.js" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

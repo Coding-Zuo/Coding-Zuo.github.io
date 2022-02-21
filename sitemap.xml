@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://example.com/2022/02/21/A-Survey-of-Active-Learning-for-Text-Classification-Using-Deep-Neural-Networks/</loc>
+    
+    <lastmod>2022-02-21</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://example.com/2022/02/21/ZeroPrompt-Scaling-Prompt-Based-Pretraining-to-1-000-Tasks-Improves-Zero-Shot-Generalization/</loc>
     
     <lastmod>2022-02-21</lastmod>
@@ -1076,6 +1083,13 @@
   
   <url>
     <loc>http://example.com/tags/Convex-optimization/</loc>
+    <lastmod>2022-02-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/tags/Active-Learning/</loc>
     <lastmod>2022-02-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
