@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://example.com/2022/02/10/Prompt-Guided-Few-Shot-Event-Detection/</loc>
+    
+    <lastmod>2022-02-21</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://example.com/2022/02/21/%E4%B8%BB%E5%8A%A8%E5%AD%A6%E4%B9%A0Active-Learning-%E5%9F%BA%E7%A1%80/</loc>
     
     <lastmod>2022-02-21</lastmod>
@@ -40,13 +47,6 @@
     <loc>http://example.com/2021/12/03/Continual-Learning-with-Hypernetworks/</loc>
     
     <lastmod>2022-02-14</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://example.com/2022/02/10/Prompt-Guided-Few-Shot-Event-Detection/</loc>
-    
-    <lastmod>2022-02-10</lastmod>
     
   </url>
   
